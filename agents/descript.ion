@@ -1,2 +1,4 @@
 light-style-checker.md Scan imported / 3rd-party Delphi code for style issues and dangerous patterns.
 light-os-compat.md Audit Delphi FMX source for cross-platform compatibility issues.
+light-md.md Fix Delphi vocabulary and writing-clarity issues in Markdown docs (the /light-md workhorse).
+light-md \nFix Delphi vocabulary and writing-clarity issues in Markdown documentation. Use when user invokes /light-md, says "check vocab" / "fix vocabulary" / "delphi terms" / "fix the docs" / "clean up the md", or after writing/editing *.md files in a Delphi project. Also fires automatically on Stop hook when configured.\n\nÂ

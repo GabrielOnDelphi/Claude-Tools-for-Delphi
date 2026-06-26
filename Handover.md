@@ -21,9 +21,9 @@ This folder is now a git repo wired to the public showcase repo and pushed.
 - `Delphi, in all its glory.url` — promo shortcut
 - `README.md`, `CLAUDE.md`, `Handover.md`
 
-## Not yet pushed
+## Pushed
 
-`README.md`, `CLAUDE.md`, `Handover.md`, and the `.url` shortcut are **uncommitted** — commit and push them next.
+Everything above is committed and on `origin/main` (latest: `d456ec3`). Working tree clean.
 
 ## Open items
 

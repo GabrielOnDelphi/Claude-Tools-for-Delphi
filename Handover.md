@@ -27,5 +27,8 @@ Everything above is committed and on `origin/main` (latest: `d456ec3`). Working 
 
 ## Open items
 
-- No `LICENSE` file yet (README references one). Add one if the repo should carry a license.
 - Token has `repo` scope only (no `delete_repo`) — fine for normal pushes.
+
+## License
+
+MPL 2.0 — `LICENSE` holds the canonical text fetched from mozilla.org. README updated to match.

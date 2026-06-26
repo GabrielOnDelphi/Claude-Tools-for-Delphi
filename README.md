@@ -32,4 +32,4 @@ Details and where to buy: **https://gabrielmoraru.com**
 
 ## License
 
-See `LICENSE` (when present). The agents and skills are free to use and adapt.
+Mozilla Public License 2.0 — see `LICENSE`. Free to use and adapt; changes to MPL-covered files stay open under the same license.

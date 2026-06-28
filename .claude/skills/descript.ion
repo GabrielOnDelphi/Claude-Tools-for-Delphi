@@ -1,3 +1,5 @@
-light-style-checker Scan imported / 3rd-party Delphi code for style issues and dangerous patterns.
-light-os-compat Audit Delphi FMX source for cross-platform compatibility issues (Windows-only APIs, mobile traps).
-light-review Full three-stage Delphi code review pipeline (find bugs, counter-analyze+fix, verify+compile).
+light-code-FakeTestAudit Audit a Delphi DUnitX / classic-DUnit test suite for FAKE or WEAK tests - tests that pass without verifying the behavior they claim (zero assertions, Assert.Pass-only, tautologies, setup-only checks, vague error checks, negative tests with no probe). Reports REAL / WEAK / SUSPECT per test, and can PROVE fakeness with a git-safe mutation pass. Runs the light-fake-test-auditor agent.
+light-code-CheckOsCompatibility Audit Delphi FMX source for cross-platform compatibility issues - Windows-only units/APIs, hardcoded paths, missing platform conditionals, mobile-incompatible patterns. Runs the light-os-compat agent. Use before targeting Android/iOS/macOS/Linux, or when porting a feature.
+light-code-StyleChecker Scan imported / 3rd-party Delphi code for style compliance, common mistakes and dangerous patterns (resource leaks, unsafe casts, missing try/finally). Runs the light-style-checker agent. NOT for our own project code - use /light-code-Review for that.
+light-code-Review Full three-stage Delphi code review pipeline (find bugs, counter-analyze+fix, verify+compile).
+light-md-DelphiIdiom Fix Delphi vocabulary and writing-clarity issues in Markdown docs - swaps non-Delphi terms for Delphi ones and applies bounded clarity rewrites. Runs the light-md agent. Use on /light-md-DelphiIdiom, "check vocab", "fix vocabulary", "delphi terms", "clean up the md", or after editing *.md files in a Delphi project.

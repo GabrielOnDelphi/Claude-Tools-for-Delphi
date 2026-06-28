@@ -1,7 +1,9 @@
-light-style-checker.md Scan imported / 3rd-party Delphi code for style issues and dangerous patterns.
-light-os-compat.md Audit Delphi FMX source for cross-platform compatibility issues.
-light-md.md Fix Delphi vocabulary and writing-clarity issues in Markdown docs (the /light-md workhorse).
 light-md \nFix Delphi vocabulary and writing-clarity issues in Markdown documentation. Use when user invokes /light-md, says "check vocab" / "fix vocabulary" / "delphi terms" / "fix the docs" / "clean up the md", or after writing/editing *.md files in a Delphi project. Also fires automatically on Stop hook when configured.\n\nÂ
 light-review-step1.md Stage 1 of the Delphi review pipeline: thorough critical code review (find bugs).
 light-review-step2.md Stage 2: counter-analyze step-1 findings, drop false positives, apply surviving fixes.
 light-review-step3.md Stage 3: verify the applied fixes hold up, revert bad ones, then compile.
+light-code-CheckOsCompatibility.md Audit Delphi FMX source for cross-platform compatibility issues.
+light-code-FakeTestAudit.md Audit a DUnitX / DUnit test suite for FAKE tests that pass without verifying anything.
+light-code-StyleChecker.md Scan imported / 3rd-party Delphi code for style issues and dangerous patterns.
+light-md-DelphiIdiom.md Fix Delphi vocabulary and writing-clarity issues in Markdown docs (the /light-md-DelphiIdiom workhorse).
+light-web-CodeReview.md Review HTML, CSS and JavaScript for errors, accessibility and cross-browser problems.

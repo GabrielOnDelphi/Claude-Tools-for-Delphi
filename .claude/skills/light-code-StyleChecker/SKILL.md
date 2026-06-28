@@ -1,12 +1,12 @@
 ---
 name: light-code-StyleChecker
-description: Scan imported or 3rd-party Delphi code for style compliance, common mistakes, and dangerous patterns (resource leaks, unsafe casts, missing try/finally). Launches the light-style-checker agent. Use when the user invokes `/light-code-StyleChecker`, says "check this 3rd-party unit", "scan the imported library", or "style-check SourceCode/". Do NOT use for our own project code — use /light-code-Review for that.
+description: Scan imported or 3rd-party Delphi code for style compliance, common mistakes, and dangerous patterns (resource leaks, unsafe casts, missing try/finally). Launches the light-code-StyleChecker agent. Use when the user invokes `/light-code-StyleChecker`, says "check this 3rd-party unit", "scan the imported library", or "style-check SourceCode/". Do NOT use for our own project code — use /light-code-Review for that.
 ---
 
 # /light-code-StyleChecker — 3rd-party Code Style Audit
 
 This is a thin launcher. Your only job is to resolve the input scope and launch the
-**`light-style-checker`** agent. You do NOT review code yourself.
+**`light-code-StyleChecker`** agent. You do NOT review code yourself.
 
 **Scope reminder:** this skill is for IMPORTED / 3RD-PARTY Delphi code only. For our own
 project code, the right tool is `/light-code-Review` (deeper, real correctness review). If the user
@@ -29,7 +29,7 @@ Print the resolved scan set as a short list before launching, so the user can se
 
 ## Step 2 — Launch the agent
 
-Call the **Agent** tool with `subagent_type: "light-style-checker"`. Pass it the **full scan
+Call the **Agent** tool with `subagent_type: "light-code-StyleChecker"`. Pass it the **full scan
 set** in one prompt. Tell it plainly that this is imported / 3rd-party code to audit for style
 compliance, common mistakes, and dangerous patterns.
 

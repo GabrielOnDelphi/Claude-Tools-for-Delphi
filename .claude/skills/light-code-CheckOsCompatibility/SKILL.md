@@ -1,12 +1,12 @@
 ---
 name: light-code-CheckOsCompatibility
-description: Audit Delphi FMX source for cross-platform compatibility issues — Windows-only units/APIs, hardcoded paths, missing platform conditionals, mobile-incompatible patterns. Launches the light-os-compat agent. Use when the user invokes `/light-code-CheckOsCompatibility`, says "check this for Android/iOS", "is this safe on mobile/macOS/Linux", or "audit Lib/ for cross-platform issues".
+description: Audit Delphi FMX source for cross-platform compatibility issues — Windows-only units/APIs, hardcoded paths, missing platform conditionals, mobile-incompatible patterns. Launches the light-code-CheckOsCompatibility agent. Use when the user invokes `/light-code-CheckOsCompatibility`, says "check this for Android/iOS", "is this safe on mobile/macOS/Linux", or "audit Lib/ for cross-platform issues".
 ---
 
 # /light-code-CheckOsCompatibility — Cross-Platform Compatibility Audit
 
 This is a thin launcher. Your only job is to resolve the input scope and launch the
-**`light-os-compat`** agent. You do NOT audit the code yourself.
+**`light-code-CheckOsCompatibility`** agent. You do NOT audit the code yourself.
 
 ## Step 1 — Resolve the input
 
@@ -26,7 +26,7 @@ prompt so it focuses there. Print the resolved audit set as a short list before 
 
 ## Step 2 — Launch the agent
 
-Call the **Agent** tool with `subagent_type: "light-os-compat"`. Pass it the **full audit set**
+Call the **Agent** tool with `subagent_type: "light-code-CheckOsCompatibility"`. Pass it the **full audit set**
 in one prompt, plus any target platform the user mentioned. The agent reads the project
 `CLAUDE.md` for the declared target platforms and intentional platform-specific code, scans the
 files, and reports issues (Windows-only units/APIs, hardcoded paths, missing `{$IFDEF}` guards,

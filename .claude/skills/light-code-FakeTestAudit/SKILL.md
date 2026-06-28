@@ -1,6 +1,6 @@
 ---
 name: light-code-FakeTestAudit
-description: Audit a Delphi DUnitX or classic-DUnit test suite for FAKE tests — tests that pass without verifying the behavior they claim (zero assertions, Assert.Pass-only, tautologies, setup-only checks, tautological helpers, vague error checks, negative tests with no probe). Establishes the green baseline, launches the light-fake-test-auditor agent, and optionally PROVES fakeness with a git-safe mutation pass. Use when the user invokes `/light-code-FakeTestAudit`, says "are these tests fake", "make sure the tests aren't fake", "did we game the tests to pass", "audit test integrity", or "check the dunit tests actually test something".
+description: Audit a Delphi DUnitX or classic-DUnit test suite for FAKE tests — tests that pass without verifying the behavior they claim (zero assertions, Assert.Pass-only, tautologies, setup-only checks, tautological helpers, vague error checks, negative tests with no probe). Establishes the green baseline, launches the light-code-FakeTestAudit agent, and optionally PROVES fakeness with a git-safe mutation pass. Use when the user invokes `/light-code-FakeTestAudit`, says "are these tests fake", "make sure the tests aren't fake", "did we game the tests to pass", "audit test integrity", or "check the dunit tests actually test something".
 ---
 
 # /light-code-FakeTestAudit — Test-Integrity Auditor
@@ -9,7 +9,7 @@ This skill answers one question: **is the suite's green real, or do some tests p
 
 **Scope:** this audits EXISTING tests for honesty — whether each one *can fail*. It does NOT measure code coverage or find missing tests; a suite of 100%-honest tests can still under-test the product. Coverage gaps are a different job — say so if the user conflates the two.
 
-**You (the main thread) orchestrate. You do NOT audit the tests yourself** — the `light-fake-test-auditor` agent does the per-test analysis. Your job: resolve the scope, establish the green baseline, launch the auditor (sharded if large), optionally run a mutation proof, then summarize.
+**You (the main thread) orchestrate. You do NOT audit the tests yourself** — the `light-code-FakeTestAudit` agent does the per-test analysis. Your job: resolve the scope, establish the green baseline, launch the auditor (sharded if large), optionally run a mutation proof, then summarize.
 
 ## Parse `$args`
 
@@ -44,7 +44,7 @@ Handle the messy cases:
 
 ## Step 3 — Launch the auditor agent
 
-Call the **Agent** tool with `subagent_type: "light-fake-test-auditor"`.
+Call the **Agent** tool with `subagent_type: "light-code-FakeTestAudit"`.
 
 - **Small set** (one or two modest files) → one agent, pass the whole test set.
 - **Large set** (a big fixture like a 2000+-line unit, or many units) → shard: **one agent per test unit, launched in parallel** (cap ~6 concurrent), so each agent reads its file completely instead of sampling. Give every agent the SAME shared context: the framework dialect and the **runner no-assert-guard setting** from Step 1/2 (so it doesn't re-derive it), plus the paths of any shared helper/fixture units it may need to open to resolve assertion helpers.

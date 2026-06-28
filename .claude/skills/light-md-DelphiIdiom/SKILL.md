@@ -5,7 +5,7 @@ description: Fix Delphi vocabulary and writing-clarity issues in Markdown docume
 
 # Delphi MD vocab + clarity check (launcher)
 
-This skill is a thin launcher. The work is done by the `light-md` agent. Do not load the dictionary or scan files yourself — that's the agent's job, in its own context window.
+This skill is a thin launcher. The work is done by the `light-md-DelphiIdiom` agent. Do not load the dictionary or scan files yourself — that's the agent's job, in its own context window.
 
 ## When to run
 
@@ -33,7 +33,7 @@ If unsure whether a project is "Delphi", check for `*.dpr`, `*.dpk`, `*.dproj` i
    - With args: Glob the arg pattern.
    - No args: list MD files Write/Edited this task. If none — print "No MD files touched this task." and stop.
 
-2. **Launch the `light-md` agent** via the Agent tool with `subagent_type: light-md`. Pass the resolved file list in the prompt. One agent for the whole batch — the agent processes files sequentially so it can accumulate cross-file pattern confirmations.
+2. **Launch the `light-md-DelphiIdiom` agent** via the Agent tool with `subagent_type: light-md-DelphiIdiom`. Pass the resolved file list in the prompt. One agent for the whole batch — the agent processes files sequentially so it can accumulate cross-file pattern confirmations.
 
 3. **Print the agent's returned report** verbatim. The agent already beeps on finish.
 

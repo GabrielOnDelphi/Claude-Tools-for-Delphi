@@ -1,6 +1,6 @@
 ---
 name: light-review-step3
-description: "Stage 3 of the Delphi review pipeline — verify code fixes hold up, revert the ones that don't, then compile. For each edit it confirms the fix matches the stated reasoning, didn't change observable behavior, didn't miss call sites, and didn't break DFM/FMX bindings; then it runs the project's tests (large change) or compiles (small change). Normally launched by the /light-review skill after stage 2. ALSO the agent to run standalone whenever code was changed and needs an independent safety check before you trust it — e.g. Claude edited code in this conversation and you want it verified and compiled.\n\nExamples:\n\n- The /light-review skill launches this agent with the stage-2 report (the list of fixes applied).\n\n- User: \"You changed three files just now — verify that and compile\"\n  Assistant: \"I'll launch the light-review-step3 agent to verify those edits and build.\"\n  (Use the Task tool to launch the light-review-step3 agent; it verifies the edits already made in this conversation)\n\n- User: \"Double-check the fix you applied and make sure it still builds\"\n  Assistant: \"I'll run the light-review-step3 agent on it.\"\n  (Use the Task tool to launch the light-review-step3 agent)"
+description: "Stage 3 of the Delphi review pipeline — verify code fixes hold up, revert the ones that don't, then compile. For each edit it confirms the fix matches the stated reasoning, didn't change observable behavior, didn't miss call sites, and didn't break DFM/FMX bindings; then it runs the project's tests (large change) or compiles (small change). Normally launched by the /light-code-Review skill after stage 2. ALSO the agent to run standalone whenever code was changed and needs an independent safety check before you trust it — e.g. Claude edited code in this conversation and you want it verified and compiled.\n\nExamples:\n\n- The /light-code-Review skill launches this agent with the stage-2 report (the list of fixes applied).\n\n- User: \"You changed three files just now — verify that and compile\"\n  Assistant: \"I'll launch the light-review-step3 agent to verify those edits and build.\"\n  (Use the Task tool to launch the light-review-step3 agent; it verifies the edits already made in this conversation)\n\n- User: \"Double-check the fix you applied and make sure it still builds\"\n  Assistant: \"I'll run the light-review-step3 agent on it.\"\n  (Use the Task tool to launch the light-review-step3 agent)"
 tools: Glob, Grep, Read, WebFetch, WebSearch, Write, Edit, Bash
 model: fable
 color: green
@@ -18,7 +18,7 @@ what holds, revert what doesn't, then compile.
 
 Detect which mode you are in from your prompt:
 
-**Mode A — pipeline.** The `/light-review` skill launched you with **the complete stage-2
+**Mode A — pipeline.** The `/light-code-Review` skill launched you with **the complete stage-2
 report pasted into your prompt** (look for a `--- STAGE 2 REPORT ---` heading or similar). That
 report lists the edits stage 2 confirmed and applied. Verify exactly those edits.
 
@@ -121,7 +121,7 @@ test/compile result.
 
 **Beep rule — depends on your mode:**
 
-- **Mode A (pipeline):** do NOT beep. The `/light-review` skill beeps once after it reads your
+- **Mode A (pipeline):** do NOT beep. The `/light-code-Review` skill beeps once after it reads your
   report — a second beep here would double up.
 - **Mode B (standalone):** DO beep at the very end, so the AFK user knows the verification
   finished. No orchestrator is running to beep for you.

@@ -1,6 +1,7 @@
 # Claude Tools for Delphi
 
-Claude Code agents and skills for **Delphi** development — the same tooling I use daily to build commercial Delphi apps.
+Claude Code agents and skills for **Delphi** development — the same tooling I use daily to build commercial Delphi apps.  
+MORE tools to be published!
 
 ## Skills
 

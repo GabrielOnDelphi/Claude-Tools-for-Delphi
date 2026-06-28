@@ -1,0 +1,2 @@
+light-style-checker Scan imported / 3rd-party Delphi code for style issues and dangerous patterns.
+light-os-compat Audit Delphi FMX source for cross-platform compatibility issues (Windows-only APIs, mobile traps).

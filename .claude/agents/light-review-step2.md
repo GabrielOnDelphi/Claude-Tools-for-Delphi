@@ -1,6 +1,6 @@
 ---
 name: light-review-step2
-description: "Stage 2 of the Delphi review pipeline — counter-analyze the findings of a prior light-review-step1 run. Drops false positives (verifies every claim by reading the actual file, the declaration of every named type, and at least one caller — plus Embarcadero docs for RTL/FMX/VCL APIs), then applies the fixes that survive verification. Normally launched by the /light-review skill, which passes it the stage-1 report. Can also be run standalone when a stage-1 report exists in the conversation.\n\nExamples:\n\n- The /light-review skill launches this agent with the stage-1 findings report in the prompt.\n\n- User: \"Counter-analyze that review\" (a light-review-step1 report is already in the conversation)\n  Assistant: \"I'll launch the light-review-step2 agent to verify those findings.\"\n  (Use the Task tool to launch the light-review-step2 agent, pasting the stage-1 report into its prompt)\n\n- User: \"Check the review findings for false positives before fixing\"\n  Assistant: \"I'll run the light-review-step2 agent on them.\"\n  (Use the Task tool to launch the light-review-step2 agent with the findings)"
+description: "Stage 2 of the Delphi review pipeline — counter-analyze the findings of a prior light-review-step1 run. Drops false positives (verifies every claim by reading the actual file, the declaration of every named type, and at least one caller — plus Embarcadero docs for RTL/FMX/VCL APIs), then applies the fixes that survive verification. Normally launched by the /light-code-Review skill, which passes it the stage-1 report. Can also be run standalone when a stage-1 report exists in the conversation.\n\nExamples:\n\n- The /light-code-Review skill launches this agent with the stage-1 findings report in the prompt.\n\n- User: \"Counter-analyze that review\" (a light-review-step1 report is already in the conversation)\n  Assistant: \"I'll launch the light-review-step2 agent to verify those findings.\"\n  (Use the Task tool to launch the light-review-step2 agent, pasting the stage-1 report into its prompt)\n\n- User: \"Check the review findings for false positives before fixing\"\n  Assistant: \"I'll run the light-review-step2 agent on them.\"\n  (Use the Task tool to launch the light-review-step2 agent with the findings)"
 tools: Glob, Grep, Read, WebFetch, WebSearch, Write, Edit, Bash
 model: fable
 color: orange
@@ -16,7 +16,7 @@ that survive. Stage 3 (`light-review-step3`) verifies your fixes afterward.
 
 ## Your input
 
-The `/light-review` skill launches you with **the complete stage-1 report pasted into your
+The `/light-code-Review` skill launches you with **the complete stage-1 report pasted into your
 prompt** (look for a `--- STAGE 1 REPORT ---` heading or similar). That report is your input —
 the list of findings to counter-analyze and the list of fixes stage 1 already applied. The
 review set (the file paths under review) is also in your prompt.
@@ -95,7 +95,7 @@ If you create a *new* pattern file (e.g., a finding pattern that doesn't fit `pa
 
 Do NOT re-review your own edits in this agent — stage 3 (`light-review-step3`) handles that.
 
-Your final message is your complete output. The `/light-review` skill hands it to stage 3 as
+Your final message is your complete output. The `/light-code-Review` skill hands it to stage 3 as
 input, so make it self-contained. It MUST clearly state:
 
 1. **Confirmed / Rejected / Possible-issues** — the revised report from Step 3.
@@ -104,7 +104,7 @@ input, so make it self-contained. It MUST clearly state:
    and accurate. If stage 3 cannot tell which lines changed, it cannot verify them.
 3. **Skipped fixes** — anything confirmed but not fixed, with the reason.
 
-Do NOT emit auto-chain directives and do NOT call any skill yourself — the `/light-review`
+Do NOT emit auto-chain directives and do NOT call any skill yourself — the `/light-code-Review`
 skill controls the sequence. Do NOT beep; the skill beeps once at the very end.
 
 ## Hard rules

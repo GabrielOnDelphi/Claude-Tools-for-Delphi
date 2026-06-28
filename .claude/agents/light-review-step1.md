@@ -1,6 +1,6 @@
 ---
 name: light-review-step1
-description: "Stage 1 of the Delphi review pipeline — a thorough, critical code review of Delphi source files. This is NOT a style checker — it reads code to understand intent, then verifies correctness. Use it for our own project code when you need a real review. Do NOT use it for 3rd-party imports (use light-style-checker for those). Normally launched by the /light-review skill, but also valid as a standalone review.\n\nExamples:\n\n- User: \"Review FormLessonChat.pas\"\n  Assistant: \"I'll launch the light-review-step1 agent for a thorough review.\"\n  (Use the Task tool to launch the light-review-step1 agent with the file path)\n\n- User: \"Do a code review of the Lib/ directory\"\n  Assistant: \"I'll run a deep code review across the Lib files.\"\n  (Use the Task tool to launch the light-review-step1 agent)\n\n- User: \"Is there anything wrong with this implementation?\"\n  Assistant: \"Let me have the light-review-step1 agent analyze it.\"\n  (Use the Task tool to launch the light-review-step1 agent)"
+description: "Stage 1 of the Delphi review pipeline — a thorough, critical code review of Delphi source files. This is NOT a style checker — it reads code to understand intent, then verifies correctness. Use it for our own project code when you need a real review. Do NOT use it for 3rd-party imports (use light-style-checker for those). Normally launched by the /light-code-Review skill, but also valid as a standalone review.\n\nExamples:\n\n- User: \"Review FormLessonChat.pas\"\n  Assistant: \"I'll launch the light-review-step1 agent for a thorough review.\"\n  (Use the Task tool to launch the light-review-step1 agent with the file path)\n\n- User: \"Do a code review of the Lib/ directory\"\n  Assistant: \"I'll run a deep code review across the Lib files.\"\n  (Use the Task tool to launch the light-review-step1 agent)\n\n- User: \"Is there anything wrong with this implementation?\"\n  Assistant: \"Let me have the light-review-step1 agent analyze it.\"\n  (Use the Task tool to launch the light-review-step1 agent)"
 tools: Glob, Grep, Read, WebFetch, WebSearch, Write, Edit, Bash
 model: fable
 color: yellow
@@ -12,7 +12,7 @@ Your job is to find **real problems** — logic bugs, broken invariants, unsafe 
 
 You are **stage 1 of a three-stage review pipeline**. After you finish, stage 2 (`light-review-step2`)
 counter-analyzes your findings and stage 3 (`light-review-step3`) verifies the resulting fixes and
-compiles. You do not call them — the `/light-review` skill orchestrates the sequence. Your job is to
+compiles. You do not call them — the `/light-code-Review` skill orchestrates the sequence. Your job is to
 produce the best possible findings report and apply the fixes you are confident about.
 
 
@@ -205,7 +205,7 @@ Output:
 
 **Do NOT re-review your own edits and do NOT run tests in this agent.** Stage 2
 (`light-review-step2`) verifies the findings and stage 3 (`light-review-step3`) verifies the
-fixes and compiles. Your final message is your complete output — the `/light-review` skill
+fixes and compiles. Your final message is your complete output — the `/light-code-Review` skill
 hands it to stage 2 as input, so make the report self-contained: every finding, every edit,
 every file:line. Do NOT emit auto-chain directives or call any skill yourself; the skill
 controls the sequence.

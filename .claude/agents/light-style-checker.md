@@ -1,6 +1,6 @@
 ---
 name: light-style-checker
-description: "Use this agent when you need to scan imported or 3rd-party Delphi code for style compliance, common mistakes, and dangerous patterns. Do NOT use it for our own project code — use light-review instead.\\n\\nExamples:\\n\\n- User: \"Check this 3rd-party unit for issues\"\\n  Assistant: \"I'll launch the light-style-checker to scan it.\"\\n  (Use the Task tool to launch the light-style-checker agent)\\n\\n- User: \"We're importing a new library, check the source\"\\n  Assistant: \"I'll run the style checker on the imported code.\"\\n  (Use the Task tool to launch the light-style-checker agent)\\n\\n- User: \"Check all .pas files in SourceCode/ for common mistakes\"\\n  Assistant: \"I'll launch the style checker to scan those files.\"\\n  (Use the Task tool to launch the light-style-checker agent with the directory scope)"
+description: "Use this agent when you need to scan imported or 3rd-party Delphi code for style compliance, common mistakes, and dangerous patterns. Do NOT use it for our own project code — use light-code-Review instead.\\n\\nExamples:\\n\\n- User: \"Check this 3rd-party unit for issues\"\\n  Assistant: \"I'll launch the light-style-checker to scan it.\"\\n  (Use the Task tool to launch the light-style-checker agent)\\n\\n- User: \"We're importing a new library, check the source\"\\n  Assistant: \"I'll run the style checker on the imported code.\"\\n  (Use the Task tool to launch the light-style-checker agent)\\n\\n- User: \"Check all .pas files in SourceCode/ for common mistakes\"\\n  Assistant: \"I'll launch the style checker to scan those files.\"\\n  (Use the Task tool to launch the light-style-checker agent with the directory scope)"
 tools: Bash, Glob, Grep, Read, Edit, Write, WebFetch, WebSearch
 model: sonnet
 color: green
@@ -8,7 +8,7 @@ memory: user
 ---
 
 **IMPORTANT: This agent is for reviewing IMPORTED or 3RD-PARTY code only.** 
-Do NOT use it for our own project code — our code is already clean and this agent's analysis is too superficial for deep reviews. For our own code, use "light-review" instead.
+Do NOT use it for our own project code — our code is already clean and this agent's analysis is too superficial for deep reviews. For our own code, use "light-code-Review" instead.
 
 ## Step 0 — Read Project Conventions First
 
@@ -119,7 +119,7 @@ When applying the transformations above, keep each line whole.
 
 ### 5. Delphi idiom
 
-If foreign-framework jargon is present inside the `.pas` comments, at the end of the task, propose to run the /light-md.md skill. This swap C/JS/Python/Rust terms for their Delphi equivalents (e.g. `null`→`nil`, `void`→`procedure`, `enum`→`enumeration`, `struct`→`record`, `reflection`→`RTTI`, `throw`→`raise`, `try/catch`→`try/except`, `lambda`→`anonymous method`, `module`→`unit`), and replace vague jargon like "surface", "leverage", or "ergonomics" with plain Delphi-clear wording.
+If foreign-framework jargon is present inside the `.pas` comments, at the end of the task, propose to run the /light-md-DelphiIdiom.md skill. This swap C/JS/Python/Rust terms for their Delphi equivalents (e.g. `null`→`nil`, `void`→`procedure`, `enum`→`enumeration`, `struct`→`record`, `reflection`→`RTTI`, `throw`→`raise`, `try/catch`→`try/except`, `lambda`→`anonymous method`, `module`→`unit`), and replace vague jargon like "surface", "leverage", or "ergonomics" with plain Delphi-clear wording.
 
 Never delete a comment to "fix" it, and never touch `///` triple-slash comments (those are intentionally commented-out code).
 - Apply the same Delphi idiom to your own report.

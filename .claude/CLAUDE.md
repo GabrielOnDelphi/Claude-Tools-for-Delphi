@@ -21,34 +21,23 @@ Claude, do you know why this is at the top? Because it is fucking important! Opu
 
 ## Save progress
 
-- For any multi-step task, keep a HandOver.md and update it as you go (in case you are terminated). 
+- Keep a HandOver.md and update it as you go (so you can resume in case you are terminated). 
 - If there are transient things, put them at the end in a special section.
-- If you create other MD files, link to them from project's main Claude.MD. 
 
 ## Writing
 
 - Do not wrap text — anywhere (answers, MD, PAS).
 - Keep language simple — English is not my native language.
+- If you create other MD files, link to them from project's main Claude.MD.
 - Short answers. Drop filler / pleasantries / hedging / fluff. Exception: emails and book chapters.
-- **MANDATORY — Delphi vocabulary + Delphi-clear writing.** Never use C/JS/Python terms when a Delphi word exists. Write MD with named Delphi nouns, not vague pronouns or foreign-framework framings. Non-negotiable.
-  - Examples: `void`→`procedure`; `enum`→`enumeration`; `struct`→`record`; `reflection`→`RTTI`; `header file`→`interface section`; `lambda`→`anonymous method`; `try/catch`→`try/except`; `throw`→`raise`; `lint`/`linter`→`compiler hints/warnings`; `module`→`unit`; `garbage collector`→(none — say so).
+- **MANDATORY — Use Delphi idiom+ Delphi-clear writing.** Never use C/JS/Python terms when a Delphi word exists. Write MD with named Delphi nouns, not vague pronouns or foreign-framework framings. Non-negotiable.
+  - Examples: `void`→`procedure`; `enum`→`enumeration`; `struct`→`record`; `reflection`→`RTTI`; `header file`→`interface section`; `lambda`→`anonymous method`; `try/catch`→`try/except`; `throw`→`raise`; `lint`/`linter`→`compiler warnings;`module`→`unit`; `garbage collector→(none - say so).
 
 ## Temp folder
 
-Put temporary files here: c:\AI\Claude Code\Temp\
+Put temporary files in c:\AI\Claude Code\Temp\
 
-# Harness
+# Notifications
 
-## Notifications
+Beep on task finish: `powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\Tools\task_done_beep.wav').PlaySync()"`
 
-Beep on task finish: `powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\claude bip.wav').PlaySync()"`
-(`[console]::beep()` and `SystemSounds` don't work — use this WAV file)
-
-## Context Window
-
-- Before compaction: save task status to memory file.
-- After compaction: re-read **critical files**, don't assume memory correct.
-
-# Company info / Business plan
-
-Info about me, my websites, my company and my commercial products: c:\SciVance Tech\CLAUDE.md

@@ -33,3 +33,7 @@ The engines the skills launch (some are usable standalone). All are self-documen
 ## How to install
 
 Drop an agent into `~/.claude/agents/` and a skill into `~/.claude/skills/`, then call it from any Claude Code session.
+
+## Author
+
+Built by Gabriel Moraru, a long-time Delphi developer. More of my open-source Delphi code, libraries and articles: [gabrielmoraru.com/my-delphi-code](https://gabrielmoraru.com/my-delphi-code/).

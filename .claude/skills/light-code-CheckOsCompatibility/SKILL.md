@@ -1,6 +1,6 @@
 ---
 name: light-code-CheckOsCompatibility
-description: Audit Delphi FMX source for cross-platform compatibility issues — Windows-only units/APIs, hardcoded paths, missing platform conditionals, mobile-incompatible patterns. Launches the light-code-CheckOsCompatibility agent. Use when the user invokes `/light-code-CheckOsCompatibility`, says "check this for Android/iOS", "is this safe on mobile/macOS/Linux", or "audit Lib/ for cross-platform issues".
+description: Audit Delphi FMX source for cross-platform issues — Windows-only APIs, hardcoded paths, missing platform conditionals, mobile-incompatible patterns. Say "check this for Android/iOS", "is this safe on mobile/macOS/Linux", "audit for cross-platform issues".
 ---
 
 # /light-code-CheckOsCompatibility — Cross-Platform Compatibility Audit
@@ -34,16 +34,10 @@ mobile-incompatible patterns).
 
 **Relay its final report** to the user.
 
-## Step 3 — Summary + beep
+## Step 3 — Summary
 
 Print a short summary (the agent's full report is already in the transcript — do not re-paste
 it): how many files audited, how many issues by severity, and which need a human decision.
-
-Then beep once so the AFK user knows it finished:
-
-```
-powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\claude bip.wav').PlaySync()"
-```
 
 ## Rules
 
@@ -51,4 +45,3 @@ powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\claude bip.wav')
   entire job. The agent does the audit.
 - **This agent only reports** (its tools are read + web). It does not apply fixes — so do not
   promise fixes; relay the findings and let the user decide.
-- **One beep, at the end**, after the agent returns.

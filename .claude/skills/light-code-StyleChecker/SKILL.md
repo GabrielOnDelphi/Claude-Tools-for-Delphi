@@ -1,6 +1,6 @@
 ---
 name: light-code-StyleChecker
-description: Scan imported or 3rd-party Delphi code for style compliance, common mistakes, and dangerous patterns (resource leaks, unsafe casts, missing try/finally). Launches the light-code-StyleChecker agent. Use when the user invokes `/light-code-StyleChecker`, says "check this 3rd-party unit", "scan the imported library", or "style-check SourceCode/". Do NOT use for our own project code — use /light-code-Review for that.
+description: Scan imported/3rd-party Delphi code for style compliance, common mistakes, dangerous patterns (leaks, unsafe casts, missing try/finally). Not for our own code — use /light-review-Full. Say "check this 3rd-party unit", "scan the imported library".
 ---
 
 # /light-code-StyleChecker — 3rd-party Code Style Audit
@@ -9,8 +9,8 @@ This is a thin launcher. Your only job is to resolve the input scope and launch 
 **`light-code-StyleChecker`** agent. You do NOT review code yourself.
 
 **Scope reminder:** this skill is for IMPORTED / 3RD-PARTY Delphi code only. For our own
-project code, the right tool is `/light-code-Review` (deeper, real correctness review). If the user
-points this at our own code, say so and suggest `/light-code-Review` — then proceed only if they
+project code, the right tool is `/light-review-Full` (deeper, real correctness review). If the user
+points this at our own code, say so and suggest `/light-review-Full` — then proceed only if they
 confirm.
 
 ## Step 1 — Resolve the input
@@ -39,20 +39,13 @@ on imported code: a LightSaber-format unit header, Embarcadero keyword casing, `
 layout, and no line wrapping. **Relay its final report** to the user — do not re-derive or
 second-guess it.
 
-## Step 3 — Summary + beep
+## Step 3 — Summary
 
 Print a short summary (the agent's full report is already in the transcript — do not re-paste
 it): how many files scanned, how many issues found, how many fixed vs. flagged for a human
 decision.
 
-Then beep once so the AFK user knows it finished:
-
-```
-powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\claude bip.wav').PlaySync()"
-```
-
 ## Rules
 
 - **You do not review code.** Resolving the scope, launching the agent, and summarizing is your entire job. The agent does the audit.
-- **3rd-party scope only.** If the target looks like our own project code, recommend `/light-code-Review` instead before proceeding.
-- **One beep, at the end**, after the agent returns.
+- **3rd-party scope only.** If the target looks like our own project code, recommend `/light-review-Full` instead before proceeding.

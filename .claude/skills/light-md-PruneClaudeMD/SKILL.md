@@ -1,6 +1,7 @@
 ---
 name: light-md-PruneClaudeMD
-description: Prune and tighten a CLAUDE.md (or any agent/skill instruction markdown) — cut bloat and duplication, fix stale/wrong rules, relayer misplaced content, reorder for adherence — without losing load-bearing info. Backs the file up first. Launches the light-md-PruneClaudeMD agent. Use when the user invokes `/light-md-PruneClaudeMD`, says "clean up this CLAUDE.md", "my CLAUDE.md is too long", "prune the docs", or "Claude keeps ignoring my rules".
+description: Prune and tighten a CLAUDE.md or other agent/skill instruction markdown — cut bloat/duplication, fix stale rules, relayer misplaced content, without losing load-bearing info. Backs up first. Say "clean up this CLAUDE.md", "my CLAUDE.md is too long".
+disable-model-invocation: true
 ---
 
 # /light-md-PruneClaudeMD — Prune a CLAUDE.md
@@ -23,18 +24,11 @@ Call the **Agent** tool with `subagent_type: "light-md-PruneClaudeMD"`. Pass the
 
 **Relay its final report** to the user.
 
-## Step 3 — Summary + beep
+## Step 3 — Summary
 
 Print a short summary (the full report is already in the transcript): backup path, size before → after, counts of cut / rewritten / stale-fixed, and the FLAGGED items that need a human decision.
-
-Then beep once:
-
-```
-powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\Tools\task_done_beep.wav').PlaySync()"
-```
 
 ## Rules
 
 - **You don't prune; the agent does.** Resolve the target, launch, summarize.
 - The agent **edits the target in place after backing it up**, but only **proposes** cross-file moves — relay those for the user to approve; never let it scatter content into other files unasked.
-- **One beep, at the end.**

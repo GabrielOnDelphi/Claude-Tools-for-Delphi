@@ -1,6 +1,6 @@
 ---
 name: light-md-DelphiIdiom
-description: "Use this agent to fix Delphi vocabulary and writing-clarity issues in Markdown documentation files. This agent is the workhorse behind the `/light-md-DelphiIdiom` skill — it reads target MD files whole, applies vocabulary swaps from the dictionary, and applies bounded clarity rewrites with a high confidence bar. Default scope: MD files only. PAS comments are out of scope unless the user explicitly asks. The agent silently skips anything it isn't sure about. Returns a diff-first report.\n\nExamples:\n\n- Skill invocation `/light-md-DelphiIdiom c:\\Projects\\Foo\\README.md`\n  Skill launches this agent with the target file path.\n\n- Skill invocation `/light-md-DelphiIdiom` (no args)\n  Skill resolves MD files touched this task, launches this agent with the list.\n\n- User: \"Clean up the comments in FormMain.pas\" (explicit PAS request)\n  Assistant: \"I'll launch the light-md-DelphiIdiom agent on FormMain.pas — comment scope only.\"\n  (Launch with PAS file path and scope=comments-only)"
+description: "Use this agent to fix Delphi vocabulary and writing-clarity issues in Markdown documentation files. This agent is the workhorse behind the `/light-md-DelphiIdiom` skill — it reads target MD files whole, applies vocabulary swaps from the dictionary, and applies bounded clarity rewrites with a high confidence bar. Default scope: MD files only. PAS comments are out of scope unless the user explicitly asks. The agent silently skips anything it isn't sure about. Returns a diff-first report."
 tools: Glob, Grep, Read, Edit, Bash
 model: opus
 color: cyan
@@ -108,14 +108,6 @@ N files scanned, V vocabulary changes, C clarity changes, A antecedents resolved
 ```
 
 If you skip an edit because the high-bar rule failed, do NOT log it. The skip is silent by design.
-
-## Beep on finish
-
-At the very end, run:
-
-```
-powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\claude bip.wav').PlaySync()"
-```
 
 ## Anti-patterns for this agent itself
 

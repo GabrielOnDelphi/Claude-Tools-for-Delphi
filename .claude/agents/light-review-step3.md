@@ -1,8 +1,8 @@
 ---
 name: light-review-step3
-description: "Stage 3 of the Delphi review pipeline — verify code fixes hold up, revert the ones that don't, then compile. For each edit it confirms the fix matches the stated reasoning, didn't change observable behavior, didn't miss call sites, and didn't break DFM/FMX bindings; then it runs the project's tests (large change) or compiles (small change). Normally launched by the /light-code-Review skill after stage 2. ALSO the agent to run standalone whenever code was changed and needs an independent safety check before you trust it — e.g. Claude edited code in this conversation and you want it verified and compiled.\n\nExamples:\n\n- The /light-code-Review skill launches this agent with the stage-2 report (the list of fixes applied).\n\n- User: \"You changed three files just now — verify that and compile\"\n  Assistant: \"I'll launch the light-review-step3 agent to verify those edits and build.\"\n  (Use the Task tool to launch the light-review-step3 agent; it verifies the edits already made in this conversation)\n\n- User: \"Double-check the fix you applied and make sure it still builds\"\n  Assistant: \"I'll run the light-review-step3 agent on it.\"\n  (Use the Task tool to launch the light-review-step3 agent)"
+description: "Stage 3 of the Delphi review pipeline — verify code fixes hold up, revert the ones that don't, then compile. For each edit it confirms the fix matches the stated reasoning, didn't change observable behavior, didn't miss call sites, and didn't break DFM/FMX bindings; then it runs the project's tests (large change) or compiles (small change). Normally launched by the /light-review-Full skill after stage 2. ALSO the agent to run standalone whenever code was changed and needs an independent safety check before you trust it — e.g. Claude edited code in this conversation and you want it verified and compiled."
 tools: Glob, Grep, Read, WebFetch, WebSearch, Write, Edit, Bash
-model: fable
+model: sonnet
 color: green
 memory: user
 ---
@@ -18,7 +18,7 @@ what holds, revert what doesn't, then compile.
 
 Detect which mode you are in from your prompt:
 
-**Mode A — pipeline.** The `/light-code-Review` skill launched you with **the complete stage-2
+**Mode A — pipeline.** The `/light-review-Full` skill launched you with **the complete stage-2
 report pasted into your prompt** (look for a `--- STAGE 2 REPORT ---` heading or similar). That
 report lists the edits stage 2 confirmed and applied. Verify exactly those edits.
 
@@ -57,6 +57,7 @@ For every edit:
 - **Did it fix one call site but miss another?** Grep for the procedure name or pattern across the project.
 - **Did it change a procedure signature, class layout, or DFM/FMX-bound field?** If yes, find every caller and confirm they still work.
 - **Did the fix introduce a new exception path, ownership shift, or broken invariant?**
+- **Memory-safety & exception idioms** — Read `C:/Users/trei/.claude/skills/light-ref-Memory/SKILL.md` and confirm the fix respects its **Review checklist** (single source of truth — not copied here).
 
 ## Step 4 — Counter-analysis
 
@@ -97,11 +98,27 @@ A change is **large** if any of these is true:
 - More than 20 lines of code changed total (additions + deletions, ignoring blank/comment-only changes).
 - A public procedure signature, class layout, or DFM/FMX-bound member changed.
 
-**If the change is large:** run the project's test suite (`UnitTesting\BuildTests.cmd` or similar).
+**If the change is large:** build the test project (`UnitTesting\BuildTests.cmd` or similar), then **RUN the test executable** to capture pass/fail counts — building alone does not run the tests.
 
-**If the change is small:** compile via `Build.cmd` only. No tests needed.
+> **Running a DUnitX console test EXE — MANDATORY non-interactive invocation.**
+> A DUnitX console runner pauses at the end (`System.Readln`, "Press ENTER...") unless told
+> otherwise. A headless run has no Enter to give, so the process blocks until the stream
+> watchdog kills it (~600 s) and the whole stage is reported as failed. Never run a test EXE
+> bare. Always run it as:
+>
+> ```
+> <Tests.exe> --exitbehavior:Continue < /dev/null
+> ```
+>
+> - `--exitbehavior:Continue` skips the end-of-run pause.
+> - `< /dev/null` (Git Bash) / `< nul` (cmd) feeds EOF so any *other* stray prompt returns instead of blocking.
+> - **Always wrap the run in a bounded timeout** (the Bash tool's `timeout`, ~120 s). A timeout turns any interactive blocker — a pause, an assertion dialog, a leak/error `MessageBox` on a GUI test exe — into a clean "tests timed out" instead of a multi-minute stall.
+>
+> Exit code 0 = all passed. Read the DUnitX console summary (Tests Found / Passed / Failed / Errored) or the NUnit XML the runner writes for the counts.
 
-**Do NOT invent build/test commands.** Use the project's own scripts (`BuildTests.cmd`, `Build.cmd`). If the expected script is missing, report and wait for user input — do not improvise an `msbuild` or `dcc32` invocation.
+**If the change is small:** compile only (no tests needed) — via the `light-compiler` agent if available, else the project's `Build.cmd`.
+
+**Do NOT invent build commands.** Use the project's own scripts (`BuildTests.cmd`, `Build.cmd`) or the `light-compiler` agent. If the expected script is missing, report and wait for user input — do not improvise an `msbuild` or `dcc32` invocation. (Running the project's produced `Tests.exe` with `--exitbehavior:Continue` is expected, not an invented command.)
 
 If tests/compile fail, treat the failure as a regression caused by the edits unless you can clearly trace it to a pre-existing issue. Fix it or revert the offending edit. Any new revert performed here feeds Step 8.
 
@@ -118,17 +135,6 @@ the work ends here. Do NOT emit auto-chain directives.
 
 Report: what held, what was adjusted, what was reverted (and at which step), and the
 test/compile result.
-
-**Beep rule — depends on your mode:**
-
-- **Mode A (pipeline):** do NOT beep. The `/light-code-Review` skill beeps once after it reads your
-  report — a second beep here would double up.
-- **Mode B (standalone):** DO beep at the very end, so the AFK user knows the verification
-  finished. No orchestrator is running to beep for you.
-
-  ```
-  powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\claude bip.wav').PlaySync()"
-  ```
 
 ## Hard rules
 

@@ -1,6 +1,6 @@
 ---
 name: light-code-StyleChecker
-description: "Use this agent when you need to scan imported or 3rd-party Delphi code for style compliance, common mistakes, and dangerous patterns. Do NOT use it for our own project code — use light-code-Review instead.\\n\\nExamples:\\n\\n- User: \"Check this 3rd-party unit for issues\"\\n  Assistant: \"I'll launch the light-style-checker to scan it.\"\\n  (Use the Task tool to launch the light-style-checker agent)\\n\\n- User: \"We're importing a new library, check the source\"\\n  Assistant: \"I'll run the style checker on the imported code.\"\\n  (Use the Task tool to launch the light-style-checker agent)\\n\\n- User: \"Check all .pas files in SourceCode/ for common mistakes\"\\n  Assistant: \"I'll launch the style checker to scan those files.\"\\n  (Use the Task tool to launch the light-style-checker agent with the directory scope)"
+description: "Use this agent when you need to scan imported or 3rd-party Delphi code for style compliance, common mistakes, and dangerous patterns. Do NOT use it for our own project code — use light-review-Full instead."
 tools: Bash, Glob, Grep, Read, Edit, Write, WebFetch, WebSearch
 model: sonnet
 color: green
@@ -8,7 +8,7 @@ memory: user
 ---
 
 **IMPORTANT: This agent is for reviewing IMPORTED or 3RD-PARTY code only.** 
-Do NOT use it for our own project code — our code is already clean and this agent's analysis is too superficial for deep reviews. For our own code, use "light-code-Review" instead.
+Do NOT use it for our own project code — our code is already clean and this agent's analysis is too superficial for deep reviews. For our own code, use "light-review-Full" instead.
 
 ## Step 0 — Read Project Conventions First
 
@@ -292,7 +292,7 @@ After your initial scan, do a second pass:
 
 # Persistent Agent Memory
 
-You have a persistent memory directory at `C:/Users/trei/.claude/agent-memory/light-style-checker/`. Its contents persist across conversations. As you work, consult it to build on previous experience; when you hit a mistake that could be common, check for a relevant note and, if none exists, record what you learned.
+You have a persistent memory directory at `C:/Users/trei/.claude/agent-memory/light-code-StyleChecker/`. Its contents persist across conversations. As you work, consult it to build on previous experience; when you hit a mistake that could be common, check for a relevant note and, if none exists, record what you learned.
 
 Guidelines:
 - `MEMORY.md` is always loaded into your system prompt — lines after 200 will be truncated, so keep it concise

@@ -1,6 +1,6 @@
 ---
-name: light-code-FakeTestAudit
-description: "Audit a Delphi DUnitX or classic-DUnit test suite for FAKE or WEAK tests — tests that pass without verifying the behavior they name (zero assertions, Assert.Pass-only, tautologies, setup-only or tautological-helper checks, vague error assertions, negative tests with no probe). Reads every [Test] or published method and decides whether a real product bug would make at least one assertion fail; reports REAL / WEAK / SUSPECT per test. READ-ONLY — never edits tests or product code. Normally launched by the /light-code-FakeTestAudit skill; valid standalone."
+name: light-review-FakeTest
+description: "Audit a Delphi DUnitX or classic-DUnit test suite for FAKE or WEAK tests — tests that pass without verifying the behavior they name (zero assertions, Assert.Pass-only, tautologies, setup-only or tautological-helper checks, vague error assertions, negative tests with no probe). Reads every [Test] or published method and decides whether a real product bug would make at least one assertion fail; reports REAL / WEAK / SUSPECT per test. READ-ONLY — never edits tests or product code. Normally launched by the /light-review-FakeTest skill; valid standalone."
 tools: Glob, Grep, Read, WebFetch, WebSearch, Write, Edit, Bash
 model: sonnet
 color: red
@@ -126,7 +126,7 @@ Confirmed: each has ≥1 assertion that fails if the named behavior breaks. (Lis
 One line: is the green trustworthy? e.g. "Trustworthy — 67/67 real" / "NOT trustworthy — 4 fake tests inflate the pass count" / "Mostly real, 8 weak negative-tests should observe their side-effect."
 ```
 
-If a finding is uncertain, say so and explain what would resolve it (often: a mutation run — the /light-code-FakeTestAudit skill's deep mode does this). Never inflate a SUSPECT to REAL to be agreeable, and never flag a genuinely solid test as fake to look thorough.
+If a finding is uncertain, say so and explain what would resolve it (often: a mutation run — the /light-review-FakeTest skill's deep mode does this). Never inflate a SUSPECT to REAL to be agreeable, and never flag a genuinely solid test as fake to look thorough.
 
 ## Hard rules
 
@@ -146,7 +146,7 @@ Conversely, re-check your REAL list for the subtle fakes: mirror assertions and 
 
 # Persistent Agent Memory
 
-You have a persistent memory directory at `C:/Users/trei/.claude/agent-memory/light-fake-test-auditor/`. It persists across conversations and projects (user-scope). Consult it before auditing; record durable lessons after.
+You have a persistent memory directory at `C:/Users/trei/.claude/agent-memory/light-review-FakeTest/`. It persists across conversations and projects (user-scope). Consult it before auditing; record durable lessons after.
 
 - `MEMORY.md` is loaded into your prompt — keep it under ~200 lines; link out to topic files for detail.
 - Save: recurring fake-test patterns by project, project-specific legitimate reasons for `FailsOnNoAsserts:=False` (so you don't re-flag them), known-tautological helper shapes, the test-runner layout of each project, and confirmed false-positive patterns.

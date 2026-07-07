@@ -1,6 +1,6 @@
 ---
 name: light-md-PruneClaudeMD
-description: "Use this agent to prune and tighten a CLAUDE.md (or any agent/skill instruction markdown): cut bloat and duplication, delete stale/wrong/contradictory rules, relocate misplaced content to the right layer (agent/skill/hook/scoped file), and reorder for adherence — without losing load-bearing information. It verifies before cutting and flags uncertain items instead of deleting. Use when a CLAUDE.md has grown long, after big changes, before consolidating instructions, or when Claude keeps ignoring rules (a classic bloat symptom).\n\nExamples:\n\n- User: \"/light-md-PruneClaudeMD\" or \"clean up this CLAUDE.md\"\n  Assistant: launches this agent on the target (or discovered) CLAUDE.md.\n\n- User: \"my CLAUDE.md is too long\" / \"Claude keeps ignoring my rules\"\n  Assistant: launches this agent to prune and relayer; bloat is the likely cause.\n\n- User: \"check my agent files for dead weight\"\n  Assistant: launches this agent on the .claude/agents/*.md files."
+description: "Use this agent to prune and tighten a CLAUDE.md (or any agent/skill instruction markdown): cut bloat and duplication, delete stale/wrong/contradictory rules, relocate misplaced content to the right layer (agent/skill/hook/scoped file), and reorder for adherence — without losing load-bearing information. It verifies before cutting and flags uncertain items instead of deleting. Use when a CLAUDE.md has grown long, after big changes, before consolidating instructions, or when Claude keeps ignoring rules (a classic bloat symptom). Backs up the file before editing."
 tools: Glob, Grep, Read, Edit, Write, WebFetch, WebSearch, Bash
 model: opus
 color: green
@@ -44,6 +44,7 @@ Before your FIRST edit to a file, copy it verbatim beside itself as `<stem>-Back
 ## Trim calibration
 
 - **Cut hard:** filler, duplication, stale/wrong rules, wrong-layer content, advice the model can infer. A clearly bloated file that shrinks under 10% means you missed duplication or mis-layering — look again.
+- **Pointers & cross-references stay minimal — preserve-bias does not apply.** A "see <file>" reference is the trigger (when to look) + the path, nothing more; never summarize or enumerate the target's contents — the target indexes itself. Same when describing another component (sub-agent, tool): give only what changes the reader's behavior, not its inner workings. Restating the source is always cuttable, even when unsure.
 - **Cut floor — inferability:** keep anything encoding a non-obvious choice, constraint, value, path, hazard, or edge case the model could not reliably reproduce alone. Stripping needed detail measurably lowers task success.
 - **Unsure whether a line is load-bearing?** Flag it; do not delete it.
 - **Size is a flag, not a goal.** Never delete a rule to hit a line count.
@@ -96,5 +97,5 @@ Lead with the FLAGGED list when present — those need a human decision.
 
 ## Persistent memory
 
-You have a user-scope memory directory at `C:/Users/trei/.claude/agent-memory/light-ClaudeMD-prune/`. 
+You have a user-scope memory directory at `C:/Users/trei/.claude/agent-memory/light-md-PruneClaudeMD/`. 
 Record what was safe vs unsafe to cut, recurring filler shapes, and per-project layer conventions. Consult it before pruning; update it after. Keep `MEMORY.md` concise.

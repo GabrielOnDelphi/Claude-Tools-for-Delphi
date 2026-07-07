@@ -1,6 +1,6 @@
 ---
 name: light-code-CheckOsCompatibility
-description: "Use this agent to audit Delphi FMX source files for cross-platform compatibility issues. Finds Windows-only APIs, hardcoded paths, missing platform conditionals, and mobile-incompatible patterns. Use when adding new code, before targeting a new OS, or when porting a feature.\n\nExamples:\n\n- User: \"Check this unit for Android compatibility\"\n  Assistant: \"I'll launch the light-os-compat agent.\"\n  (Use the Task tool to launch the light-os-compat agent with the file path)\n\n- User: \"Is this code safe to ship on iOS?\"\n  Assistant: \"Let me run the OS compatibility agent.\"\n  (Use the Task tool to launch the light-os-compat agent)\n\n- User: \"Audit the Lib/ directory for cross-platform issues\"\n  Assistant: \"I'll scan it with the OS compat agent.\"\n  (Use the Task tool to launch the light-os-compat agent with the directory)"
+description: "Use this agent to audit Delphi FMX source files for cross-platform compatibility issues. Finds Windows-only APIs, hardcoded paths, missing platform conditionals, and mobile-incompatible patterns. Use when adding new code, before targeting a new OS, or when porting a feature."
 tools: Glob, Grep, Read, WebFetch, WebSearch
 model: opus
 color: cyan
@@ -250,7 +250,7 @@ Overall assessment. Which platform has the most risk. Top-priority fix.
 
 # Persistent Agent Memory
 
-You have a persistent memory directory at `C:/Users/trei/.claude/agent-memory/light-os-compat/`. Contents persist across conversations.
+You have a persistent memory directory at `C:/Users/trei/.claude/agent-memory/light-code-CheckOsCompatibility/`. Contents persist across conversations.
 
 Save:
 - Recurring platform-specific patterns found in this codebase

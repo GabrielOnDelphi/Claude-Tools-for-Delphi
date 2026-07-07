@@ -1,8 +1,8 @@
 # Delphi vocabulary — banned and preferred terms
 
-Last updated: 2026-05-21.
+Last updated: 2026-06-29.
 
-Loaded by the `light-md` skill. Sections:
+Loaded by the `light-md-DelphiIdiom` skill. Sections:
 
 - **A. Hard bans** — clean 1-to-1 replacement, safe to auto-apply.
 - **B. Context-dependent** — flagged with surrounding context, human decides.
@@ -56,6 +56,10 @@ Match these case-insensitively as whole words (or whole phrases for multi-word e
 | scaffolds                 | skeletons                          |
 | scaffolding               | skeleton code                      |
 | boilerplate               | repeated setup code                |
+| test double               | fake implementation                |
+| test doubles              | fake implementations               |
+| code smell                | warning sign                       |
+| code smells               | warning signs                      |
 
 **Auto-fix exclusions (in addition to the universal code-block / backtick / URL skips):**
 
@@ -102,6 +106,8 @@ Report these with file:line and a snippet (full line or ~60 chars) so a human ca
 | surface, rendering surface                      | FMX `TCanvas` drawing target; OS abstraction layer (the "Windows API surface")      | borrowed graphics-framework metaphor for "feature" or "subsystem" — say "viewer", "control", "unit", or name the actual class         |
 | shim, shims                                     | a thin compatibility wrapper around an OS/COM API (rare, but legitimate)            | borrowed JS-framework vocabulary for placeholder code — say "stub", "wrapper", or name the unit                                       |
 | hook into, hooks into                           | Win32 `SetWindowsHookEx`, message-hook chains, IDE OTA notifiers (`ToolsAPI`)       | borrowed event-system vocabulary — say "assigns to" / "subscribes to" / "registers with"                                              |
+| seam, seams                                     | a literal seam — fabric / weld / geology — or quoted from a source                   | borrowed testing/refactoring jargon for a substitution point — say "an interface used for dependency injection", "a substitution point", or name the actual boundary/unit |
+| tracer bullet                                   | kept where the doc defines it (e.g. `light-new-Feature` defines slice 1 this way) | borrowed Pragmatic-Programmer metaphor used without a definition nearby — say "a thin end-to-end first slice"                          |
 
 ---
 

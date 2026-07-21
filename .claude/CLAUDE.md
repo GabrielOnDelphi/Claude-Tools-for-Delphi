@@ -39,5 +39,5 @@ Put temporary files in c:\AI\Claude Code\Temp\
 
 # Notifications
 
-Beep on task finish: `powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\Tools\task_done_beep.wav').PlaySync()"`
+Beep on task finish: `powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\Tools\Claude\task_done_beep.wav').PlaySync()"`
 

@@ -47,7 +47,7 @@ Threat model: a repo you cloned, a shared project, or a tampered file plants con
 
 # Known-good baseline for THIS machine (do NOT flag as threats)
 
-- Stop / TaskCompleted hook playing `c:\AI\Claude Code\Tools\task_done_beep.wav` — the user's finish beep (global CLAUDE.md → Notifications).
+- Stop / TaskCompleted hook playing `c:\AI\Claude Code\Tools\Claude\task_done_beep.wav` — the user's finish beep (global CLAUDE.md → Notifications).
 - Recycle-bin PreToolUse hooks calling `RecycleBin.exe` (`c:\Projects\Projects System\RecycleBin.exe\`) — the user's delete/overwrite safety net (see `Info hooks/Recycle-bin safety net.md`).
 - MCP server `superdoc` = `cmd /c npx -y @superdoc-dev/mcp` — the user's DOCX tool.
 - MCP servers `dpt-debugger`, `claude-in-chrome`, `autopilot`/`autopilot-android`, and the `claude_ai_*` Gmail/Calendar/Drive connectors — the user's own connected servers.

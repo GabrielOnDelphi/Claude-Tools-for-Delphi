@@ -21,7 +21,7 @@ Find every Claude Code config file. Glob for these three filename patterns:
 
 Default coverage is the whole machine, but full-disk globs are slow and some roots are blocked. Scan these roots (each with `path:` set), in order, and report which you covered:
 1. `C:\Users\trei` — user settings + most projects (highest priority)
-2. `C:\AI`, `C:\Projects`, `C:\GabrielMoraru`, `C:\SciVance Tech`, `C:\Delphi`, `C:\My`
+2. `C:\AI`, `C:\Projects`, `C:\Delphi`
 3. `C:\Program Files\ClaudeCode` — managed settings (report if present/unexpected)
 
 Only `settings.json` / `settings.local.json` **inside a `.claude` folder** (or the managed dir) are Claude config — a stray `settings.json` from some other app is out of scope; note it and move on. If a root can't be read, say so rather than skipping silently.

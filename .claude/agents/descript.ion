@@ -1,5 +1,4 @@
-light-md \nFix Delphi vocabulary and writing-clarity issues in Markdown documentation. Use when user invokes /light-md, says "check vocab" / "fix vocabulary" / "delphi terms" / "fix the docs" / "clean up the md", or after writing/editing *.md files in a Delphi project. Also fires automatically on Stop hook when configured.\n\nÂ
-light-bug.md Diagnose and fix a Delphi madExcept crash report end-to-end up to a successful build (never releases).
+light-bug-MadShi.md Diagnose and fix a Delphi madExcept crash report end-to-end up to a successful build (never releases). Invoked by /light-bug-MadShi directly, or via /light-bug's routing.
 light-code-ArchitectureClass.md Audit a Delphi project's classes (incl. forms) for bad shapes â€” god / anemic / misplaced / Ex-downcast (reports; never refactors).
 light-code-ArchitectureUnit.md Audit a Delphi project's units for shallow modules that should merge into one deep module (reports; never merges).
 light-code-CheckOsCompatibility.md Audit Delphi FMX source for cross-platform compatibility issues.
@@ -14,3 +13,4 @@ light-review-step2.md Stage 2: counter-analyze step-1 findings, drop false posit
 light-review-step3.md Stage 3: verify the applied fixes hold up, revert bad ones, then compile.
 light-security-ClaudeSettingsAudit.md Audit Claude Code config (settings.json, .mcp.json) for unsafe hooks, env vars, MCP servers and permissions.
 light-web-CodeReview.md Review HTML, CSS and JavaScript for errors, accessibility and cross-browser problems.
+light-web-YoutubeSummarizer.md Summarize a YouTube transcript .txt file into a structured summary.

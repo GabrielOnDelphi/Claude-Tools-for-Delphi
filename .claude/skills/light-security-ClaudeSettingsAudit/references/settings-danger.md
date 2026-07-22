@@ -52,7 +52,7 @@ Threat model: a repo you cloned, a shared project, or a tampered file plants con
 - MCP server `superdoc` = `cmd /c npx -y @superdoc-dev/mcp` — the user's DOCX tool.
 - MCP servers `dpt-debugger`, `claude-in-chrome`, `autopilot`/`autopilot-android`, and the `claude_ai_*` Gmail/Calendar/Drive connectors — the user's own connected servers.
 - Light-* skill/agent hooks that call the beep wav.
-- The user's own local hook/statusline scripts: `vampire-hook.ps1`, `vampire-statusline.ps1` (ClaudeTokenVampire, `C:\Projects\Projects AI\Claude TokenVampire`) and `delphipraxis-offline-hook.ps1` (light-ref-DelphiPraxisOffline tooling). These run on prompt/status/WebFetch by design — SAFE.
+- The user's own local hook/statusline scripts: `vampire-hook.ps1`, `vampire-statusline.ps1` (ClaudeTokenVampire, `C:\Projects\Projects AI\Claude TokenVampire`) and `skills\light-ref-DelphiOfflineKnowledge\delphipraxis-offline-hook.ps1` (light-ref-DelphiOfflineKnowledge tooling). These run on prompt/status/WebFetch by design — SAFE.
 
 Known 3rd-party but user-installed (surface for review, do NOT treat as an attack): the `claude-hud` plugin (GitHub `jarrodwatts/claude-hud`, `node dist/index.js`) runs on every status render. Legitimate but 3rd-party — worth a periodic glance, not an alarm.
 

@@ -51,15 +51,17 @@ Match the evidence against the classification table in the Reference file. Check
 
 ## Step 4 — Symbolicate native addresses (only for tombstones / `___lldb_unnamed_symbol` frames)
 
-1. Load base of the app's `.so`: the logcat `DEBUG` block prints it per frame; or dump `/proc/<pid>/maps` (`& $ADB shell run-as <pkg> cat /proc/<pid>/maps`, or `ProcMaps-Android.cmd` in `c:\Projects\Project OrinocoReader\Frame FMX\`).
-2. You need the linker `.map` from the SAME build (Project Options → Linking → Map file = Detailed). No `.map` → rebuild with it enabled and reproduce; do not guess across builds.
-3. Run the lookup:
+Full recipe + tool paths in the Reference file. Order by what actually resolves:
+
+1. **addr2line / ndk-stack on the UNSTRIPPED `.so` (primary).** The `.so` deployed in the APK is stripped — use the unstripped build output, or Delphi's retained `*.apk.symbols\lib\<abi>\` copy. `llvm-addr2line` → function + source line; `ndk-stack` → a whole tombstone. `delphi-arm-backtrace` (shadow-cs, GitHub) automates the Delphi-on-ARM flow. Confirm a binary is usable with `llvm-readelf -S` (`.symtab`/`.debug_*` present).
+2. **Borland `.map` + `MapLookup.ps1` — LAST RESORT, UNPROVEN.** Only if the `.so` is stripped with no unstripped copy or DWARF anywhere, but you kept the Detailed linker `.map` (Project Options → Linking → Map file = Detailed, SAME build). Public symbols only, no line numbers. Load base from the logcat `DEBUG` block or `/proc/<pid>/maps`, then:
    `& '<this skill folder>\Tools\MapLookup.ps1' -Map <file.map> -Address 0x<frame> -Base 0x<base>`
-   First use on a new target: calibrate with `-Name <KnownRoutine>` and feed its offset back with `-Offset` — if a constant delta appears, pass it as `-Delta`.
+   First use: calibrate with `-Name <KnownRoutine>`, feed its offset back with `-Offset`; a constant delta → pass as `-Delta`. Not yet validated against a real Delphi ARM `.map`.
 
 ## Step 5 — Root cause + fix
 
 - Trace the FULL call chain before touching code (global #Bug-fix rule). Fix the root cause, not the symptom site.
+- **Before writing the fix**, run a derailment check on your root-cause conclusion: invoke the `light-task-DerailmentCheck` skill (Skill tool) against the chain you just traced — classify each step VERIFIED / INFERRED / ASSUMED, attack the unverified ones. Mandatory once, and again if Step 6 doesn't clear the symptom or the user pushes back.
 - Compile via the **light-compiler agent** only. Note: `delphi-compiler.exe` does not support Android64 — the agent must go through `rsvars.bat` + MSBuild `/p:Platform=Android64`, or verify the shared units on Win64 first.
 - **NEVER release.** The user reviews the diff and ships manually.
 
@@ -70,9 +72,11 @@ Redeploy (IDE F9; or headless `/t:Make;Deploy /p:Platform=Android64` if a `.depl
 ## Failure modes
 
 - **`unauthorized` device** — old adb daemon; kill it, use the bundled adb (Step 0).
+- **`offline` device** — same cure: `taskkill /f /im adb.exe`, then `& $ADB start-server` and re-check (fixed a real `offline` Nord, 2026-07-22).
 - **Empty capture file** — a second `adb logcat` is already attached; kill it or unplug/replug.
 - **`run-as` denied** — build not debug-signed; fall back to logcat only.
-- **No `.map`** — enable Detailed map, rebuild same config, reproduce again.
+- **`adb install` says "Success" but the app is absent / `am start` says the activity "does not exist"** — a stale copy on another Android user (Guest / work profile / parallel space) makes `adb install -r` update only THAT user. Install for the foreground user explicitly: `& $ADB install -r --user 0 <apk>` (foreground user = `& $ADB shell am get-current-user`). Seen live 2026-07-22: a copy on user 10 (Guest) hid the user-0 install.
+- **No `.map` for Android** — expected, don't chase it: a standard Android64 build emits NO Borland `.map` (the ARM64 link is `ld.lld`, which ignores `DCC_MapFile`; verified 2026-07-22). Symbolicate via addr2line on the UNSTRIPPED `.so` instead (Step 4, option 1).
 - **Nothing matches any classification row** — report what WAS captured and stop; do not invent a root cause.
 
 ## Notes

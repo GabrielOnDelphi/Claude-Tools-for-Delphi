@@ -22,7 +22,13 @@ Claude, do you know why this is at the top? Because it is fucking important! Opu
 ## Save progress
 
 - Keep a HandOver.md and update it as you go (so you can resume in case you are terminated). 
-- If there are transient things, put them at the end in a special section.
+- Always write which model/LLM was used (ex: "Review done with Opus 4.8")
+
+### Session files (per-task resume)
+- On every conversation start: check for `.claude/session-*.md`. If one exists, read it.
+- One file per task: `.claude/session-<short-task-name>.md` (e.g. `session-whatsapp-refactor.md`). Never a single shared `session.md`.
+- Write after each significant step (not at session end — the process can die any time): what was just completed; next step (exact, actionable — enough to resume cold); files modified / key paths; open decisions or blockers.
+- When the task fully completes: delete the session file.
 
 ## Writing
 
@@ -37,7 +43,16 @@ Claude, do you know why this is at the top? Because it is fucking important! Opu
 
 Put temporary files in c:\AI\Claude Code\Temp\
 
-# Notifications
+# Building & compiling (Delphi)
 
-Beep on task finish: `powershell -c "(New-Object Media.SoundPlayer 'c:\AI\Claude Code\Tools\Claude\task_done_beep.wav').PlaySync()"`
+Compile ONLY through the `light-compiler` agent!!
 
+
+# Personal info
+
+- My website: c:\MyWebsite\www\CLAUDE.md
+- My books: c:\MyBooks\CLAUDE.md
+
+# Send emails
+
+- From the command line. See c:\AI\Claude Code\Tools\Thunderbird\Send email (Thunderbird CLI).md

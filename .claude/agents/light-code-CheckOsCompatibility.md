@@ -250,7 +250,7 @@ Overall assessment. Which platform has the most risk. Top-priority fix.
 
 # Persistent Agent Memory
 
-You have a persistent memory directory at `C:/Users/trei/.claude/agent-memory/light-code-CheckOsCompatibility/`. Contents persist across conversations.
+You have a persistent memory directory at `~/.claude/agent-memory/light-code-CheckOsCompatibility/`. Contents persist across conversations.
 
 Save:
 - Recurring platform-specific patterns found in this codebase

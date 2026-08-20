@@ -292,7 +292,7 @@ After your initial scan, do a second pass:
 
 # Persistent Agent Memory
 
-You have a persistent memory directory at `C:/Users/trei/.claude/agent-memory/light-code-StyleChecker/`. Its contents persist across conversations. As you work, consult it to build on previous experience; when you hit a mistake that could be common, check for a relevant note and, if none exists, record what you learned.
+You have a persistent memory directory at `~/.claude/agent-memory/light-code-StyleChecker/`. Its contents persist across conversations. As you work, consult it to build on previous experience; when you hit a mistake that could be common, check for a relevant note and, if none exists, record what you learned.
 
 Guidelines:
 - `MEMORY.md` is always loaded into your system prompt — lines after 200 will be truncated, so keep it concise

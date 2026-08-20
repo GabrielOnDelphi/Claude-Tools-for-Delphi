@@ -46,7 +46,7 @@ and applies the surgical fixes.
 ## Where the rules live (for the agent, not for you)
 
 The agent loads the Delphi vocabulary + clarity references from
-`c:\Users\trei\.claude\skills\light-md-DelphiIdiom\references\` so any new prose it writes is already
+`~\.claude\skills\light-md-DelphiIdiom\references\` so any new prose it writes is already
 Delphi-idiomatic, and it holds the claim-extraction / verify / skip / anti-pattern rules. See
 `.claude/agents/light-md-DriftUpdate.md`.
 

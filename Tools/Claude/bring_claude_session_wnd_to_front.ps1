@@ -1,5 +1,5 @@
 # Brings the terminal window hosting Claude Code to the foreground.
-# CALLER: the Stop hook in c:\Users\trei\.claude\settings.json (runs right after the task-done beep).
+# CALLER: the Stop hook in ~\.claude\settings.json (runs right after the task-done beep).
 #         If you rename/move this script, update that hook's -File path.
 #
 # Why the parent-chain walk: under Windows Terminal, GetConsoleWindow() returns a

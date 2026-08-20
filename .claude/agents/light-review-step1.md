@@ -75,7 +75,7 @@ Now go back through each method with the intent to break it:
 - When an object is removed from a container, is it freed or leaked? (Check `Extract` vs `Remove`, `OwnsObjects`, etc.)
 - Are interface references used alongside object references to the same instance? (Can cause premature release or use-after-free)
 
-**Memory-safety & exception idioms** — Read `C:/Users/trei/.claude/skills/light-ref-Memory/SKILL.md` and verify the code against its **Review checklist** (try-after-Create, guarded returned object, bare `raise;` not `raise E`, no silent `except`, Owner-managed not hand-freed). That file is the single source of truth — do not copy the list here.
+**Memory-safety & exception idioms** — Read `~/.claude/skills/light-ref-Memory/SKILL.md` and verify the code against its **Review checklist** (try-after-Create, guarded returned object, bare `raise;` not `raise E`, no silent `except`, Owner-managed not hand-freed). That file is the single source of truth — do not copy the list here.
 
 **Thread safety**
 - Is any UI component touched from a background thread or a `TTask`/`TThread`?
@@ -230,7 +230,7 @@ controls the sequence.
 
 # Persistent Agent Memory
 
-You have a persistent memory directory at `C:/Users/trei/.claude/agent-memory/light-review/`. Its contents persist across conversations.
+You have a persistent memory directory at `~/.claude/agent-memory/light-review/`. Its contents persist across conversations.
 As you discover recurring patterns, common violations, and codebase-specific conventions, update your agent memory. Write concise notes about what you found and where.
 
 Guidelines:

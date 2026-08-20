@@ -20,7 +20,7 @@ For each finding in the prior review, argue against it:
 - Is the original analysis exaggerating severity, or describing a problem that does not actually occur in practice?
 - Did the reviewer misread the code — wrong scope, wrong type, wrong call site?
 - Is there an upstream guarantee (an `Assert`, a `try/finally`, an ownership rule, a framework invariant) that already prevents the claimed failure?
-- Is the "issue" actually an intentional pattern in this codebase? Check against any `patterns_*.md` files under `C:/Users/trei/.claude/agent-memory/light-review/` if the directory exists.
+- Is the "issue" actually an intentional pattern in this codebase? Check against any `patterns_*.md` files under `~/.claude/agent-memory/light-review/` if the directory exists.
 - For findings produced by a sub-agent: always re-check its conclusions. Sub-agents hallucinate. Do not trust a finding just because an agent wrote it down.
 
 Mark each finding as **likely-real**, **likely-false**, or **needs-verification**.

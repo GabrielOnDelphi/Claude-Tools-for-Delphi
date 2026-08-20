@@ -20,14 +20,14 @@
 
 $ErrorActionPreference = 'SilentlyContinue'
 
-# Roots to recurse. C:\Users\trei\.claude holds user settings + plugin/marketplace
-# .mcp.json; the rest are the project trees. Full C:\Users\trei is deliberately NOT
-# recursed (AppData bloat) -- all real Claude config lives in these roots.
+# Roots to recurse. The user .claude folder holds user settings + plugin/marketplace
+# .mcp.json; the rest are the project trees. The whole user profile is deliberately
+# NOT recursed (AppData bloat) -- all real Claude config lives in these roots.
 $RecurseRoots = @(
   'C:\AI',
   'C:\Projects',
   'C:\Delphi',
-  'C:\Users\trei\.claude',
+  "$env:USERPROFILE\.claude",
   'C:\Program Files\ClaudeCode'
 )
 $BaselinePath = 'C:\AI\Claude Code\Temp\claude-settings-baseline.json'

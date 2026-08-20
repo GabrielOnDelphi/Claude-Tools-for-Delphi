@@ -17,7 +17,7 @@ A skill + agent pair that catches non-Delphi terminology and confused-Delphi-pro
 | `SKILL.md`                                     | Thin launcher. Parses args, resolves targets, hands off to the agent.              |
 | `references/vocabulary.md`                     | Word-level rules. Section A (always replace), B (judge from context), C (correct). |
 | `references/writing-good-md.md`                | Sentence-level rules. Anti-patterns + style invariants + high-bar rule.            |
-| `c:\Users\trei\.claude\agents\light-md-DelphiIdiom.md`    | The agent itself. Two-pass per file (vocab → clarity).                             |
+| `~\.claude\agents\light-md-DelphiIdiom.md`    | The agent itself. Two-pass per file (vocab → clarity).                             |
 
 ## How to use it
 
@@ -41,7 +41,7 @@ PAS files are NOT touched by default. If you specifically ask ("clean up the com
 
 ## Write-time vs fix-time
 
-`writing-good-md.md` is loaded **both** when retrofitting existing docs (via this skill) **and** when writing new Delphi-related prose (via a one-line directive in the global `c:\Users\trei\.claude\CLAUDE.md`). The agent / Claude is expected to print `--!SLIM MD!--` in the final summary to prove it read the file at write-time.
+`writing-good-md.md` is loaded **both** when retrofitting existing docs (via this skill) **and** when writing new Delphi-related prose (via a one-line directive in the global `~\.claude\CLAUDE.md`). The agent / Claude is expected to print `--!SLIM MD!--` in the final summary to prove it read the file at write-time.
 
 **Scope of the write-time rule:** ALL Delphi-related prose, not only `*.md` files. Plans, design notes, code reviews, commit messages, and conversational answers about Delphi code all count. The fix-time `/light-md-DelphiIdiom` skill only edits MD files — concept-level violations in conversational prose are caught by Claude reading `writing-good-md.md` up-front, not by post-hoc scanning.
 

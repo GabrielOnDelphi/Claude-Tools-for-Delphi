@@ -10,7 +10,7 @@ license: MPL-2.0
 
 When the user invokes `/light-bug-MadShi`, do this in order. Be terse. Each step is a single tool call unless noted.
 
-The pipeline is product-driven. Every product is one block in `c:\Users\trei\.claude\skills\light-bug-MadShi\products.ini` (mbox list + source paths + fix-log location + memory subfolder). Read that file first — it is the single source of routing facts.
+The pipeline is product-driven. Every product is one block in `~\.claude\skills\light-bug-MadShi\products.ini` (mbox list + source paths + fix-log location + memory subfolder). Read that file first — it is the single source of routing facts.
 
 ## Step 0 — Resolve the product and the argument
 
@@ -28,7 +28,7 @@ Split the block's `Mboxes` on `|`, trim each, and pass them all as one array to 
 
 ```powershell
 $mboxes = @('<path1>','<path2>','<path3>')   # from the block's Mboxes field
-& 'c:\Users\trei\.claude\skills\light-bug-MadShi\Tools\extract-mad.ps1' -MboxPath $mboxes -List -OutPrefix '<OutPrefix>'
+& '~\.claude\skills\light-bug-MadShi\Tools\extract-mad.ps1' -MboxPath $mboxes -List -OutPrefix '<OutPrefix>'
 ```
 
 Do NOT add `-ExecutionPolicy Bypass` (the auto-mode classifier blocks it; the script runs without it).
@@ -56,7 +56,7 @@ If only one candidate exists, skip the question and go to step 3 with `-Index 1`
 Re-run the extractor with the same mbox array and `-Index N`:
 
 ```powershell
-& 'c:\Users\trei\.claude\skills\light-bug-MadShi\Tools\extract-mad.ps1' -MboxPath $mboxes -Index <N> -OutPrefix '<OutPrefix>'
+& '~\.claude\skills\light-bug-MadShi\Tools\extract-mad.ps1' -MboxPath $mboxes -Index <N> -OutPrefix '<OutPrefix>'
 ```
 
 The last stdout line is the absolute path of the extracted file. Capture it.

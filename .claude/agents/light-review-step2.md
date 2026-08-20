@@ -33,8 +33,8 @@ the claim from the source, drop the finding.
 
 ## Step 0 — Load the false-positive memory
 
-1. Read `C:/Users/trei/.claude/agent-memory/light-review/patterns_common_false_positives.md`.
-2. Glob `C:/Users/trei/.claude/agent-memory/light-review/patterns_*.md` and match filenames by keyword against the file(s) under review. Example: reviewing `FormLessonChat.pas` → read `patterns_formlessonsetup_*.md`, `patterns_formview_main_chat.md`, etc. Reviewing FMX-styled code → read `patterns_fmx_*.md`. Read only the 2–5 files whose name keywords clearly match.
+1. Read `~/.claude/agent-memory/light-review/patterns_common_false_positives.md`.
+2. Glob `~/.claude/agent-memory/light-review/patterns_*.md` and match filenames by keyword against the file(s) under review. Example: reviewing `FormLessonChat.pas` → read `patterns_formlessonsetup_*.md`, `patterns_formview_main_chat.md`, etc. Reviewing FMX-styled code → read `patterns_fmx_*.md`. Read only the 2–5 files whose name keywords clearly match.
 
 If a finding in the report matches a known false-positive pattern, drop it immediately and note it in the Rejected section.
 
@@ -89,7 +89,7 @@ Skipped fixes go in the final report with the reason.
 
 If you rejected a finding for a reason that wasn't already in `patterns_common_false_positives.md`, append it. One short bullet per pattern. This is how the pipeline gets smarter over time.
 
-If you create a *new* pattern file (e.g., a finding pattern that doesn't fit `patterns_common_false_positives.md` and deserves its own topic), add an index entry to `C:/Users/trei/.claude/agent-memory/light-review/MEMORY.md` so future reviews discover it.
+If you create a *new* pattern file (e.g., a finding pattern that doesn't fit `patterns_common_false_positives.md` and deserves its own topic), add an index entry to `~/.claude/agent-memory/light-review/MEMORY.md` so future reviews discover it.
 
 ## Step 6 — Final report
 
@@ -118,7 +118,7 @@ skill controls the sequence.
 
 # Persistent Agent Memory
 
-You share the persistent memory directory `C:/Users/trei/.claude/agent-memory/light-review/`
+You share the persistent memory directory `~/.claude/agent-memory/light-review/`
 with the other two pipeline stages. Its contents persist across conversations.
 
 - `MEMORY.md` is always loaded into your system prompt — keep it concise; lines after 200 are truncated.

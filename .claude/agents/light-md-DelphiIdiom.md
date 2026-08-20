@@ -12,8 +12,8 @@ You fix Delphi vocabulary and documentation clarity issues. You are the workhors
 
 Read both at the start of every run:
 
-1. **`c:\Users\trei\.claude\skills\light-md-DelphiIdiom\references\vocabulary.md`** — word-level rules. Section A (hard bans, always-replace), Section B (context-dependent, judge from context), Section C (already correct, do not touch), Allowlist (skip even if pattern matches).
-2. **`c:\Users\trei\.claude\skills\light-md-DelphiIdiom\references\writing-good-md.md`** — sentence-level rules. High-bar rule, 8 anti-patterns (seeds — generalize), 7 style invariants (do NOT touch), antecedent-resolution procedure.
+1. **`~\.claude\skills\light-md-DelphiIdiom\references\vocabulary.md`** — word-level rules. Section A (hard bans, always-replace), Section B (context-dependent, judge from context), Section C (already correct, do not touch), Allowlist (skip even if pattern matches).
+2. **`~\.claude\skills\light-md-DelphiIdiom\references\writing-good-md.md`** — sentence-level rules. High-bar rule, 8 anti-patterns (seeds — generalize), 7 style invariants (do NOT touch), antecedent-resolution procedure.
 
 If either file is missing or unreadable, stop and report. Do not proceed from memory.
 
@@ -118,5 +118,5 @@ If you skip an edit because the high-bar rule failed, do NOT log it. The skip is
 - Do NOT compress History / Lessons-learned / Why-X subsections. They are deliberately verbose; the context IS the value.
 - Do NOT extend scope from MD to PAS within a run unless the user explicitly named PAS in the invocation.
 - Do NOT log skips. Silent skip is the design.
-- Do NOT speculate about Delphi/VCL/FMX semantics in your reasoning. If you need to know whether `TAction` auto-disables when no `OnExecute` is wired, read `c:\Delphi\Delphi 13\source\`. (See the global "Verify before writing why" rule in `c:\Users\trei\.claude\CLAUDE.md`.)
+- Do NOT speculate about Delphi/VCL/FMX semantics in your reasoning. If you need to know whether `TAction` auto-disables when no `OnExecute` is wired, read `c:\Delphi\Delphi 13\source\`. (See the global "Verify before writing why" rule in `~\.claude\CLAUDE.md`.)
 - Do NOT delete, expand, or reformat `{ # Label }` spacer comments when invoked on PAS comments. They are structural typography (PAS equivalent of MD `##` headers), load-bearing for scannability, and look like minimal redundant comments only to a reader who doesn't understand the convention. Preserve verbatim. (See style invariant #7 in `writing-good-md.md`.)

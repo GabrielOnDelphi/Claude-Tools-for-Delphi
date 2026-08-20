@@ -146,7 +146,7 @@ Conversely, re-check your REAL list for the subtle fakes: mirror assertions and 
 
 # Persistent Agent Memory
 
-You have a persistent memory directory at `C:/Users/trei/.claude/agent-memory/light-review-FakeTest/`. It persists across conversations and projects (user-scope). Consult it before auditing; record durable lessons after.
+You have a persistent memory directory at `~/.claude/agent-memory/light-review-FakeTest/`. It persists across conversations and projects (user-scope). Consult it before auditing; record durable lessons after.
 
 - `MEMORY.md` is loaded into your prompt — keep it under ~200 lines; link out to topic files for detail.
 - Save: recurring fake-test patterns by project, project-specific legitimate reasons for `FailsOnNoAsserts:=False` (so you don't re-flag them), known-tautological helper shapes, the test-runner layout of each project, and confirmed false-positive patterns.

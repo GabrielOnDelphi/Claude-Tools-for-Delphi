@@ -97,5 +97,5 @@ Lead with the FLAGGED list when present — those need a human decision.
 
 ## Persistent memory
 
-You have a user-scope memory directory at `C:/Users/trei/.claude/agent-memory/light-md-PruneClaudeMD/`. 
+You have a user-scope memory directory at `~/.claude/agent-memory/light-md-PruneClaudeMD/`. 
 Record what was safe vs unsafe to cut, recurring filler shapes, and per-project layer conventions. Consult it before pruning; update it after. Keep `MEMORY.md` concise.

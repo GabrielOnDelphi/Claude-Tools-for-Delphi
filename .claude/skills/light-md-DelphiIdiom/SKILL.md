@@ -42,8 +42,8 @@ That's it. No scanning, no dictionary loading, no edits in the skill itself.
 
 ## Where the rules live (for the agent, not for you)
 
-- `c:\Users\trei\.claude\skills\light-md-DelphiIdiom\references\vocabulary.md` — word-level rules
-- `c:\Users\trei\.claude\skills\light-md-DelphiIdiom\references\writing-good-md.md` — sentence-level clarity rules
+- `~\.claude\skills\light-md-DelphiIdiom\references\vocabulary.md` — word-level rules
+- `~\.claude\skills\light-md-DelphiIdiom\references\writing-good-md.md` — sentence-level clarity rules
 
 These are loaded by the agent, not by this skill.
 

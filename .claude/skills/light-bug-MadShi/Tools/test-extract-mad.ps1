@@ -10,7 +10,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 
-$Extractor = 'c:\Users\trei\.claude\skills\light-bug-MadShi\Tools\extract-mad.ps1'
+$Extractor = Join-Path $PSScriptRoot 'extract-mad.ps1'
 $TestRoot  = 'c:\AI\Claude Code\Temp\extractor-tests'
 $OutDir    = Join-Path $TestRoot 'out'
 

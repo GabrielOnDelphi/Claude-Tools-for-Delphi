@@ -17,8 +17,8 @@ so you never silently fan out over a huge doc tree.
 
 1. **Detect Delphi project.** If the project root contains `*.dpr`, `*.dpk`, or `*.dproj`, read these
    two files BEFORE any Edit:
-   - `c:\Users\trei\.claude\skills\light-md-DelphiIdiom\references\vocabulary.md`
-   - `c:\Users\trei\.claude\skills\light-md-DelphiIdiom\references\writing-good-md.md`
+   - `~\.claude\skills\light-md-DelphiIdiom\references\vocabulary.md`
+   - `~\.claude\skills\light-md-DelphiIdiom\references\writing-good-md.md`
 
    Reason: drift fixes that introduce new prose must use Delphi vocabulary (`nil` not `null`, `unit`
    not `module`, etc.) from the first write — otherwise `/light-md-DelphiIdiom` has to rewrite them

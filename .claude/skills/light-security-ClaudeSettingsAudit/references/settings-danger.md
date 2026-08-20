@@ -9,7 +9,7 @@ This is the source of truth for the light-security-ClaudeSettingsAudit agent. Up
 # Files to audit
 
 All of these are Claude Code config that can run code or grant access:
-- `~/.claude/settings.json`  (user; applies to EVERY project) = `C:\Users\trei\.claude\settings.json`
+- `~/.claude/settings.json`  (user; applies to EVERY project) = `C:\Users\<you>\.claude\settings.json`
 - `<project>/.claude/settings.json`  (project; shared via git — a cloned or 3rd-party repo SHIPS this)
 - `<project>/.claude/settings.local.json`  (local; gitignored)
 - any `.mcp.json`  (MCP server definitions)

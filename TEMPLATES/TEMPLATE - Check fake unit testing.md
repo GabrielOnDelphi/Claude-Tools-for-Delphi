@@ -39,7 +39,7 @@ A `[Test]` method is fake if ANY of these are true:
 
 ## Reference
 
-Global rule (from `C:\Users\trei\.claude\CLAUDE.md` → Unit Testing):
+Global rule (from `~\.claude\CLAUDE.md` → Unit Testing):
 > Every `[Test]` must have real `Assert.*` calls verifying actual behavior. Banned: `Assert.Pass` as sole assertion (unless skipping for environment reasons with real assertion on non-skip path), zero Assert calls, compile-time-guarantee tests (`Assert.Pass('X exists')`), calling functions without checking results.
 
  

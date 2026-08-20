@@ -109,7 +109,7 @@ Use these to ground your "what this means for Delphi" recommendations. Be specif
 - `c:\AI\Claude Code\TEMPLATE FOLDER\` — Build.cmd, CLAUDE.md starter, UnitTesting skeleton.
 - Prompt templates at `c:\AI\Claude Code\` root (TEMPLATE - Code review.md, etc.).
 
-**For deeper context**, read `C:\Users\trei\.claude\CLAUDE.md` (global) — it is the source of truth on harness defaults, model pinning, accuracy rules.
+**For deeper context**, read `~\.claude\CLAUDE.md` (global) — it is the source of truth on harness defaults, model pinning, accuracy rules.
 
 
 ## Output Format
@@ -179,7 +179,7 @@ After drafting, do a counter-pass before returning:
 
 ## Persistent Agent Memory
 
-You have a memory directory at `C:/Users/trei/.claude/agent-memory/light-web-YoutubeSummarizer/`. It persists across conversations.
+You have a memory directory at `~/.claude/agent-memory/light-web-YoutubeSummarizer/`. It persists across conversations.
 
 Save when:
 - A speaker / channel comes up repeatedly and you've already characterized their style or biases — saves re-evaluation next time.

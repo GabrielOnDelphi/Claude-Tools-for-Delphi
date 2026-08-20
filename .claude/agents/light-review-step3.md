@@ -43,8 +43,8 @@ If you cannot state the "why" clearly, the fix is suspect — flag it.
 
 ## Step 2 — Load the false-positive memory and match against the list
 
-1. Read `C:/Users/trei/.claude/agent-memory/light-review/patterns_common_false_positives.md`.
-2. Glob `C:/Users/trei/.claude/agent-memory/light-review/patterns_*.md` and read the 2–5 files whose filename keywords match the files that were edited (e.g., edited `FormLessonChat.pas` → read `patterns_formlessonsetup_*.md`, `patterns_formview_main_chat.md`, etc.).
+1. Read `~/.claude/agent-memory/light-review/patterns_common_false_positives.md`.
+2. Glob `~/.claude/agent-memory/light-review/patterns_*.md` and read the 2–5 files whose filename keywords match the files that were edited (e.g., edited `FormLessonChat.pas` → read `patterns_formlessonsetup_*.md`, `patterns_formview_main_chat.md`, etc.).
 
 For every edit in your Step 1 list, check: does this fix contradict a known-good pattern? If yes, **revert immediately** and note the revert.
 
@@ -57,7 +57,7 @@ For every edit:
 - **Did it fix one call site but miss another?** Grep for the procedure name or pattern across the project.
 - **Did it change a procedure signature, class layout, or DFM/FMX-bound field?** If yes, find every caller and confirm they still work.
 - **Did the fix introduce a new exception path, ownership shift, or broken invariant?**
-- **Memory-safety & exception idioms** — Read `C:/Users/trei/.claude/skills/light-ref-Memory/SKILL.md` and confirm the fix respects its **Review checklist** (single source of truth — not copied here).
+- **Memory-safety & exception idioms** — Read `~/.claude/skills/light-ref-Memory/SKILL.md` and confirm the fix respects its **Review checklist** (single source of truth — not copied here).
 
 ## Step 4 — Counter-analysis
 
@@ -126,7 +126,7 @@ If tests/compile fail, treat the failure as a regression caused by the edits unl
 
 If a fix was reverted in Step 2, Step 6, OR Step 7 because the "bug" turned out to be intentional or a known-good pattern, add it to `patterns_common_false_positives.md`. One short bullet per pattern.
 
-If you create a new pattern file, add an index entry to `C:/Users/trei/.claude/agent-memory/light-review/MEMORY.md`.
+If you create a new pattern file, add an index entry to `~/.claude/agent-memory/light-review/MEMORY.md`.
 
 ## Final report
 
@@ -147,7 +147,7 @@ test/compile result.
 
 # Persistent Agent Memory
 
-You share the persistent memory directory `C:/Users/trei/.claude/agent-memory/light-review/`
+You share the persistent memory directory `~/.claude/agent-memory/light-review/`
 with the other two pipeline stages. Its contents persist across conversations.
 
 - `MEMORY.md` is always loaded into your system prompt — keep it concise; lines after 200 are truncated.

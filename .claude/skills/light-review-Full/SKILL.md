@@ -224,7 +224,7 @@ transcript above — do not re-paste them). Cover:
   pipeline per file. Cross-file analysis depends on the agent seeing the whole set.
 - **You do not review code.** Resolving input, launching agents, threading reports, and
   summarizing is your entire job. The agents do the review.
-- **Shared memory checklist.** The `light-review-step1` and `light-review-step3` agents apply the Delphi memory-safety & exception checklist at `C:/Users/trei/.claude/skills/light-ref-Memory/SKILL.md` — that file is its single source of truth, not copied here or inside the agents. Edit that one file to change what the pipeline checks for memory/exception safety.
+- **Shared memory checklist.** The `light-review-step1` and `light-review-step3` agents apply the Delphi memory-safety & exception checklist at `~/.claude/skills/light-ref-Memory/SKILL.md` — that file is its single source of truth, not copied here or inside the agents. Edit that one file to change what the pipeline checks for memory/exception safety.
 - **If a stage fails** (agent errors out, returns nothing usable), stop the pipeline, report
   which stage failed and why, and do not fabricate the missing stage's output.
 - **Docs come after the code is verified, not before.** Step 5 runs only after stage 3 has

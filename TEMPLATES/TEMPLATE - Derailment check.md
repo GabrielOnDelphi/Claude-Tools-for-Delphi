@@ -2,7 +2,7 @@
 
 Paste this mid-task when Claude drifts off course, or after any long autonomous stretch.
 
-**Canonical version:** the `light-task-DerailmentCheck` skill (`C:\Users\trei\.claude\skills\light-task-DerailmentCheck\SKILL.md`) — invoke it with `/light-task-DerailmentCheck` whenever skill access is available; it is also referenced by the /light-bug skill family. Keep this file only for pasting into a context that can't invoke a skill. If the protocol changes, edit the skill and copy the text back here — not the other way round.
+**Canonical version:** the `light-task-DerailmentCheck` skill (`~\.claude\skills\light-task-DerailmentCheck\SKILL.md`) — invoke it with `/light-task-DerailmentCheck` whenever skill access is available; it is also referenced by the /light-bug skill family. Keep this file only for pasting into a context that can't invoke a skill. If the protocol changes, edit the skill and copy the text back here — not the other way round.
 
 ## Full version
 

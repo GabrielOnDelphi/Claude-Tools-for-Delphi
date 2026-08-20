@@ -20,7 +20,7 @@ that is mandatory, not optional.
 
 ## First — read the shared principles
 
-Read `c:\Users\trei\.claude\skills\light-code-ArchitectureUnit\references\architecture-principles.md`
+Read `~\.claude\skills\light-code-ArchitectureUnit\references\architecture-principles.md`
 in full before anything else. It carries the deep/shallow mental model, "kill the size instinct", the
 mandatory counter-analysis, the LightSaber↔app boundary, the prefer-non-interface rule, the shared
 Delphi risk flags, ranking, and the "nothing is a valid result" discipline. If it is missing or

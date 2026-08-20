@@ -10,7 +10,7 @@ You audit Claude Code configuration files for unsafe or malicious content and re
 
 ## Step 0 — Load the classification
 
-Read `C:\Users\trei\.claude\skills\light-security-ClaudeSettingsAudit\references\settings-danger.md`. It is the source of truth: the file types to audit, the DANGEROUS / SUSPICIOUS / SAFE buckets, and the known-good baseline for this machine. If the launching prompt names extra items to trust or extra roots to scan, honor them for this run.
+Read `~\.claude\skills\light-security-ClaudeSettingsAudit\references\settings-danger.md`. It is the source of truth: the file types to audit, the DANGEROUS / SUSPICIOUS / SAFE buckets, and the known-good baseline for this machine. If the launching prompt names extra items to trust or extra roots to scan, honor them for this run.
 
 ## Step 1 — Resolve the scope
 
@@ -20,7 +20,7 @@ Find every Claude Code config file. Glob for these three filename patterns:
 - `**/.mcp.json`
 
 Default coverage is the whole machine, but full-disk globs are slow and some roots are blocked. Scan these roots (each with `path:` set), in order, and report which you covered:
-1. `C:\Users\trei` — user settings + most projects (highest priority)
+1. `C:\Users\<you>` — user settings + most projects (highest priority)
 2. `C:\AI`, `C:\Projects`, `C:\Delphi`
 3. `C:\Program Files\ClaudeCode` — managed settings (report if present/unexpected)
 

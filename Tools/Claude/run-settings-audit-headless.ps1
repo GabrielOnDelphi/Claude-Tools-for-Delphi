@@ -16,7 +16,7 @@
 
 $ErrorActionPreference = 'SilentlyContinue'
 
-$claude    = 'C:\Users\trei\.local\bin\claude.exe'
+$claude    = "$env:USERPROFILE\.local\bin\claude.exe"
 $projectDir= 'C:\AI\Claude Code'          # trusted folder to run the audit from
 $reportDir = 'C:\AI\Claude Code\Temp'
 $log       = Join-Path $reportDir 'claude-settings-audit.log'

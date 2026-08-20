@@ -23,8 +23,8 @@ If you cannot state the "why" clearly, the change is suspect — flag it.
 
 ## Step 2 — Load the false-positive memory and match against the list
 
-1. Read `C:/Users/trei/.claude/agent-memory/light-review/patterns_common_false_positives.md` if it exists.
-2. Glob `C:/Users/trei/.claude/agent-memory/light-review/patterns_*.md` and read the 2–5 files whose filename keywords match the files you edited (e.g., edited `FormLessonChat.pas` → read `patterns_formlessonsetup_*.md`, `patterns_formview_main_chat.md`, etc.).
+1. Read `~/.claude/agent-memory/light-review/patterns_common_false_positives.md` if it exists.
+2. Glob `~/.claude/agent-memory/light-review/patterns_*.md` and read the 2–5 files whose filename keywords match the files you edited (e.g., edited `FormLessonChat.pas` → read `patterns_formlessonsetup_*.md`, `patterns_formview_main_chat.md`, etc.).
 
 For every edit in your Step 1 list, check: does this change contradict a known-good pattern? If yes, **revert immediately** and note the revert.
 
@@ -107,7 +107,7 @@ If tests/compile fail, treat the failure as a regression you caused unless you c
 
 If a change was reverted in Step 2, Step 6, OR Step 7 because the "improvement" turned out to contradict an intentional pattern, add it to `patterns_common_false_positives.md`. One short bullet per pattern.
 
-If you create a new pattern file, add an index entry to `C:/Users/trei/.claude/agent-memory/light-review/MEMORY.md`.
+If you create a new pattern file, add an index entry to `~/.claude/agent-memory/light-review/MEMORY.md`.
 
 Skip this step if the memory directory does not exist.
 

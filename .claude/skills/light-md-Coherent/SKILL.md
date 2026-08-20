@@ -39,7 +39,7 @@ File mode overlaps with `/light-md-DelphiIdiom`. Split: use **this** skill on a 
 
 1. **Rewrite, never re-derive.** Every claim in the plain version must already exist in the target message. No new analysis, no new files read, no new conclusions. Zero tool calls in Plain, Points and Zoom mode.
 2. **Facts are carried verbatim.** Numbers, versions, file paths, unit and class names, procedure signatures, `[UNVERIFIED]` markers, and every risk or warning move across **unchanged**. Simplify the words. Never simplify the facts. Dropping a caveat because it "reads like hedging" is the one failure this skill must not have.
-3. **Keep Delphi words. Kill imported words.** Delphi and RTL vocabulary is not jargon here — it is the correct vocabulary, and `c:\Users\trei\.claude\CLAUDE.md` requires it.
+3. **Keep Delphi words. Kill imported words.** Delphi and RTL vocabulary is not jargon here — it is the correct vocabulary, and `~\.claude\CLAUDE.md` requires it.
    - **Keep as-is:** `procedure`, `record`, `RTTI`, `try..finally`, `interface section`, `DFM`, `FMX`, `VCL`, `TThread`, `madExcept`, `LightSaber`, product names, real API names.
    - **Kill on sight:** `leverage` → use · `surface` (as a verb) → show · `orchestrate` → run · `non-trivial` → hard · `semantics` → meaning · `primitive` → building block · `canonical` → standard · `footgun` → easy to get wrong · `idiomatic` → the normal way · `robust` → say what actually survives what. Plus every foreign-stack word already banned in CLAUDE.md (`void`, `lambda`, `throw`, `module`, `header file`).
    - **A term with no plain equivalent** stays, but gets a definition in parentheses on first use — six words, no more.

@@ -1,6 +1,9 @@
 ---
 name: light-web-YoutubeSummarizer
 description: Summarize a YouTube transcript .txt file — cleans it first, then produces a structured summary (with a Delphi 13 / LightSaber adaptation section when the talk is about programming). Launches the light-web-YoutubeSummarizer agent. Use when the user invokes `/light-web-YoutubeSummarizer`, says "summarize this transcript", "what can I learn from this video for my Delphi work", or points at a file in c:\AI\Claude Code\Transcript\.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-web-YoutubeSummarizer — Transcript Summarizer
@@ -56,3 +59,7 @@ each was saved. For a single file, the agent's output is enough — no extra wra
   per file, and relaying results is your entire job. The agent does the cleaning and summarizing.
 - **You ask where to save, not the agent.** Subagents cannot prompt the user — resolve the save
   location in the launcher and pass the concrete `OutputPath` to each agent.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

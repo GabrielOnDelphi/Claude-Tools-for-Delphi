@@ -1,6 +1,9 @@
 ---
 name: light-bug-Android
 description: "Triage a Delphi FMX Android bug/crash from the PC over adb: capture logcat, pull the app's LightCore.ExceptionLogger log via run-as, classify the failure (SIGUSR1 IDE noise / Pascal exception / Java exception / native tombstone / deployment), symbolicate stripped-.so addresses against the linker .map (Tools\\MapLookup.ps1), then root-cause and fix (build via light-compiler, never release). Use when the user says \"/light-bug-Android\", \"the Android app crashes\", \"the app silently disappears on the phone\", \"triage this logcat\", \"exception class 10\", or an FMX bug shows only on Android."
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-bug-Android — FMX Android crash triage (PC-side, over adb)
@@ -83,3 +86,7 @@ Redeploy (IDE F9; or headless `/t:Make;Deploy /p:Platform=Android64` if a `.depl
 
 - If the bug also reproduces on Windows, prefer the Win64 Debug build + Autopilot bridge / DPT debugger — much faster loop. Reach for the phone only for Android-only bugs.
 - `Assert`/`raise` policy, no-swallowed-exceptions, FreeAndNil — the global Delphi rules apply to any fix.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

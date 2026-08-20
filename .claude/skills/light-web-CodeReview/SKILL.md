@@ -1,6 +1,9 @@
 ---
 name: light-web-CodeReview
 description: Review HTML, CSS, or JavaScript for errors, formatting, best practices, accessibility, cross-browser issues. Say "review this HTML/CSS/JS", "check my stylesheet", or after writing/editing web frontend code.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-web-CodeReview — HTML / CSS / JS Review
@@ -43,3 +46,7 @@ it): how many files reviewed and how many issues by severity / category.
   entire job. The agent does the review.
 - **Recently changed code by default.** Do not expand to the whole codebase unless the user
   explicitly asks.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

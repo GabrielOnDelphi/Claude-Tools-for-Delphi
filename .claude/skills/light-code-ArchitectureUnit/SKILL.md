@@ -1,6 +1,9 @@
 ---
 name: light-code-ArchitectureUnit
 description: Audit a Delphi project's own units (files) for SHALLOW modules that should merge into one deep module — information leakage, temporal decomposition, pass-through layers, always-paired usage. Reports ranked merge candidates; never merges. Say "find shallow units", "what units should be merged". For CLASS shapes use light-code-ArchitectureClass.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-code-ArchitectureUnit — Find shallow units (launcher)
@@ -36,3 +39,7 @@ That's it. No mapping, no signal-walking, no edits in the skill itself.
   LightSaber boundary, risk flags (read by both this and the ArchitectureClass agent).
 - The agent's own file (`.claude/agents/light-code-ArchitectureUnit.md`) — the unit-specific signals,
   anti-signals, procedure, report format, and hard rules.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

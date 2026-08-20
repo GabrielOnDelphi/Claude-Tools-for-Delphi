@@ -1,6 +1,9 @@
 ---
 name: light-ref-Threading
 description: Reference for writing or reviewing Delphi threading code on VCL and FMX (incl. Android/iOS) — TThread, TThread.CreateAnonymousThread, PPL (TTask/TParallel/TFuture), Synchronize vs Queue, TInterlocked/TCriticalSection/TMonitor/TLightweightMREW, TThreadList/TThreadedQueue/TEvent, graceful cancellation and thread-safety. Load this when a task works with threads, or touches shared state from more than one thread — or when reviewing such code. FMX/mobile-aware. Composition over interfaces.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # Delphi threading — reference
@@ -166,3 +169,7 @@ Since Delphi 10.4 the mobile compilers use the **same manual model as desktop** 
 - [ ] Exceptions caught inside the thread/task and marshalled out.
 - [ ] `FreeOnTerminate` consistent with whether you keep a reference or `WaitFor`.
 - [ ] Threads named via `TThread.NameThreadForDebugging` when debugging.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

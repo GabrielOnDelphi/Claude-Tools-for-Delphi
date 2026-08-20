@@ -1,6 +1,9 @@
 ---
 name: light-web-UncensoredFetch
 description: Read ONE web page that Claude Code's built-in WebFetch refuses (the whole reddit.com domain is on WebFetch's denylist; also any Cloudflare-walled or JS-only page). Runs a local Delphi WebView2 browser exe (UncensoredClaude.exe) that fetches the page outside Claude Code's network and writes its visible text to a file you then Read. Use when WebFetch returns "unable to fetch from <host>", when you need a reddit.com / old.reddit.com page, or the user says "fetch this with the browser tool", "use uncensored claude", "read this blocked page".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # light-web-UncensoredFetch — read a page WebFetch won't
@@ -82,3 +85,7 @@ Append after the two paths:
 - The output file is ALWAYS written, even on failure, so your Read never fails on a missing file.
 - Full project docs: `C:\Projects\Projects AI\Uncensored Claude\CLAUDE.md`.
 - Build only via the `light-compiler` agent; engine unit is `C:\Projects\LightSaber\FrameVCL\LightVcl.Internet.Browser.pas`.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

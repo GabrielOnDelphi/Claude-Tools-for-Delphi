@@ -1,6 +1,9 @@
 ---
 name: light-review-DUnitX
 description: Reference for structuring Delphi DUnitX unit tests — test project layout, [TestFixture]/[Setup]/[TearDown]/[Test], Method_Scenario_Expected naming, the assertion cheat-sheet, substituting collaborators with a concrete fake (shared base, no interface required), and SQLite :memory: integration tests. Load this when writing, organising or reviewing DUnitX tests. Adapted to Gabriel's rules — no fake/zero-assert tests, no form/UI tests, compile ONLY via the light-compiler agent, then launch the EXE yourself. Pairs with /light-review-RedGreen and /light-review-FakeTest.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # DUnitX testing — reference
@@ -114,3 +117,7 @@ end;
 - [ ] Collaborators faked via shared base (or an already-existing interface), not a new interface.
 - [ ] Both happy and error scenarios covered.
 - [ ] Built via the light-compiler agent; EXE launched and counts read.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

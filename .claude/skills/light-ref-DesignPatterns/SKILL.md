@@ -1,6 +1,9 @@
 ---
 name: light-ref-DesignPatterns
 description: Quick index of the GoF design patterns that actually pay off in Delphi desktop/mobile code, each with its Delphi-native shortcut (anonymous methods, virtual methods, System.Messaging, class functions, enumerators) so you reach for the full pattern only when it earns its keep. Load this when choosing a structure for varying behaviour, decoupling producer from consumer, building objects step by step, or wrapping/adapting a subsystem. Adapted to Gabriel's stack: composition and concrete types first, interfaces only where they genuinely pay, no over-engineering.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # Design patterns in Delphi — reference
@@ -64,3 +67,7 @@ end;
 - New variation seam → shared base class first; interface only for a genuine external plug-in point.
 - Singleton and any shared cache: guard mutable state across threads (see `/light-ref-Threading`).
 - If a pattern adds indirection without a second concrete case in sight, remove it (YAGNI).
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

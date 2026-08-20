@@ -1,6 +1,9 @@
 ---
 name: light-task-DerailmentCheck
 description: "Pause mid-task and verify your own conclusions before continuing: classify every load-bearing conclusion VERIFIED / INFERRED / ASSUMED with evidence, actively attack the unverified ones, and find the earliest wrong turn if one exists. Not Delphi-specific — usable in any long or drifting task, in any language. Use when the user says \"derailment check\", \"are you on track\", \"checkpoint yourself\", \"pause and check your conclusions\", \"/light-task-DerailmentCheck\", or after any long autonomous stretch. ALSO fire this on yourself, unprompted, whenever: the user says \"nope\"/\"no\"/\"wrong\"/\"stop\" or otherwise corrects you; a fix didn't change the symptom; two fix attempts on the same problem both failed; you're editing a file your own analysis never mentioned; you're explaining away contradicting evidence instead of checking it; or you're about to act without ever having reproduced the problem."
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-task-DerailmentCheck — pause and verify conclusions
@@ -40,3 +43,7 @@ Checkpoint: stop. List the conclusions the current plan rests on, mark each VERI
 ## Relationship to other skills
 
 The `/light-bug` family (the general skill, the `light-bug-MadShi` agent, and `light-bug-Android`) invokes this before every fix — a bug "fix" built on an unverified root cause is worse than no fix, because it burns a cycle and adds noise to the diff. Any other skill or task may invoke it too; it is deliberately generic.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

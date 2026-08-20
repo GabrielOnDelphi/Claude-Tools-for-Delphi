@@ -1,6 +1,9 @@
 ---
 name: light-new-Align
 description: One-question-at-a-time design interview before any non-trivial Delphi task — each question carries your recommended answer, highest-stakes first, skip what you can decide yourself. Say "align first", "interview me", or "ask before you build".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-new-Align — Align on the design before building
@@ -59,3 +62,7 @@ Roughly in stakes order — most of these apply to refactors and bug fixes too, 
 ## Relationship to other skills
 
 This is the standalone interview, usable before ANY non-trivial task. `light-new-Feature` Phase 1 is the same interview inside the feature flow (it then continues to PRD → slices → implement); it should reference this skill rather than restating it.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

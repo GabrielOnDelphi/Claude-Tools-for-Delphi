@@ -2,6 +2,9 @@
 name: light-bug-BioniX
 description: "Alias for /light-bug-MadShi with the BioniX product preselected. Diagnose and fix a BioniX Wallpaper crash report from Thunderbird, then build (never release). Use when the user says \"/light-bug-BioniX\", \"new BioniX bug report\", \"check the latest BioniX crash\", or similar."
 disable-model-invocation: true
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-bug-BioniX — alias for /light-bug-MadShi bionix
@@ -14,3 +17,7 @@ Do this:
 2. If `$args` contains a path to an existing `.mad` file, pass it straight through to step 4 of that skill (hand off to the `light-bug-MadShi` agent with the BioniX profile). Otherwise run the list -> pick -> extract -> hand off -> relay flow for BioniX.
 
 Everything else (mbox handling, candidate listing, the agent hand-off, the "do not release" rule) is defined in the general skill. Don't duplicate it here.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

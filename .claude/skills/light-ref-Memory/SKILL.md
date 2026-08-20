@@ -1,6 +1,9 @@
 ---
 name: light-ref-Memory
 description: Reference for Delphi memory-safety and exception handling — the try..finally gold standard, freeing owned fields, FreeAndNil, Owner-managed components, functions that return objects, specific try..except, domain exception hierarchies and bare raise. Load this when writing or reviewing code that creates objects, manages lifetimes, or handles exceptions.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # Delphi memory & exceptions — reference
@@ -74,3 +77,7 @@ end;
 - [ ] No object leaked on the exception path.
 - [ ] `except` catches specific types; nothing swallowed silently.
 - [ ] Re-raise uses bare `raise;`.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

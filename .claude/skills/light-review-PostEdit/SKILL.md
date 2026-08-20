@@ -1,6 +1,9 @@
 ---
 name: light-review-PostEdit
 description: Verify the code you just wrote (fix or feature) works — confirm each change matches intent, broke nothing observable, missed no call sites, didn't break DFM/FMX bindings; revert what fails; then test or compile. Use after implementing a fix/feature or /light-review-PostEdit.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # Delphi Post Change
@@ -130,3 +133,7 @@ Report:
 **Top-of-summary cue (redundancy):** As the FIRST line of your final response, write one line: `Pipeline terminal step — no further auto-chain.` — so the user can see at a glance the verification chain is ending here.
 
 **Do not draw separators between intermediate tasks.** Only the single end-of-stage Report block above is emitted.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

@@ -1,6 +1,9 @@
 ---
 name: light-md-DriftUpdate
 description: Scan project markdown docs (CLAUDE.md, README.md, docs/*.md) for drift after code changes. Flag sections out of sync with current code — class names, file paths, settings keys, procedure signatures, architecture claims. Propose and apply concrete edits. Use when user says "update md", "check docs", "refresh claude.md", "verify docs", or invokes /light-md-DriftUpdate.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # Update MD docs (launcher)
@@ -46,3 +49,7 @@ The agent loads the Delphi vocabulary + clarity references from
 `c:\Users\trei\.claude\skills\light-md-DelphiIdiom\references\` so any new prose it writes is already
 Delphi-idiomatic, and it holds the claim-extraction / verify / skip / anti-pattern rules. See
 `.claude/agents/light-md-DriftUpdate.md`.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

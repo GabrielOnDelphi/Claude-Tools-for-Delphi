@@ -1,6 +1,9 @@
 ---
 name: light-review-RedGreen
 description: Red-green TDD for any Delphi change (new behavior OR bug fix): write the FAILING DUnitX test first, confirm red on its assertion (not a compile error), then drive to green, compiling only via the light-compiler agent. For a bug the failing test is the reproduction. Say "TDD this", "write the test first", "reproduce the bug with a test", "red-green".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-review-RedGreen — Test first, then make it pass
@@ -53,3 +56,7 @@ Compile the test `.dproj` via the **`light-compiler` agent** (`subagent_type: "l
 ## Relationship to other skills
 
 This is the standalone red-green loop, usable for **any** change — especially **bug fixes**, which the feature pipeline does not cover. `light-new-Feature` Phase 4 is the same loop inside the feature flow; it should reference this skill rather than restating it.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

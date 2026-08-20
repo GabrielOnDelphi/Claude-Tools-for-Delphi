@@ -1,6 +1,9 @@
 ---
 name: light-review-FakeTest
 description: Audit a Delphi DUnitX/DUnit suite for FAKE or WEAK tests that pass without verifying the behavior they name (zero assertions, Assert.Pass-only, tautologies, setup-only). Establishes the green baseline, launches the auditor agent, and can PROVE fakeness with a git-safe mutation pass. Say "are these tests fake", "audit test integrity", "did we game the tests to pass".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-review-FakeTest — Test-Integrity Auditor
@@ -96,3 +99,7 @@ Optionally, if the user wants a trail across sessions, append a dated one-line e
 - **Default is read-only.** Only `deep`/`mutation` mode edits code, and only under a clean git tree with immediate `git checkout --` revert. A dirty tree or missing git ⇒ no mutation pass.
 - **Be honest about the green.** The headline number is "how many passing tests are fake". Don't soften it. A suite can be "105/105 passing" and still have fakes inflating that count.
 - **Dialect-aware.** Handle both DUnitX (`[Test]`, `Assert.*`, `FailsOnNoAsserts`) and classic DUnit (`published` on `TTestCase`, `Check*`/`Fail`, `FailsOnNoChecksExecuted`).
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

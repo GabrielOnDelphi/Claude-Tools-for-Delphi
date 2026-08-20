@@ -1,6 +1,9 @@
 ---
 name: light-code-StyleChecker
 description: Scan imported/3rd-party Delphi code for style compliance, common mistakes, dangerous patterns (leaks, unsafe casts, missing try/finally). Not for our own code — use /light-review-Full. Say "check this 3rd-party unit", "scan the imported library".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-code-StyleChecker — 3rd-party Code Style Audit
@@ -49,3 +52,7 @@ decision.
 
 - **You do not review code.** Resolving the scope, launching the agent, and summarizing is your entire job. The agent does the audit.
 - **3rd-party scope only.** If the target looks like our own project code, recommend `/light-review-Full` instead before proceeding.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

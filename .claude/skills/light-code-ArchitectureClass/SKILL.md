@@ -1,6 +1,9 @@
 ---
 name: light-code-ArchitectureClass
 description: Audit a Delphi project's own classes (INCLUDING forms) for bad shapes — god classes, anemic data classes, misplaced responsibility, fat config records, shared mutable singletons, Ex-downcast holders. Reports ranked reshapes (extract-class, move-method, replace-singleton); never refactors. Say "is this a god class", "review the class design", "find anemic classes". For UNIT merges use light-code-ArchitectureUnit.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-code-ArchitectureClass — Find ill-shaped classes (launcher)
@@ -40,3 +43,7 @@ That's it. No mapping, no signal-walking, no edits in the skill itself.
   ArchitectureUnit agent).
 - The agent's own file (`.claude/agents/light-code-ArchitectureClass.md`) — the class-specific signals,
   anti-signals, procedure, report format, the mandatory HandOver.md write, and hard rules.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

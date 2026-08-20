@@ -1,6 +1,9 @@
 ---
 name: light-review-Full
 description: Full three-stage Delphi code review pipeline: find correctness bugs, counter-analyze + apply surviving fixes, verify + compile. Say "review this Delphi code", "code review FormFoo.pas", "deep review the Lib folder".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # Delphi Review — Pipeline Orchestrator
@@ -237,3 +240,7 @@ transcript above — do not re-paste them). Cover:
   `CLAUDE.md → ## Last review` holds only a **one-line pointer** carrying the latest date +
   verdict (overwritten each run) — `ReviewHistory.md` is not context-loaded, so it grows there,
   not in `CLAUDE.md`. Never put the log in the global `CLAUDE.md`.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

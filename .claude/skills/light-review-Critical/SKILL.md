@@ -1,6 +1,9 @@
 ---
 name: light-review-Critical
 description: Counter-analyze review findings already in this conversation, verify each surviving claim against the code and docs, drop false positives, then fix ALL that remain — not just the easy ones. Use after a review/audit/listing produced findings; say "counter-analyze these findings", "vet and fix", or "verify then fix all of these".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-review-Critical — Delphi Post Review
@@ -75,3 +78,7 @@ Invoke the **`light-review-PostEdit`** skill via the Skill tool. It will pick up
 - **No silent drops.** Every dropped finding gets one line of justification.
 - **No cherry-picking.** All surviving findings get fixed, not just the easy ones.
 - **Hand off, don't duplicate.** The final verify + compile is `light-review-PostEdit`'s job, not this skill's.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

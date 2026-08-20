@@ -1,6 +1,9 @@
 ---
 name: light-md-DelphiIdiom
 description: Fix Delphi vocabulary and writing-clarity issues in Markdown docs — non-Delphi term swaps + bounded clarity rewrites. Say "check vocab", "fix vocabulary", "delphi terms", "clean up the md", or after writing/editing *.md in a Delphi project.
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # Delphi MD vocab + clarity check (launcher)
@@ -57,3 +60,7 @@ When a Section D open question is resolved, edit `references/vocabulary.md`:
 - Delete from D.
 - Update the "Sources" section if a new citation is involved.
 - Do not touch this SKILL.md unless the skill's behaviour itself needs to change.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

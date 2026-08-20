@@ -1,6 +1,9 @@
 ---
 name: light-new-Feature
 description: Turn "I want feature X" into a designed, sliced, test-driven Delphi implementation — align, PRD, vertical slices, red-green each (failing DUnitX test first), then hand to light-review-PostEdit / light-review-Full. Say "add a feature", "build feature X", "implement a new feature", "create a new screen/dialog/option".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # Delphi New Feature — Pipeline Orchestrator
@@ -336,3 +339,7 @@ The implementation is done. Now verify it with the existing pipeline rather than
 - **Delphi vocabulary throughout** — `nil` not null, `record` not struct, `try/except` not
   try/catch, `anonymous method` not lambda, `unit` not module, `enumeration` not enum, `RTTI` not
   reflection.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

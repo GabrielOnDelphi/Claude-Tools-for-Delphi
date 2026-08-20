@@ -1,6 +1,9 @@
 ---
 name: light-bug-MadShi
 description: "Diagnose and fix a Delphi crash report (madExcept .mad) for any registered product (BioniX, ...). Reads the product profile in products.ini, lists the recent .mad attachments across that product's Thunderbird mbox(es), lets the user pick one (or accept the newest), then launches the light-bug-MadShi agent to diagnose, fix, and build (never release). This is the crash-report-specific pipeline behind the general /light-bug skill's Step 0 routing — invoke it directly when you already have a .mad file or Thunderbird crash report in hand. Use when the user says \"/light-bug-MadShi\", \"/light-bug-MadShi bionix\", \"new crash report\", \"check the latest .mad\", or similar."
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-bug-MadShi — Delphi crash-triage pipeline (multi-product)
@@ -86,3 +89,7 @@ When the agent returns:
 - Profiles live in `products.ini`. To add a product, add a block there — no skill or agent edit needed.
 - The extractor is idempotent: running it twice re-extracts the same `.mad` to a new timestamped file.
 - `-Top` defaults to 10. For more candidates, add `-Top 20` (or higher) to the `-List` call.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

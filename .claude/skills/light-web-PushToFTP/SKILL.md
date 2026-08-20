@@ -1,6 +1,9 @@
 ---
 name: light-web-PushToFTP
 description: Release a Delphi tool's new version to its website FTP. Reads the tool's ReleaseProfile.md and follows it. Use when the user says "push <tool> to FTP", "release a new version", "upload the new build", "promote to stable".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # Push a tool release to FTP
@@ -37,3 +40,7 @@ The profile is the single source of truth for that tool: paths, version bump, bu
 - Verify: <expected exe/sfx size fingerprints, remote check>
 - Website to update: <features page path>
 ```
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

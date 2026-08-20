@@ -2,6 +2,9 @@
 name: light-ref-Refactoring
 description: Reference catalog of behaviour-preserving Delphi refactorings — Extract Method, Extract Class, Guard Clauses, Named Constants, Replace Conditional with Polymorphism, Introduce Parameter Object (record), Remove with, Rename, Inline Method, and introducing a test seam via a shared base class. Load this when cleaning up smelly code, taming a long method or god class, or planning a safe refactor. Adapted to Gabriel's stack: shared base / concrete typing over interfaces, test-green before and after, compile only via the light-compiler agent. Pairs with /light-code-ArchitectureUnit and /light-code-ArchitectureClass.
 
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # Delphi refactoring — reference
@@ -63,3 +66,7 @@ When code is hard to test because it hard-wires a collaborator (a DB layer, a cl
 - [ ] No new `with`, no new magic literal, no method over ~20 lines.
 - [ ] Names reveal intent.
 - [ ] New seam uses a shared base, not a new interface (unless one existed).
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

@@ -2,6 +2,9 @@
 name: light-security-ClaudeSettingsAudit
 description: Audit Claude Code config files (settings.json, settings.local.json, .mcp.json) across the computer for unsafe or malicious content — hooks that run shell commands, credential/proxy env vars, arbitrary MCP servers, permission-bypass modes, over-broad allow rules. Classifies each finding DANGEROUS / SUSPICIOUS / SAFE. Read-only. Use when the user invokes `/light-security-ClaudeSettingsAudit`, says "check my settings.local.json for malware", "are my Claude permission files safe", "scan my Claude config", or "audit settings.json across the computer".
 disable-model-invocation: true
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-security-ClaudeSettingsAudit — Claude Code config safety scan
@@ -25,3 +28,7 @@ Print the agent's report verbatim — the verdict line, the per-bucket tables, a
 - **Read-only.** Removing or fixing a bad entry is a separate, explicit follow-up the user must request.
 - The classification in `references/settings-danger.md` is the source of truth. Update it (and its `Sources` date) when Claude Code adds fields or the machine's known-good baseline changes. The agent reads it by absolute path.
 - **Weekly run:** this skill can be scheduled. See the audit note in the project CLAUDE.md for the cron/Task-Scheduler wiring.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

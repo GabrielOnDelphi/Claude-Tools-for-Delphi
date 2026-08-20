@@ -1,6 +1,9 @@
 ---
 name: light-bug
 description: "Diagnose and fix a Delphi bug end-to-end, however it arrived: a Thunderbird crash report (.mad), a pasted exception/stack trace, or a symptom described in plain words. Routes internally — a .mad or 'crash report' goes to the light-bug-MadShi pipeline, an Android-only symptom hands off to /light-bug-Android, everything else runs here: intake, reproduce (a failing DUnitX test preferred), localize, a MANDATORY derailment check before any fix, fix, then verify and compile (never releases). Use whenever the user reports a bug, crash, or unexpected behavior in a Delphi project — says \"/light-bug\", \"/light-bug bionix\", \"I have a crash in program X\", \"the app does Y instead of Z\", \"this doesn't work\", pastes an exception or stack trace, forwards a bug-report email, or describes an app crashing/hanging/misbehaving — even without typing a command."
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-bug — Delphi bug diagnosis and fix (general entry point)
@@ -110,3 +113,7 @@ If the right fix is unclear and a wrong one would do real harm, stop and ask rat
 - **`light-review-PostEdit`** — the terminal verification step, used in Phase 6.
 
 This skill is the entry point that ties them together for a bug of unknown shape; it isn't a replacement for any of them, and shouldn't grow to duplicate what they already own.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

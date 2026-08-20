@@ -1,6 +1,9 @@
 ---
 name: light-code-CheckOsCompatibility
 description: Audit Delphi FMX source for cross-platform issues — Windows-only APIs, hardcoded paths, missing platform conditionals, mobile-incompatible patterns. Say "check this for Android/iOS", "is this safe on mobile/macOS/Linux", "audit for cross-platform issues".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-code-CheckOsCompatibility — Cross-Platform Compatibility Audit
@@ -45,3 +48,7 @@ it): how many files audited, how many issues by severity, and which need a human
   entire job. The agent does the audit.
 - **This agent only reports** (its tools are read + web). It does not apply fixes — so do not
   promise fixes; relay the findings and let the user decide.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

@@ -1,6 +1,9 @@
 ---
 name: light-code-Win64Audit
 description: Audit Delphi source for Win64 truncation bugs — pointer-width API results (DWORD_PTR/LRESULT/handles) stored in 32-bit variables (Integer/Cardinal/DWORD/UInt), and 32-bit casts of pointers passed to the API. Say "audit for Win64 bugs", "check 64-bit safety", "search for SysIL-class bugs".
+author: Gabriel Moraru
+homepage: https://gabrielmoraru.com
+license: MPL-2.0
 ---
 
 # /light-code-Win64Audit — Win64 pointer-truncation audit
@@ -66,3 +69,7 @@ Relay the agent report. Apply fixes ONLY if the user asked for fixes: one-line t
 
 - The in-house DUT tool (`Tool - Light Delphi utilities (DUT)\dutWin64Api.pas`) already scans patterns 2-3 (casts in SendMessage/Perform/SetWindowLong). This skill's main added value is pattern 1/6 — the RECEIVER-width class DUT does not cover.
 - Origin: `LightSaber\External\DiskDrives.pas` SysIL bug, root-caused 2026-07-21 (see `Autopilot for Delphi\Issues\vcl-win64-bridge-not-starting.md`). LightSaber itself was fully audited + fixed 2026-07-22 — re-run there only after importing new code.
+
+---
+
+*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*

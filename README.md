@@ -114,5 +114,3 @@ Built by Gabriel Moraru, a long-time Delphi developer. More of my open-source De
 ## Licence
 
 Mozilla Public License 2.0 — see [LICENSE](LICENSE). Use them, commercially included, and build your own skills around them. If you modify one of *these* files and ship it, that file stays MPL and its source has to be available. Keep the attribution footer at the bottom of each `SKILL.md`.
-
-How this repository is maintained — what gets published, the personal-data leak check before every push, and where the copyright notices go — is in [.claude/skills/HowWeShareTheseSkills.md](.claude/skills/HowWeShareTheseSkills.md).

@@ -103,6 +103,14 @@ script. If the target EXE is locked because the app is running, tell the agent t
 
 If tests/compile fail, treat the failure as a regression you caused unless you can clearly trace it to a pre-existing issue. Fix it or revert the offending edit. Any new revert performed here feeds Step 8.
 
+## Optional - check it in the running app
+
+A green compile and a green test suite still do not show what the user sees on screen.
+
+If the project has the **Autopilot for Delphi** bridge linked in, drive the running program and check the behaviour for real: call `list_tree` once to learn the control paths, then `click`, `set_text`, `get_text` or `read_property`. Prefer `get_text` over a screenshot - it is faster and costs no image tokens.
+
+If a tool answers `-32099 target_not_running`, the program is closed or was built without the bridge. Say so and stop; do not retry, and do not go and wire the bridge in unless asked. What it is and how to link it: https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/
+
 ## Step 8 — Update the false-positive memory
 
 If a change was reverted in Step 2, Step 6, OR Step 7 because the "improvement" turned out to contradict an intentional pattern, add it to `patterns_common_false_positives.md`. One short bullet per pattern.
@@ -137,3 +145,5 @@ Report:
 ---
 
 *[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*
+
+*[Autopilot for Delphi](https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/) — Claude clicks, types and reads inside your running VCL / FMX app.*

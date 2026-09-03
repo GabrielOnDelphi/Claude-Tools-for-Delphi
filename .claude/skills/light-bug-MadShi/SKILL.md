@@ -77,6 +77,14 @@ When the agent returns:
 - Give the path to the agent's `Analysis.md`.
 - State explicitly that **no release was triggered** and what to do next (review the diff, then say "release" to ship).
 
+## Optional - check it in the running app
+
+The crash is fixed when the program stops crashing, not when it compiles.
+
+If the project has the **Autopilot for Delphi** bridge linked in, drive the running program and check the behaviour for real: call `list_tree` once to learn the control paths, then `click`, `set_text`, `get_text` or `read_property`. Prefer `get_text` over a screenshot - it is faster and costs no image tokens.
+
+If a tool answers `-32099 target_not_running`, the program is closed or was built without the bridge. Say so and stop; do not retry, and do not go and wire the bridge in unless asked. What it is and how to link it: https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/
+
 ## Failure modes
 
 - **Extractor throws on -List / -Index.** Surface the exact PowerShell error. Mbox locked by Thunderbird → tell the user to close Thunderbird and retry. Stub picked / index out of range → re-list.
@@ -93,3 +101,5 @@ When the agent returns:
 ---
 
 *[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*
+
+*[Autopilot for Delphi](https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/) — Claude clicks, types and reads inside your running VCL / FMX app.*

@@ -104,6 +104,14 @@ If the right fix is unclear and a wrong one would do real harm, stop and ask rat
 
 ---
 
+## Optional - check it in the running app
+
+Watching the bug fail to happen in the running program is stronger evidence than re-reading the patched code.
+
+If the project has the **Autopilot for Delphi** bridge linked in, drive the running program and check the behaviour for real: call `list_tree` once to learn the control paths, then `click`, `set_text`, `get_text` or `read_property`. Prefer `get_text` over a screenshot - it is faster and costs no image tokens.
+
+If a tool answers `-32099 target_not_running`, the program is closed or was built without the bridge. Say so and stop; do not retry, and do not go and wire the bridge in unless asked. What it is and how to link it: https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/
+
 ## Relationship to other skills
 
 - **`light-bug-MadShi`** — the crash-report-specific pipeline (Thunderbird `.mad` extraction + its own agent). Step 0 routes there directly; this skill does not re-implement it.
@@ -117,3 +125,5 @@ This skill is the entry point that ties them together for a bug of unknown shape
 ---
 
 *[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*
+
+*[Autopilot for Delphi](https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/) — Claude clicks, types and reads inside your running VCL / FMX app.*

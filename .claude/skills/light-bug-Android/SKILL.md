@@ -72,6 +72,14 @@ Full recipe + tool paths in the Reference file. Order by what actually resolves:
 
 Redeploy (IDE F9; or headless `/t:Make;Deploy /p:Platform=Android64` if a `.deployproj` exists — see `c:\Projects\FMX\Compiling FMX projects for cross-platform targets\` Stage 3), clear the buffer, reproduce, confirm the logcat and the exception log stay clean.
 
+## Optional - check it in the running app
+
+The same check runs on the device through the `autopilot-android` tools, which carry the same names as the Windows ones.
+
+If the project has the **Autopilot for Delphi** bridge linked in, drive the running program and check the behaviour for real: call `list_tree` once to learn the control paths, then `click`, `set_text`, `get_text` or `read_property`. Prefer `get_text` over a screenshot - it is faster and costs no image tokens.
+
+If a tool answers `-32099 target_not_running`, the program is closed or was built without the bridge. Say so and stop; do not retry, and do not go and wire the bridge in unless asked. What it is and how to link it: https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/
+
 ## Failure modes
 
 - **`unauthorized` device** — old adb daemon; kill it, use the bundled adb (Step 0).
@@ -90,3 +98,5 @@ Redeploy (IDE F9; or headless `/t:Make;Deploy /p:Platform=Android64` if a `.depl
 ---
 
 *[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*
+
+*[Autopilot for Delphi](https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/) — Claude clicks, types and reads inside your running VCL / FMX app.*

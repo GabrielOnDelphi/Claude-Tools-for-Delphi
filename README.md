@@ -3,6 +3,8 @@
 Claude Code skills and agents for **Delphi** development — the same tooling I use daily to build commercial Delphi apps.
 MORE tools to be published!
 
+Several of these skills end at "it compiles". If you want Claude to go one step further and actually *use* your program — click a button, type into an edit box, read a label back, screenshot a form — see [Autopilot for Delphi](#autopilot-for-delphi) further down.
+
 ## Skills
 
 Slash commands you call from any Claude Code session. The name of the folder is the command: `light-review-Full` → `/light-review-Full`. Several of them drive one of the agents listed further down.
@@ -100,6 +102,18 @@ The engines the skills launch. Most are also usable standalone. All are self-doc
 | `light-security-ClaudeSettingsAudit` | Classify every Claude Code config finding DANGEROUS / SUSPICIOUS / SAFE against a known-good baseline. Read-only. |
 | `light-web-CodeReview` | Review HTML / CSS / JavaScript. |
 | `light-web-YoutubeSummarizer` | Clean and summarize a transcript in its own context, so the bulk never reaches your main conversation. |
+
+## Autopilot for Delphi
+
+**[Autopilot for Delphi](https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/)** is the piece that closes the loop. Every skill above stops at the same place — the code compiles, the tests are green — and none of them can tell you whether the program actually behaves correctly on screen.
+
+Autopilot lets Claude drive your **running** VCL or FMX application: click a control, set and read text, read and write published properties through RTTI, dismiss a native dialog, screenshot a form. It works on Windows and on Android.
+
+You link a small bridge unit into the DEBUG build of your own project — `Autopilot.Bridge.Vcl` or `Autopilot.Bridge.Fmx` in the `.dpr`, one `StartBridge` call, and an `AUTOPILOT` conditional define. A Release build has the define switched off, so it carries no automation at all.
+
+So a bug fix goes: reproduce it in the running app → fix → compile → drive the app again and watch the bug not happen.
+
+Pre-release. Details and download: [gabrielmoraru.com/my-delphi-code/autopilot-for-delphi](https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/)
 
 ## How to install
 

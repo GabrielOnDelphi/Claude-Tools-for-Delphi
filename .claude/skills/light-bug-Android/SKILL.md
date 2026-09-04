@@ -32,7 +32,7 @@ Pick by situation:
 - **Crash already happened, no tail was running:** one-shot dump, unfiltered:
   `& $ADB logcat -d > "$CaptureDir\logcat-<Tag>-dump.txt" 2>&1`
 - **Crash is reproducible:** clear first (`& $ADB logcat -b all -c`), start an unfiltered capture in the background, have the human reproduce on the phone (or drive it yourself via the `mcp__autopilot-android__*` tools IF the build has the Autopilot bridge compiled in — `AUTOPILOT` define), then stop and read the capture.
-- A human at the machine can instead double-click `c:\Projects\FMX\Bug reporter FMX\Logcat-Android.cmd` (verbs: tail/dump/clear; writes to `$CaptureDir\logcat-<Tag>-latest.txt`).
+- A human at the machine can instead double-click a `Logcat-Android.cmd` wrapper kept beside the project (verbs: tail/dump/clear; writes to `$CaptureDir\logcat-<Tag>-latest.txt`).
 
 Capture UNFILTERED. Filter afterwards while reading: the interesting tags are `AndroidRuntime` (Java FATAL EXCEPTION), `DEBUG` (native tombstone), and `info` (Pascal-side `FMX.Types.Log.d`, prefixed `FMX: <AppTitle>:`).
 
@@ -70,7 +70,7 @@ Full recipe + tool paths in the Reference file. Order by what actually resolves:
 
 ## Step 6 — Verify on device
 
-Redeploy (IDE F9; or headless `/t:Make;Deploy /p:Platform=Android64` if a `.deployproj` exists — see `c:\Projects\FMX\Compiling FMX projects for cross-platform targets\` Stage 3), clear the buffer, reproduce, confirm the logcat and the exception log stay clean.
+Redeploy (IDE F9; or headless `/t:Make;Deploy /p:Platform=Android64` if a `.deployproj` exists), clear the buffer, reproduce, confirm the logcat and the exception log stay clean.
 
 ## Optional - check it in the running app
 

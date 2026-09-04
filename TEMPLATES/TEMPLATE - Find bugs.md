@@ -8,7 +8,7 @@ Using insights from both analyses, revise your review proposals and generate an 
 
 ## Notes
 - If necessary, create a new Delphi project in the folder for isolated testing.
-- Integrate madExcept if needed. Template: c:\Projects\Project Support\Template - madShi\TesterMadShi.dpr
+- Integrate madExcept if needed. Keep a ready-made madExcept test project somewhere fixed and point at it here, e.g. `c:\Projects\<your templates folder>\Template - madShi\TesterMadShi.dpr`.
 - If the bug is in Delphi itself, write a bug report for Embarcadero.
 
 ## Reply

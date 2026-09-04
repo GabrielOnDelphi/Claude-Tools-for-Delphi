@@ -284,7 +284,8 @@ The implementation is done. Now verify it with the existing pipeline rather than
    - **Preconditions / fallbacks:** this needs the `mcp__autopilot__*` tools loaded **this** session.
      If they are absent (server not yet registered, or registered only this session), say so and fall
      back to the manual-QA reminder — do NOT hand-roll a UI driver. Read
-     `c:\Projects\Projects AI\Autopilot for Delphi\AI-INSTRUCTIONS.md` for the tool reference and the
+     `AI-INSTRUCTIONS.md` in your clone of Autopilot for Delphi
+     (https://github.com/GabrielOnDelphi/Autopilot-for-Delphi) for the tool reference and the
      efficiency rules (bundle independent calls into one turn; `count=N` for repeats).
 
 4. **Optionally** invoke **`/light-review-Full`** on the `.pas` files the feature added or changed — a

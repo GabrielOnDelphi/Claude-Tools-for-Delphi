@@ -45,14 +45,16 @@ Threat model: a repo you cloned, a shared project, or a tampered file plants con
 - `model`, `outputStyle`, `statusLine` that is `type:"static"`/non-command, `env` with non-sensitive vars (e.g. `NO_COLOR`).
 - `hooks` that only invoke the user's OWN known scripts/tools (see baseline below).
 
-# Known-good baseline for THIS machine (do NOT flag as threats)
+# Known-good baseline (do NOT flag as threats)
+
+This is the author's own baseline, kept as a worked example. **Replace it with yours** — a hook is only "known good" on the machine whose owner put it there.
 
 - Stop / TaskCompleted hook playing `c:\AI\Claude Code\Tools\Claude\task_done_beep.wav` — the user's finish beep (global CLAUDE.md → Notifications).
-- Recycle-bin PreToolUse hooks calling `RecycleBin.exe` (`c:\Projects\Projects System\RecycleBin.exe\`) — the user's delete/overwrite safety net (see `Info hooks/Recycle-bin safety net.md`).
+- Recycle-bin PreToolUse hooks calling a local `RecycleBin.exe` — the user's delete/overwrite safety net (see `Info hooks/Recycle-bin safety net.md`).
 - MCP server `superdoc` = `cmd /c npx -y @superdoc-dev/mcp` — the user's DOCX tool.
 - MCP servers `dpt-debugger`, `claude-in-chrome`, `autopilot`/`autopilot-android`, and the `claude_ai_*` Gmail/Calendar/Drive connectors — the user's own connected servers.
 - Light-* skill/agent hooks that call the beep wav.
-- The user's own local hook/statusline scripts: `vampire-hook.ps1`, `vampire-statusline.ps1` (ClaudeTokenVampire, `C:\Projects\Projects AI\Claude TokenVampire`) and `skills\light-ref-DelphiOfflineKnowledge\delphipraxis-offline-hook.ps1` (light-ref-DelphiOfflineKnowledge tooling). These run on prompt/status/WebFetch by design — SAFE.
+- The user's own local hook/statusline scripts: `vampire-hook.ps1`, `vampire-statusline.ps1` (from ClaudeTokenVampire, https://github.com/GabrielOnDelphi/ClaudeCode_TokenVampire) and `skills\light-ref-DelphiOfflineKnowledge\delphipraxis-offline-hook.ps1` (light-ref-DelphiOfflineKnowledge tooling). These run on prompt/status/WebFetch by design — SAFE.
 
 Known 3rd-party but user-installed (surface for review, do NOT treat as an attack): the `claude-hud` plugin (GitHub `jarrodwatts/claude-hud`, `node dist/index.js`) runs on every status render. Legitimate but 3rd-party — worth a periodic glance, not an alarm.
 

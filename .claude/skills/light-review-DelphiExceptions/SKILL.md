@@ -55,44 +55,73 @@ Any attempt to define it by its shape misses almost all of them. Measured on `C:
 | `except` with only comments and blank lines before `end` | **11** |
 | `except` whose next significant line is not `on ... do` - **correct** | **105** |
 
-The first two are not "nearly right". They find one hundredth and one tenth of the truth, and the ninety-four they miss are ordinary working code: a function that builds an object, frees it on any failure and returns NIL. The skill's own worked example in rule 10 - the `EXCEPT Inc(Result); END;` in `C:\Projects\LightSaber\LightCore.IO.pas` line 2071 - is one of the ninety-four.
+The first two are not "nearly right". They find one hundredth and one tenth of the truth, and the ninety-four they miss are ordinary working code. The skill's own worked example in rule 10 - the `EXCEPT Inc(Result); END;` in `C:\Projects\LightSaber\LightCore.IO.pas` line 2071 - is one of the ninety-four.
 
-So do it with `awk`, which can hold the "am I inside an `except` waiting for its first real line" state that the job needs. This command also sorts what it finds into the two piles that matter, because a bare catch that ends in `RAISE;` is correct and one that does not is a finding:
+So do it with a script that can hold the "am I inside an `except` waiting for its first real line" state the job needs. **Write the code below to `c:\AI\Claude Code\Temp\find-bare-catches.py`, set `ROOT` to your scope folder, and run it with `python`.** It also sorts every hit into the three piles that matter, because a bare catch that ends in `raise;` is correct and one that does not is a finding:
 
-```bash
-find "c:/Projects/YourProject" -name '*.pas' -not -path '*/UnitTesting/*' -not -path '*/Demo/*' -not -path '*/External/*' -print0 | xargs -0 awk '
-FNR==1 { pend=0 }
-{ buf[FNR]=$0 }
-{
-  l=$0
-  gsub(/\{[^}]*\}/,"",l); sub(/\/\/.*/,"",l); sub(/\(\*.*\*\)/,"",l)
-  gsub(/^[ \t]+|[ \t]+$/,"",l); l=tolower(l)
-  if (pend) {
-    if (l=="") next                       # blank or comment-only line: keep waiting
-    if (l ~ /^on[ \t(]/) { pend=0; next }  # an on..do handler: not a bare catch
-    body=""; kind=0
-    for (i=xl+1; i<=xl+12; i++) {
-      if (!(i in buf)) break
-      d=tolower(buf[i]); gsub(/\{[^}]*\}/,"",d); sub(/\/\/.*/,"",d); gsub(/^[ \t]+|[ \t]+$/,"",d)
-      if (d ~ /^end[;. \t]*$/) break
-      if (d ~ /(^|[^a-z0-9_])raise([^a-z0-9_]|$)/) kind=1
-      if (d ~ /handleexception/) kind=2
-      body = body d " | "
-    }
-    printf "%s %s:%d  %s\n", (kind==1?"RERAISES ":(kind==2?"madExcept":"SWALLOWS ")), FILENAME, xl, substr(body,1,110)
-    pend=0; next
-  }
-  if (l ~ /^except[ \t]*;?$/) { pend=1; xl=FNR }
-}' | sort
+```python
+import io, os, re, sys
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
+ROOT = r'c:\Projects\YourProject'
+SKIP = ('UnitTesting', 'Demo', 'External')          # folders to leave out
+
+def clean(s):                                        # drop comments, trim
+    s = re.sub(r'\{[^}]*\}', '', s)
+    s = re.sub(r'//.*', '', s)
+    return s.strip()
+
+files = []
+for root, dirs, fns in os.walk(ROOT):
+    dirs[:] = [d for d in dirs if d not in SKIP]
+    files += [os.path.join(root, f) for f in fns if f.lower().endswith('.pas')]
+
+res = {'RERAISES': [], 'madExcept': [], 'SWALLOWS': []}
+for f in files:
+    L = io.open(f, encoding='utf-8', errors='replace').read().splitlines()
+    rel = os.path.relpath(f, ROOT)
+    for i in range(len(L)):
+        if not re.fullmatch(r'except\s*;?', clean(L[i]), re.I):
+            continue
+        j = i + 1                                    # first significant line after EXCEPT
+        while j < len(L) and clean(L[j]) == '':
+            j += 1
+        if j < len(L) and re.match(r'on[\s(]', clean(L[j]), re.I):
+            continue                                 # it has a handler: not a bare catch
+        body, depth, k = [], 0, j                    # collect the body up to its own END
+        while k < len(L) and k < j + 40:
+            s = clean(L[k])
+            if re.fullmatch(r'end\s*[;.]?', s, re.I) and depth == 0:
+                break
+            if re.search(r'\bbegin\b|\bcase\b|\btry\b', s, re.I):
+                depth += 1
+            elif re.fullmatch(r'end\s*;?', s, re.I):
+                depth -= 1
+            body.append(s)
+            k += 1
+        b = ' '.join(body)
+        if re.search(r'(^|[^A-Za-z0-9_])raise([^A-Za-z0-9_]|$)', b, re.I):
+            kind = 'RERAISES'
+        elif re.search(r'handleexception', b, re.I):
+            kind = 'madExcept'
+        else:
+            kind = 'SWALLOWS'
+        res[kind].append((rel, i + 1, b[:95]))
+
+for k in ('RERAISES', 'madExcept', 'SWALLOWS'):
+    print('### %s : %d' % (k, len(res[k])))
+print('TOTAL bare catches: %d' % sum(len(v) for v in res.values()))
+for f, l, b in sorted(res['SWALLOWS']):
+    print('%-56s:%-5d %s' % (f, l, b))
 ```
 
 Read the output this way:
 
-- **`RERAISES`** - the block frees what it owns and lets the exception out with a bare `raise;`. Correct. Clear it.
+- **`RERAISES`** - the block frees what it owns and lets the exception out with a bare `raise;`. Correct. Clear it. On LightSaber this is 43 of the 105 - by far the most common bare catch there, and every one of them is right.
 - **`madExcept`** - the block calls `madExcept.HandleException` (rule 7), so the program keeps running *and* the report is mailed. Correct. Clear it.
-- **`SWALLOWS`** - the exception stops here. Every one of these needs a verdict. On LightSaber this is 100 of the 105.
+- **`SWALLOWS`** - the exception stops here. Every one of these needs a verdict. On LightSaber this is 61 of the 105.
 
-The command runs `find` and `awk`, not `grep`, so an absolute path is fine and no `cd` is needed.
+**Do not rewrite this in `awk`, and if you do, never look forward with an array index.** The first version of this search was awk that buffered lines into `buf[FNR]` and then read `buf[xl+1]` to see what came after the `except`. Awk has not read those lines yet - it is a streaming, one-line-at-a-time tool - so `buf[xl+1]` holds a leftover line from the *previous file*. It reported 100 swallows where there are 61, and called 35 correct `raise;` blocks silent. Nothing warned; the output looked entirely plausible. Any classification that needs to see what comes *after* a match must read the whole file first, which is what the script above does.
 
 **Search 4 - the `else` catch-all, which reads as NARROW and is not.** This one does span lines, so use the **Grep tool** with `multiline: true`, `-i: true`, `glob: *.pas` and `path` set to the scope folder. Delphi allows an `else` part after the `on ... do` handlers, and that `else` catches everything the named handlers did not. Search 2 never finds it, because there is no `on E: Exception do` anywhere in the block:
 
@@ -131,7 +160,7 @@ Print all five counts before you start judging anything.
 - One finding can produce many matches. `C:\Projects\LightSaber\FrameVCL\LightVcl.Graph.Loader.pas` gives 24 separate hits from 24 near-identical blocks with the same body and the same `//todo` comment beside each. That is **one** finding with 24 line numbers, not 24 findings - see Step 4.
 - Search 1 counts every `except` keyword in the project and is always far larger than the rest: 292 on LightSaber against 91 matches for search 2. Never use search 1 to size the job.
 
-Size the job by **the matches from searches 2, 3 and 4 that survive the "What NOT to flag" list**. On LightSaber that is 74 blind catches (from 91, once the test, demo, third-party and archived folders are dropped) plus the 100 swallowing bare catches from search 3 - **174 blocks**. Search 3 finds more than search 2 does, which is the opposite of what the shipped version of this skill assumed.
+Size the job by **the matches from searches 2, 3 and 4 that survive the "What NOT to flag" list**. On LightSaber that is 74 blind catches (from 91, once the test, demo, third-party and archived folders are dropped) plus the 61 *swallowing* bare catches from search 3 - **135 blocks**. The other 44 bare catches already end in `raise;` or call `madExcept.HandleException`, so they cost nothing to clear.
 
 **Above about 60 blocks needing a verdict, work folder by folder and write the report folder by folder.** Do not try to hold the whole project in one answer - the quality of the verdicts falls long before the context runs out. LightSaber is a 91-block project, so LightSaber is audited folder by folder.
 
@@ -208,7 +237,8 @@ Do not put `EAbort` in a "not our fault, catch it" handler and do not treat it a
 |---|---|---|---|
 | 1 | **JUSTIFIED** | Catches broadly on purpose, **and the reason is visible.** Visible means either a comment in the code says why, or the block is one of the cases listed under "What NOT to flag" at the end of this file - a destructor, `OnCloseQuery`, `OnClose`, `OnDestroy`, a `finalization` section, a `stdcall` callback the Windows API calls back into, a DLL export, a COM method, or a blind catch that logs and then re-raises with a bare `raise;`. In those places the context is the reason and no comment is required. | **The catch is cleared. The handler body is not.** Read what is inside it before you move on - see below. Then say in the report that you cleared it, and why. |
 | 2 | **SILENT** | Catches broadly **and does nothing at all** - no log, no message, no re-raise, no error value handed back to the caller. The worst kind: the program keeps running in a state nobody understands and nobody ever learns why. | Always a finding. |
-| - | *(border case, read this before using row 2)* | `EXCEPT FreeAndNil(Result); END;` and `EXCEPT Result:= FALSE; END;` are **not** SILENT. Returning NIL, `FALSE` or a placeholder string *is* an error value handed to the caller, so they are row 3, BLIND. The distinction is thin but it matters: the caller can at least see that something went wrong. What it cannot see is **what** went wrong, so say that in the finding. On LightSaber this one shape - build an object, free it on any failure, return NIL, log nothing - accounts for about thirty blocks. | Row 3. |
+| - | *(border case, read this before using row 2)* | `EXCEPT Result:= FALSE; END;` and `EXCEPT Result:= 'Unknown'; END;` are **not** SILENT. Returning `FALSE`, `-1` or a placeholder string *is* an error value handed to the caller, so they are row 3, BLIND. The distinction is thin but it matters: the caller can at least see that something went wrong. What it cannot see is **what** went wrong, so say that in the finding. | Row 3. |
+| - | *(and the one that looks like it but is fine)* | `EXCEPT FreeAndNil(Result); RAISE; END;` is **correct and not a finding** - the half-built object is cleaned up and the exception still travels on to madExcept. On LightSaber this shape appears 35 times and every one of them has the `raise;`. Check for it before you write the finding: without the `raise` it is BLIND, with it there is nothing to do. | None. |
 | 3 | **BLIND** | Catches broadly and does do something, but the something is not enough to stop our own bugs from disappearing. Covers `on E: Exception do`, a bare `except`, and an `else` part whose body is not `RAISE;`. | Rewrite: name the classes that can really happen here - see "How to find those classes" below. |
 | 4 | **NARROW** | Names only classes from the "not our fault" list of Step 2. Our own bugs still fly out to madExcept. | Nothing. This is the target shape. A narrow block that swallows without a log is still worth one line in the report - but it is not SILENT, because madExcept keeps getting our bugs. |
 | 5 | **UNSURE** | You could not answer some question the verdict depends on - which classes the called routine can raise, where a value came from, whether a thread can reach this line. | Put it in the report as UNSURE **with the question you could not answer**. Never drop it silently and never guess a verdict. |
@@ -534,6 +564,8 @@ End the file with this line, exactly:
 - A blind catch in `OnCloseQuery`, `OnClose`, `OnDestroy`, a destructor or a `finalization` section - rule 1 says that is correct.
 - A blind catch that logs and then re-raises with a bare `raise;` - madExcept still gets it, with the right stack.
 - A blind catch at a boundary an exception must not cross, where it must become a return code instead: a `stdcall` callback the Windows API calls back into, a DLL export, a COM method, and the same thing on mobile - an anonymous method handed to the Android or iOS platform layer, which calls it back from code that is not Delphi.
+
+  **Check for this boundary before you judge a single block in a unit, not after.** It is one command and it decides the verdict of every block in the file at once: `grep -c "stdcall;\|cdecl;" "<the unit>"`. A count above zero means the unit is an export layer and its blind catches are correct by design. Real case: `C:\Projects\LightSaber\HardwareID\chHardID_C.pas` has 36 of them and ships as `HardwareIDExtractorC.dll`; its 17 bare catches all read `EXCEPT Result:= nil; END;` and every one is right, because an exception must not cross into C. The sister unit `chHardID.pas` has **zero** `stdcall` - it is the implementation, not the boundary - and its eleven near-identical-looking catches *are* findings. Same folder, same shape, opposite verdicts, and the only thing that separates them is that one grep.
 - A function whose documented contract is to return an error string and never raise. **Read this narrowly.** It clears the decision to catch, not the decision to catch `Exception` - see "Three things the verdict alone will get wrong" in Step 3.
 - An `else` part whose body is `RAISE;`. Everything the named handlers did not take goes on to madExcept, which is the whole point.
 - Test code, demo projects, and third-party source.

@@ -37,6 +37,7 @@ Slash commands you call from any Claude Code session. The name of the folder is 
 | `/light-review-PostEdit` | Verify the code that was just written actually works — each change matches its stated intent, broke nothing observable, missed no call site, did not break a DFM/FMX binding. Reverts what does not hold up, then tests or compiles. |
 | `/light-review-RedGreen` | Red-green TDD for any change, new behavior or bug fix: the FAILING DUnitX test first, confirmed red on its assertion (not on a compile error), then drive it to green. For a bug, that failing test *is* the reproduction. |
 | `/light-review-FakeTest` | Audit a DUnitX / classic-DUnit suite for FAKE or WEAK tests — ones that pass without verifying the behavior they name (zero assertions, `Assert.Pass`-only, tautologies, setup-only checks). Can PROVE fakeness with a git-safe mutation pass. |
+| `/light-review-DelphiExceptions` | Audit every `try..except` in the project: does the block hide a bug of ours from madExcept, or correctly absorb a failure of the outside world (locked folder, full disk, dropped share)? Each block gets a verdict - NARROW / BLIND / SILENT / JUSTIFIED - plus the exact exception classes to narrow it to. |
 
 ### Starting new work
 

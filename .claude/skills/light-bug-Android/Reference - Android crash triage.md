@@ -1,6 +1,6 @@
 # Reference — Delphi FMX Android crash triage
 
-Extracted 2026-07-03 (by Fable 5) from `c:\Projects\FMX\Bug reporter FMX\Crash Reporting Tools for Delphi FMX Android.md` (Sections 3.0 + 6). This file is the canonical copy for the `/light-bug-Android` skill; the source sections get pruned per the no-duplication rule (see that folder's `HandOver.md`).
+Extracted 2026-07-03 (by Fable 5) from the author's own longer notes, *Crash Reporting Tools for Delphi FMX Android* (Sections 3.0 + 6). This file is the canonical copy for the `/light-bug-Android` skill.
 
 ## Why triage is different on Android
 
@@ -17,7 +17,7 @@ Work top-down; first match wins.
 | logcat `AndroidRuntime: FATAL EXCEPTION` + Java stack trace | **Uncaught Java-side exception** (JNI callback, intent, service) | Read the Java stack, map the entry point back to the Pascal/JNI call that triggered it. |
 | logcat `DEBUG` block: `signal 11 (SIGSEGV)`, `backtrace:`, frames with `base: 0x...`; or IDE frames like `:0000006EDB17BB40 ___lldb_unnamed_symbol52707` | **Native crash in a `.so`** | Symbolicate — addr2line/ndk-stack on the UNSTRIPPED `.so` first, the Borland `.map` only as last resort (recipe below). Check any binary with `llvm-readelf -S`: `.symtab` → `ndk-stack` names functions; `.debug_*` → `llvm-addr2line` gives source lines; only `.dynsym` → stripped. |
 | App icon shows ~1 s then dies, BEFORE any Pascal log line; logcat may show `UnsatisfiedLinkError: dlopen failed: library "libX.so" not found` | **Deployment failure** | APK layout check (below). Classic cause: a `.so` missing from `lib/arm64-v8a/` or misrouted into `assets\internal` — the ProjectOutput singleton trap. |
-| App vanishes; nothing in logcat, exception log empty, no tombstone | **OS kill** (LowMemoryKiller, swipe-from-Recents) or a death before the hooks installed | Not a code crash. Check state persistence instead — `c:\Projects\FMX\CLAUDE.md` → "Android state persistence" (eager-save + `TApplicationEventMessage`). |
+| App vanishes; nothing in logcat, exception log empty, no tombstone | **OS kill** (LowMemoryKiller, swipe-from-Recents) or a death before the hooks installed | Not a code crash. Check state persistence instead — save eagerly, driven by `TApplicationEventMessage`, because Android gives you no reliable shutdown hook. |
 
 ## Symbolicating native addresses (tombstones / `___lldb_unnamed_symbol` frames)
 

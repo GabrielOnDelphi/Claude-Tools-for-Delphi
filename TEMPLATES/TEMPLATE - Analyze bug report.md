@@ -34,7 +34,7 @@ Only ask if you cannot proceed. Do not ask for things you can check yourself (co
 - Beep when done.
 
 ### 6. Update website
-- Bug fix or feature → edit `c:\Projects-www\www.Bionixwallpaper.com\www.Bionixwallpaper.com\features\index.html`.
+- Bug fix or feature → edit the features page in your website's local source folder, e.g. `c:\Projects-www\<yoursite.com>\features\index.html`.
 - Add to changelog / bug-fix section. Assets under `features\images\`.
 - Same session as the code change.
 

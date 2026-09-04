@@ -1,10 +1,8 @@
 # Delphi madExcept crash reporting (integration notes)
 
-madExcept / madShi is the crash- and exception-reporting suite for Delphi (madshi.net). Full integration notes live at:
+madExcept / madShi is the crash- and exception-reporting suite for Delphi (madshi.net). Keep your own integration notes next to your madExcept install — a `Claude.md` inside the folder madExcept was installed into, so any Claude session working on that machine can find them.
 
-`c:\Delphi\IDE madShi 510\Claude.md`
-
-They cover:
+Mine cover:
 
 - the `madshi` feature-symbol convention for gating madExcept inclusion (set in the `.dproj` `DCC_Define`, not in the `.dpr`);
 - runtime detection of whether madExcept is linked in;

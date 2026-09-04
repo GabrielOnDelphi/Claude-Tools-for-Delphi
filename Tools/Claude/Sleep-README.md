@@ -14,10 +14,10 @@ Status: **working** (rewired 2026-07-22, Opus 4.8). Now drives the user's own te
 
 ## How it works
 
-`Sleep.cmd` launches the headless command mode of the user's **LightSleep** tool (`C:\Projects\Projects System\LightSleep\`):
+`Sleep.cmd` launches the headless command mode of the author's own **LightSleep** tool. Set the `EXE=` line in `Sleep.cmd` to wherever your build of it sits:
 
 ```bat
-start "" "C:\Projects\Projects System\LightSleep\LightSleep.exe" /sleep 4
+start "" "C:\Projects\LightSleep\LightSleep.exe" /sleep 4
 ```
 
 `LightSleep.exe /sleep <delay>` waits `<delay>` seconds, then calls `LightVcl.Common.PowerUtils.SystemSleep(TRUE)`:

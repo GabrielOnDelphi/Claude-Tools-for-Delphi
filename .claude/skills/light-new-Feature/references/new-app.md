@@ -55,13 +55,13 @@ before implementing the feature. This is what makes the running app drivable via
 **First check whether the app already has it.** Grep the project for `StartBridge` / `Autopilot.Bridge`.
 If present, do nothing. If absent, add it:
 
-1. **Add the bridge unit to the `.dpr` `uses`** (reference the source in place — user's machine
-   layout). VCL apps:
+1. **Add the bridge unit to the `.dpr` `uses`**, referencing the source in place in your own clone of
+   Autopilot for Delphi (https://github.com/GabrielOnDelphi/Autopilot-for-Delphi). VCL apps:
 
    ```delphi
    uses
      …,
-     Autopilot.Bridge.Vcl in 'c:\Projects\Projects AI\Autopilot for Delphi\Source\Bridge\Autopilot.Bridge.Vcl.pas',
+     Autopilot.Bridge.Vcl in '<your Autopilot clone>\Source\Bridge\Autopilot.Bridge.Vcl.pas',
    ```
 
    FMX apps use the twin `Autopilot.Bridge.Fmx` at the same folder. The INTERFACE always compiles, so
@@ -88,8 +88,8 @@ If present, do nothing. If absent, add it:
      `claude mcp add autopilot -- "<path>\Autopilot.Mcp.exe"` — **the user must run this; you cannot
      self-register**, and a newly-registered server only appears in the *next* session.
    - Add one line to the new app's `CLAUDE.md`: *"See `AI-INSTRUCTIONS.md` for how to drive this app
-     via the Autopilot for Delphi MCP server."* The canonical briefing lives at
-     `c:\Projects\Projects AI\Autopilot for Delphi\AI-INSTRUCTIONS.md`.
+     via the Autopilot for Delphi MCP server."* The canonical briefing is `AI-INSTRUCTIONS.md` at the
+     root of your Autopilot clone.
 
 5. **Compile via the `light-compiler` agent** with the `AUTOPILOT` Debug config to confirm the bridge
    links cleanly before any feature code goes in.

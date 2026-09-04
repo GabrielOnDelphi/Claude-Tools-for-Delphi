@@ -24,10 +24,12 @@ setlocal
 set "DELAY=%~1"
 if "%DELAY%"=="" set "DELAY=4"
 
-set "EXE=C:\Projects\Projects System\LightSleep\LightSleep.exe"
+REM  SET THIS to wherever your own LightSleep.exe is built.
+set "EXE=C:\Projects\LightSleep\LightSleep.exe"
 if not exist "%EXE%" (
   echo ERROR: LightSleep.exe not found at "%EXE%".
-  echo Build it from C:\Projects\Projects System\LightSleep\LightSleep.dproj, or run Sleep-PC.ps1 as a fallback.
+  echo Edit the EXE= line in this file to point at your own build of LightSleep.dproj,
+  echo or run Sleep-PC.ps1 as a fallback.
   endlocal
   exit /b 1
 )

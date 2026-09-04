@@ -11,7 +11,9 @@ license: MPL-2.0
 `UncensoredClaude.exe` drives a real WebView2 browser on this PC, renders one URL, and writes the page's
 visible text to a file. It runs OUTSIDE Claude Code's network, so WebFetch's host denylist never applies.
 
-Exe: `C:\Projects\Projects AI\Uncensored Claude\src\UncensoredClaude.exe` (Win64).
+Exe: `UncensoredClaude.exe` (Win64). It is a small Delphi WebView2 host, not published — build your own
+or point this skill at any equivalent tool that takes a URL and writes the rendered text to a file.
+Set the full path in the two commands below before using the skill.
 
 ## READ THIS FIRST — the one reason it "doesn't work"
 
@@ -30,7 +32,7 @@ Quote BOTH paths — the exe path and the output path contain spaces. Use forwar
 backslashes; an unquoted path with a space is parsed as extra arguments and fails with exit 1.
 
 ```bash
-"/c/Projects/Projects AI/Uncensored Claude/src/UncensoredClaude.exe" "<url>" "C:/AI/ClaudeCode-Temp/page.txt"
+"<path to your UncensoredClaude.exe>" "<url>" "C:/AI/ClaudeCode-Temp/page.txt"
 echo "exit=$?"
 ```
 
@@ -38,13 +40,13 @@ Then `Read` `C:\AI\ClaudeCode-Temp\page.txt`.
 
 **Smoke test it first if unsure it is built/working:**
 ```bash
-"/c/Projects/Projects AI/Uncensored Claude/src/UncensoredClaude.exe" "https://example.com" "C:/AI/ClaudeCode-Temp/smoke.txt"; echo "exit=$?"
+"<path to your UncensoredClaude.exe>" "https://example.com" "C:/AI/ClaudeCode-Temp/smoke.txt"; echo "exit=$?"
 ```
 Expect `exit=0` and a file containing "Example Domain".
 
 ### PowerShell variant (only if you cannot use Bash)
 ```powershell
-$exe='C:\Projects\Projects AI\Uncensored Claude\src\UncensoredClaude.exe'
+$exe='<path to your UncensoredClaude.exe>'
 $p=Start-Process $exe -ArgumentList '"<url>"','"C:\AI\ClaudeCode-Temp\page.txt"' -Wait -PassThru
 "exit=$($p.ExitCode)"
 ```
@@ -83,8 +85,7 @@ Append after the two paths:
 ## Notes
 
 - The output file is ALWAYS written, even on failure, so your Read never fails on a missing file.
-- Full project docs: `C:\Projects\Projects AI\Uncensored Claude\CLAUDE.md`.
-- Build only via the `light-compiler` agent; engine unit is `C:\Projects\LightSaber\FrameVCL\LightVcl.Internet.Browser.pas`.
+- Build only via the `light-compiler` agent; the browser engine is `TWebPageReader` in `LightVcl.Internet.Browser.pas`, from LightSaber (https://github.com/GabrielOnDelphi/Delphi-LightSaber).
 
 ---
 

@@ -1,9 +1,6 @@
 ---
 name: light-review-DelphiExceptions
-description: Audit every try..except in a Delphi project and judge each one - does it hide OUR bug from madExcept, or correctly absorb an environment failure (locked folder, full disk, dropped share)? Gives each block a verdict (NARROW / BLIND / SILENT / JUSTIFIED) plus the exact exception classes to narrow it to. Say "check the try/except blocks", "audit exception handling", "are we swallowing exceptions", "why did madExcept never report this".
-author: Gabriel Moraru
-homepage: https://gabrielmoraru.com
-license: MPL-2.0
+description: Audit every try..except in a Delphi project and judge each one - does it hide OUR bug from madExcept, or correctly absorb an environment failure (locked folder, full disk, dropped share)? Gives each block a verdict (JUSTIFIED / SILENT / BLIND / NARROW / UNSURE) plus the exact exception classes to narrow it to. Say "check the try/except blocks", "audit exception handling", "are we swallowing exceptions", "why did madExcept never report this".
 ---
 
 # /light-review-DelphiExceptions - try..except Auditor
@@ -19,11 +16,6 @@ Both mistakes come from the same habit - writing `on E: Exception do` because it
 **Scope:** `except` blocks. `try..finally` never catches anything, so it is out of scope. Unit-test code is out of scope.
 
 **Default is REPORT ONLY.** The skill changes nothing unless `$args` contains `fix`.
-
-**Two folders are named all through this file. Both are paths on the author's machine - change them to yours.**
-
-- `C:\Delphi\Delphi 13\source\` is the Delphi runtime library and VCL source that ships with RAD Studio. On a default install it sits under `C:\Program Files (x86)\Embarcadero\Studio\<version>\source\`. Every line number quoted from it is Delphi 13; check the line in your own version before you trust it.
-- `C:\Projects\LightSaber\` is LightSaber, the author's own open-source Delphi library: https://github.com/GabrielOnDelphi/Delphi-LightSaber - free, MPL-2.0. Rules 4, 5, 6 and 8 name routines from it (`MessageErrorLog`, `MesajGeneric`, `ForceDirectoriesB`, `ForceDirectoriesE`), and the searches and worked examples quote measured counts and real line numbers in it. **Without LightSaber those four rules do not apply** - skip them, or point them at whatever your project uses to show an error and write a log line. The other seven rules need nothing but Delphi.
 
 ---
 
@@ -45,19 +37,25 @@ grep -rEin --include=*.pas "\bon\s+([A-Za-z_][A-Za-z0-9_]*\s*:\s*)?Exception\s+d
 
 **Search 3 - the bare catch. This is the one that finds the most, and no regular expression can do it.**
 
-A bare catch is an `except` with **no `on ... do` handler at all**. Its body can be anything: nothing, a comment, `FreeAndNil(Result);`, `Result:= FALSE;`, `Inc(Result);`. So the thing that defines it is a **negative** - what is *not* on the next significant line - and a regular expression cannot express that without lookahead, which the Grep tool's engine does not have.
+A bare catch is an `except` with **no `on ... do` handler at all**. Its body can be anything: nothing, a comment, `FreeAndNil(Result);`, `Result:= FALSE;`, `Inc(Result);`. So the thing that defines it is a **negative** - what is *not* the next thing after the `except` - and a regular expression cannot express that without lookahead, which the Grep tool's engine does not have.
 
-Any attempt to define it by its shape misses almost all of them. Measured on `C:\Projects\LightSaber\`:
+Any attempt to define it by its shape misses almost all of them. Measured on `C:\Projects\LightSaber\` (2026-09-05):
 
 | How the search is written | Bare catches found |
 |---|---|
 | `except` with `end` on the very next line | **1** |
 | `except` with only comments and blank lines before `end` | **11** |
-| `except` whose next significant line is not `on ... do` - **correct** | **105** |
+| `except` whose next token is not `on ... do` - **correct** | **102** |
 
-The first two are not "nearly right". They find one hundredth and one tenth of the truth, and the ninety-four they miss are ordinary working code. The skill's own worked example in rule 10 - the `EXCEPT Inc(Result); END;` in `C:\Projects\LightSaber\LightCore.IO.pas` line 2071 - is one of the ninety-four.
+The first two are not "nearly right". They find one hundredth and one tenth of the truth, and the ninety-one they miss are ordinary working code. The skill's own worked example in rule 10 - the `EXCEPT Inc(Result); END;` in `C:\Projects\LightSaber\LightCore.IO.pas` line 2071 - is one of the ninety-one.
 
-So do it with a script that can hold the "am I inside an `except` waiting for its first real line" state the job needs. **Write the code below to `c:\AI\Claude Code\Temp\find-bare-catches.py`, set `ROOT` to your scope folder, and run it with `python`.** It also sorts every hit into the three piles that matter, because a bare catch that ends in `raise;` is correct and one that does not is a finding:
+**Before it can count anything, the script must know which characters are code.** This is the whole difficulty, and getting it wrong produced every mistake this skill has ever made. Delphi has four things that look like code and are not: `{ }` and `(* *)` comments, both of which span lines; `//` to the end of a line; and `'...'` string literals. A search that reads them as code:
+
+- **reports a block that has a handler as a bare catch**, when a `{ }` comment sits between the `except` and its `on ... do`;
+- **reports a commented-out block as live code**;
+- **calls a swallowing block correct**, when the word `raise` appears in a comment or a string. Two real LightSaber blocks do exactly this. `C:\Projects\LightSaber\FrameVCL\LightVcl.Visual.AppData.pas` line 300 and `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.AppData.pas` line 194 are blind catches that only log, and the comment explaining them contains the words *"an unguarded raise here would skip all of that"*. A word-search for `raise` files both under "correct, clear it" - the one pile nobody opens. That is worse than a false alarm: a false alarm is visible and a reader corrects it, while this deletes a real finding from the report.
+
+So the script below blanks comments and string literals **first**, replacing them with spaces and keeping every newline, so line numbers never move. Everything after that reads only code. **Write it to `c:\AI\Claude Code\Temp\find-bare-catches.py`, set `ROOT` to your scope folder, and run it with `python`.** It sorts every hit into six piles, because "does the body contain the word raise" is not the same question as "does the body end in a bare `raise;`":
 
 ```python
 import io, os, re, sys
@@ -66,62 +64,99 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 ROOT = r'c:\Projects\YourProject'
 SKIP = ('UnitTesting', 'Demo', 'External')          # folders to leave out
 
-def clean(s):                                        # drop comments, trim
-    s = re.sub(r'\{[^}]*\}', '', s)
-    s = re.sub(r'//.*', '', s)
-    return s.strip()
+def blank(text):
+    """Replace every comment and every string literal with spaces, keeping the length
+       and every newline, so line numbers never move. Delphi has four of them:
+       { } and (* *) span lines, // runs to the end of the line, '...' never spans one."""
+    out, i, n, state = list(text), 0, len(text), 0   # 0 code  1 {}  2 (**)  3 '..'  4 //
+    while i < n:
+        c = text[i]
+        if state == 0:
+            if   c == '{':                              state = 1; out[i] = ' '
+            elif c == '(' and text[i+1:i+2] == '*':     state = 2; out[i] = out[i+1] = ' '; i += 1
+            elif c == "'":                              state = 3; out[i] = ' '
+            elif c == '/' and text[i+1:i+2] == '/':     state = 4; out[i] = out[i+1] = ' '; i += 1
+        elif state == 1:
+            out[i] = '\n' if c == '\n' else ' '
+            if c == '}': state = 0
+        elif state == 2:
+            out[i] = '\n' if c == '\n' else ' '
+            if c == '*' and text[i+1:i+2] == ')':       out[i+1] = ' '; i += 1; state = 0
+        else:                                            # 3 and 4 both end at the line end
+            out[i] = '\n' if c == '\n' else ' '
+            if c == '\n' or (state == 3 and c == "'"):  state = 0
+        i += 1
+    return ''.join(out)
+
+WORD  = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+OPENS = ('begin', 'case', 'try', 'asm')
+
+def body_of(src, pos):
+    """From just after an EXCEPT keyword, return (body text, position of its own END).
+       Counts begin/case/try/asm up and end down, so a nested block never ends the search
+       and there is no line cap to truncate a long handler."""
+    depth = 0
+    for m in WORD.finditer(src, pos):
+        w = m.group(0).lower()
+        if w in OPENS:
+            depth += 1
+        elif w == 'end':
+            if depth == 0:
+                return src[pos:m.start()], m.start()
+            depth -= 1
+    return src[pos:], len(src)
 
 files = []
 for root, dirs, fns in os.walk(ROOT):
     dirs[:] = [d for d in dirs if d not in SKIP]
     files += [os.path.join(root, f) for f in fns if f.lower().endswith('.pas')]
 
-res = {'RERAISES': [], 'madExcept': [], 'SWALLOWS': []}
+PILES = ('RERAISES', 'madExcept', 'CONDITIONAL', 'WRAPPED', 'SWALLOWS', 'NO-MADEXCEPT')
+res = {k: [] for k in PILES}
 for f in files:
-    L = io.open(f, encoding='utf-8', errors='replace').read().splitlines()
+    raw = io.open(f, encoding='utf-8', errors='replace').read()
+    src = blank(raw)                                 # comments and strings gone, line numbers intact
     rel = os.path.relpath(f, ROOT)
-    for i in range(len(L)):
-        if not re.fullmatch(r'except\s*;?', clean(L[i]), re.I):
-            continue
-        j = i + 1                                    # first significant line after EXCEPT
-        while j < len(L) and clean(L[j]) == '':
-            j += 1
-        if j < len(L) and re.match(r'on[\s(]', clean(L[j]), re.I):
+    uses_madexcept = re.search(r'\bmadExcept\b', src, re.I) is not None
+    for m in re.finditer(r'\bexcept\b', src, re.I):
+        if re.match(r'\s*\bon\b[\s(]', src[m.end():], re.I):
             continue                                 # it has a handler: not a bare catch
-        body, depth, k = [], 0, j                    # collect the body up to its own END
-        while k < len(L) and k < j + 40:
-            s = clean(L[k])
-            if re.fullmatch(r'end\s*[;.]?', s, re.I) and depth == 0:
-                break
-            if re.search(r'\bbegin\b|\bcase\b|\btry\b', s, re.I):
-                depth += 1
-            elif re.fullmatch(r'end\s*;?', s, re.I):
-                depth -= 1
-            body.append(s)
-            k += 1
-        b = ' '.join(body)
-        if re.search(r'(^|[^A-Za-z0-9_])raise([^A-Za-z0-9_]|$)', b, re.I):
-            kind = 'RERAISES'
-        elif re.search(r'handleexception', b, re.I):
-            kind = 'madExcept'
-        else:
-            kind = 'SWALLOWS'
-        res[kind].append((rel, i + 1, b[:95]))
+        b, _ = body_of(src, m.end())
+        b = ' '.join(b.split())
+        line = src.count('\n', 0, m.start()) + 1
+        bare_raise = re.search(r'\braise\s*;', b, re.I) is not None
+        any_raise  = re.search(r'\braise\b',   b, re.I) is not None
+        if   bare_raise and re.search(r'\bif\b', b, re.I): kind = 'CONDITIONAL'
+        elif bare_raise:                                   kind = 'RERAISES'
+        elif any_raise:                                    kind = 'WRAPPED'
+        elif re.search(r'\bhandleexception\b', b, re.I):   kind = 'madExcept' if uses_madexcept else 'NO-MADEXCEPT'
+        else:                                              kind = 'SWALLOWS'
+        res[kind].append((rel, line, b[:95]))
 
-for k in ('RERAISES', 'madExcept', 'SWALLOWS'):
-    print('### %s : %d' % (k, len(res[k])))
+for k in PILES:
+    print('### %-12s : %d' % (k, len(res[k])))
 print('TOTAL bare catches: %d' % sum(len(v) for v in res.values()))
-for f, l, b in sorted(res['SWALLOWS']):
-    print('%-56s:%-5d %s' % (f, l, b))
+for k in ('CONDITIONAL', 'WRAPPED', 'NO-MADEXCEPT', 'SWALLOWS'):
+    for f, l, b in sorted(res[k]):
+        print('%-12s %-52s:%-5d %s' % (k, f, l, b))
 ```
 
-Read the output this way:
+Read the output this way. Two piles are cleared without reading; the other four all need a verdict. Counts are LightSaber on 2026-09-05, out of 102 bare catches:
 
-- **`RERAISES`** - the block frees what it owns and lets the exception out with a bare `raise;`. Correct. Clear it. On LightSaber this is 43 of the 105 - by far the most common bare catch there, and every one of them is right.
-- **`madExcept`** - the block calls `madExcept.HandleException` (rule 7), so the program keeps running *and* the report is mailed. Correct. Clear it.
-- **`SWALLOWS`** - the exception stops here. Every one of these needs a verdict. On LightSaber this is 61 of the 105.
+- **`RERAISES` (42)** - the body holds an unconditional bare `raise;`. The block frees what it owns and lets the exception out. Correct. Clear it.
+- **`madExcept` (0)** - the body calls `HandleException` **and** the unit really references madExcept, so the program keeps running *and* the report is mailed (rule 7). Correct. Clear it.
+- **`CONDITIONAL` (1)** - there is a bare `raise;`, but an `if` sits in the same body, so the block re-raises only sometimes and swallows the rest of the time. Needs a verdict. LightSaber's one case is `C:\Projects\LightSaber\FrameVCL\LightVcl.Graph.Loader.Thread.pas` line 224, whose body is `FreeAndNil(BMP); if NOT SilentErrors then RAISE;` - with `SilentErrors` TRUE it swallows, and `SilentErrors` is a public field any caller can set.
+- **`WRAPPED` (0)** - the body raises something new (`raise EMyError.Create(...)`) instead of re-raising. The original exception and its stack are thrown away, which is rule 3's fault in its worst form. Needs a verdict.
+- **`NO-MADEXCEPT` (1)** - the body calls something named `HandleException`, but the unit never mentions madExcept, so it is a routine of your own with a confusing name. LightSaber's one case is `LightVcl.Graph.Loader.Thread.pas` line 184: `Handleexception` there is the thread class's own virtual method (declared line 76), which shows a message box and swallows. Needs a verdict.
+- **`SWALLOWS` (58)** - the exception stops here. Every one needs a verdict.
 
-**Do not rewrite this in `awk`, and if you do, never look forward with an array index.** The first version of this search was awk that buffered lines into `buf[FNR]` and then read `buf[xl+1]` to see what came after the `except`. Awk has not read those lines yet - it is a streaming, one-line-at-a-time tool - so `buf[xl+1]` holds a leftover line from the *previous file*. It reported 100 swallows where there are 61, and called 35 correct `raise;` blocks silent. Nothing warned; the output looked entirely plausible. Any classification that needs to see what comes *after* a match must read the whole file first, which is what the script above does.
+**Two ways this search has been written wrong before. Both produced output that looked entirely plausible.**
+
+**Never look forward with an array index in a streaming tool.** The first version was `awk` that buffered lines into `buf[FNR]` and then read `buf[xl+1]` to see what came after the `except`. Awk has not read those lines yet - it is a one-line-at-a-time tool - so `buf[xl+1]` held a leftover line from the *previous file*. It reported 100 swallows where there were 61, and called 35 correct `raise;` blocks silent. Nothing warned. Any classification that needs to see what comes *after* a match must read the whole file first.
+
+**Never search source text for a keyword before you have removed the comments and the strings.** The second version cleaned comments with `re.sub(r'\{[^}]*\}', '', s)`, one line at a time. A `{ }` comment that spans lines survives that, so its first line was read as code and its words were searched. Five of the 107 entries it produced on LightSaber were wrong: two blocks that have an `on ... do` handler behind a comment were reported as bare catches, one commented-out block was reported as live, and two blind catches were filed under "correct, clear it" because their explanatory comment contains the word *raise*.
+
+**And test the script against blocks whose answer you already know before you trust one number of its output.** Both wrong versions reproduced their own totals exactly, on two days, in two sessions. A count that reproduces says nothing about the entries behind it.
 
 **Search 4 - the `else` catch-all, which reads as NARROW and is not.** This one does span lines, so use the **Grep tool** with `multiline: true`, `-i: true`, `glob: *.pas` and `path` set to the scope folder. Delphi allows an `else` part after the `on ... do` handlers, and that `else` catches everything the named handlers did not. Search 2 never finds it, because there is no `on E: Exception do` anywhere in the block:
 
@@ -134,7 +169,7 @@ On LightSaber this gives 8 hits in 4 files - small enough to check every one by 
 - `else RAISE;` is the correct idiom and is **not** a finding. Every named class is handled, everything else goes on to madExcept. Real code: `C:\Projects\LightSaber\FrameVCL\LightVcl.Common.Shell.pas` lines 301-307, 343-349 and 397-399.
 - `else` with any other body is a blind catch wearing narrow handlers. Verdict BLIND, and say in the finding that the `else`, not the `on` handlers, is what does the damage.
 
-**Why `-i` is not optional.** Delphi ignores letter case, and the house style in these projects writes keywords in capitals - `TRY`, `EXCEPT`, `ON E: Exception DO`, `RAISE`. Every code sample further down this file is written that way. A lower-case-only search finds none of them and reports no error. Measured on `C:\Projects\LightSaber\`: searching for `except` in lower case only finds 62 files where 96 contain one, because 157 occurrences of `EXCEPT` in capitals are invisible to it. A file written entirely in capitals is then reported as having no try..except block at all.
+**Why `-i` is not optional.** Delphi ignores letter case, and the house style in these projects writes keywords in capitals - `TRY`, `EXCEPT`, `ON E: Exception DO`, `RAISE`. Every code sample further down this file is written that way. A lower-case-only search finds none of them and reports no error. Measured on `C:\Projects\LightSaber\`: searching for `except` in lower case only finds 63 files where 97 contain one, because 156 occurrences of `EXCEPT` in capitals are invisible to it (measured 2026-09-05). A file written entirely in capitals is then reported as having no try..except block at all.
 
 **Why search 2 allows any variable name, or none.** All three spellings below are legal Delphi and all three are blind catches. A pattern that hard-codes the single letter `E` followed by a colon finds only the first:
 
@@ -142,15 +177,26 @@ On LightSaber this gives 8 hits in 4 files - small enough to check every one by 
 - `on E2: Exception do` - the handler variable may be any identifier. Real case: `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.Graph.pas` line 187
 - `on Exception do` - no variable at all, which is valid. Real case: `C:\Projects\LightSaber\External\Exif\CCR.Exif.TiffUtils.pas` line 321
 
-On LightSaber the narrow pattern finds 67 blind catches and the one above finds 90 - it was missing a quarter of them.
+On LightSaber (2026-09-05) the broad pattern above finds 91 and the narrow `on E: Exception do` finds 89. The two it adds are `C:\Projects\LightSaber\External\Exif\CCR.Exif.TiffUtils.pas` line 321 (`on Exception do`, no variable) and `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.Graph.pas` line 187 (`on E2: Exception do`). Two matches out of 91 is a small gain - **the `-i` flag is the one that matters here**, since without it the same broad pattern finds only 70.
 
-**Search 5 - the handler that crashes while handling.** One line, and it pays for itself on the first hit. Rule 6 says a library unit must guard the global `AppDataCore` with a NIL check before logging through it. A handler that skips the guard raises an access violation *while handling an exception*, which is far worse than the block it sits in. Use the Grep tool, `multiline: true`, `-i: true`, `glob: *.pas`:
+**Search 5 - the handler that crashes while handling.** A handler that raises while handling an exception is worse than the block it sits in. The usual cause is a global that shutdown has already set to NIL. Use the Grep tool, `multiline: true`, `-i: true`, `glob: *.pas`:
 
 ```
-pattern: \bexcept\b[\s\S]{0,300}?\bAppDataCore\s*\.
+pattern: \bexcept\b[\s\S]{0,400}?\bAppDataCore\s*\.\s*(RamLog|IniFile)\b
 ```
 
-Then look at each hit and keep only the ones with no `if AppDataCore <> NIL` or `if Assigned(AppDataCore)` in front. Replace `AppDataCore` with whatever global your own project logs through.
+**Name the instance members, not the global.** This is the whole difficulty of this search, and the earlier version of it got this wrong. In LightSaber, `TAppDataCore.LogError` and its nine sisters (`LogWarn`, `LogInfo`, `LogMsg`, `LogBold`, `LogHint`, `LogImpo`, `LogVerb`, `LogEmptyRow`, `LogClear`) are **`static` class methods that test the global for NIL themselves** - `C:\Projects\LightSaber\LightCore.AppData.pas` line 190, body at 686-689:
+
+```pascal
+class procedure TAppDataCore.LogError(CONST Msg: string);
+begin
+  if AppDataCore <> NIL then AppDataCore.doLogError(Msg);
+end;
+```
+
+So `AppDataCore.LogError('x')` is safe even when `AppDataCore` is NIL, and a search for the bare `AppDataCore\s*\.` returns 51 of those out of 59 hits - all noise. Only a real **instance** member can raise: `AppDataCore.RamLog`, `AppDataCore.IniFile`. Those are what the pattern above names. Then keep the hits with no `if AppDataCore <> NIL` or `if Assigned(AppDataCore)` in front.
+
+Two things to carry to another project. **First, check whether the routine guards itself before you require a guard at the call site.** One look at its declaration decides it, and requiring a guard the routine already performs is exactly the dead code rule 6 warns about. **Second, the character window is a real limit.** At 300 characters this search missed the one LightSaber handler that genuinely needs the guard: `C:\Projects\LightSaber\FrameVCL\FormSkinsDisk.pas` line 131 calls `AppDataCore.RamLog.AddError(...)` with no NIL test, and a four-line comment between the `except` and the call pushed it out of range. Widen the window rather than trust a clean result.
 
 Print all five counts before you start judging anything.
 
@@ -158,11 +204,13 @@ Print all five counts before you start judging anything.
 
 - One block can produce several matches. A block that names three narrow classes and then ends with `on E: Exception do ... RAISE;` matches search 2 once, and that match belongs to a block that is correct.
 - One finding can produce many matches. `C:\Projects\LightSaber\FrameVCL\LightVcl.Graph.Loader.pas` gives 24 separate hits from 24 near-identical blocks with the same body and the same `//todo` comment beside each. That is **one** finding with 24 line numbers, not 24 findings - see Step 4.
-- Search 1 counts every `except` keyword in the project and is always far larger than the rest: 292 on LightSaber against 91 matches for search 2. Never use search 1 to size the job.
+- Search 1 counts every `except` keyword in the project and is always far larger than the rest: 291 on LightSaber against 91 matches for search 2 (2026-09-05). Never use search 1 to size the job.
 
-Size the job by **the matches from searches 2, 3 and 4 that survive the "What NOT to flag" list**. On LightSaber that is 74 blind catches (from 91, once the test, demo, third-party and archived folders are dropped) plus the 61 *swallowing* bare catches from search 3 - **135 blocks**. The other 44 bare catches already end in `raise;` or call `madExcept.HandleException`, so they cost nothing to clear.
+Size the job by **the matches from searches 2, 3 and 4 that survive the "What NOT to flag" list**. On LightSaber (2026-09-05) that is 74 blind catches (from 91, once `UnitTesting`, `Demo`, `External` and `_Frozen Streams` are dropped) plus the 58 *swallowing* bare catches from search 3, plus its 1 `CONDITIONAL` and 1 `NO-MADEXCEPT` - **134 blocks**. The other 42 bare catches end in an unconditional bare `raise;`, so they cost nothing to clear.
 
-**Above about 60 blocks needing a verdict, work folder by folder and write the report folder by folder.** Do not try to hold the whole project in one answer - the quality of the verdicts falls long before the context runs out. LightSaber is a 91-block project, so LightSaber is audited folder by folder.
+**Drop the same folders everywhere, or the total is nonsense.** Searches 1 and 2 are written above with no folder filter at all, the script's `SKIP` names three folders, and the scope paragraph at the top of Step 1 names five more. Pick one list for the whole audit, write it down in the report, and use it in every search. The 74 above needs four folders dropped; dropping only the script's three gives 75.
+
+**Above about 60 blocks needing a verdict, work folder by folder and write the report folder by folder.** Do not try to hold the whole project in one answer - the quality of the verdicts falls long before the context runs out. LightSaber is a 134-block project, so LightSaber is audited folder by folder.
 
 **Read the whole procedure around each block, not just the block.** A catch is only judgeable against what the code before it does and what the caller expects after it.
 
@@ -202,7 +250,7 @@ The program did everything right and something outside it said no. There is noth
 
 `EInOutError` also covers `EFileNotFoundException` (line 511) and `EPathNotFoundException` (line 513), so those need no separate handler.
 
-**Never narrow a block to `EArgumentException` itself.** Two of its descendants sit one line apart in the runtime library and have opposite verdicts: `EInOutArgumentException` (line 516) is a bad path the user typed and must be caught, while `EArgumentOutOfRangeException` (line 469) is our own bug and must reach madExcept. Catching the parent swallows both.
+**Never narrow a block to `EArgumentException` itself.** Two of its descendants sit 47 lines apart in the runtime library and have opposite verdicts: `EInOutArgumentException` (line 516) is a bad path the user typed and must be caught, while `EArgumentOutOfRangeException` (line 469) is our own bug and must reach madExcept. Catching the parent swallows both.
 
 Add per project, after checking the declaration yourself: database connection errors and `EPrinter`.
 
@@ -231,23 +279,25 @@ Do not put `EAbort` in a "not our fault, catch it" handler and do not treat it a
 
 ## Step 3 - Give the block a verdict
 
-**Test the five rows in the order they are printed and stop at the first that fits.** More than one will often fit - a bare `except` that does nothing is blind and silent at the same time - and without a fixed order two people audit the same block and write down two different verdicts.
+**Five verdicts. Test the five numbered rows in the order they are printed and stop at the first that fits.** More than one will often fit - a bare `except` that does nothing is blind and silent at the same time - and without a fixed order two people audit the same block and write down two different verdicts. The two rows numbered `-` are not verdicts; they are notes attached to the row above and below them, and you read them without ever stopping on them.
+
+The five are **JUSTIFIED, SILENT, BLIND, NARROW, UNSURE**. (The skill's own `description:` line names only four of them - it has no room for UNSURE, which is a verdict like any other and must be written into the report whenever it fits.)
 
 | # | Verdict | What it means | Action |
 |---|---|---|---|
-| 1 | **JUSTIFIED** | Catches broadly on purpose, **and the reason is visible.** Visible means either a comment in the code says why, or the block is one of the cases listed under "What NOT to flag" at the end of this file - a destructor, `OnCloseQuery`, `OnClose`, `OnDestroy`, a `finalization` section, a `stdcall` callback the Windows API calls back into, a DLL export, a COM method, or a blind catch that logs and then re-raises with a bare `raise;`. In those places the context is the reason and no comment is required. | **The catch is cleared. The handler body is not.** Read what is inside it before you move on - see below. Then say in the report that you cleared it, and why. |
+| 1 | **JUSTIFIED** | Catches broadly on purpose, **and the reason is visible.** Visible means either a comment in the code says why, or the block is one of the cases listed under "What NOT to flag" at the end of this file - a destructor, `OnCloseQuery`, `OnClose`, `OnDestroy`, a `finalization` section, a `stdcall` callback the Windows API calls back into, a DLL export, a COM method, a blind catch that logs and then re-raises with a bare `raise;`, **or a blind catch that calls `madExcept.HandleException` (rule 7)** - the program keeps running *and* the report is mailed, so nothing is hidden. In those places the context is the reason and no comment is required. **One exception, and it is row 2's:** a block cleared here only because its routine has a documented "never raises" contract is NOT finished - see the third paragraph under this table. | **The catch is cleared. The handler body is not.** Read what is inside it before you move on - see below. Then say in the report that you cleared it, and why. |
 | 2 | **SILENT** | Catches broadly **and does nothing at all** - no log, no message, no re-raise, no error value handed back to the caller. The worst kind: the program keeps running in a state nobody understands and nobody ever learns why. | Always a finding. |
-| - | *(border case, read this before using row 2)* | `EXCEPT Result:= FALSE; END;` and `EXCEPT Result:= 'Unknown'; END;` are **not** SILENT. Returning `FALSE`, `-1` or a placeholder string *is* an error value handed to the caller, so they are row 3, BLIND. The distinction is thin but it matters: the caller can at least see that something went wrong. What it cannot see is **what** went wrong, so say that in the finding. | Row 3. |
-| - | *(and the one that looks like it but is fine)* | `EXCEPT FreeAndNil(Result); RAISE; END;` is **correct and not a finding** - the half-built object is cleaned up and the exception still travels on to madExcept. On LightSaber this shape appears 35 times and every one of them has the `raise;`. Check for it before you write the finding: without the `raise` it is BLIND, with it there is nothing to do. | None. |
+| - | *(border case, read this before using row 2)* | `EXCEPT Result:= FALSE; END;` and `EXCEPT Result:= 'Unknown'; END;` are **not** SILENT. Returning `FALSE`, `-1` or a placeholder string *is* an error value handed to the caller, so they are row 3, BLIND. The distinction is thin but it matters: the caller can at least see that something went wrong. What it cannot see is **what** went wrong, so say that in the finding. **A counter handed back from inside a loop** - `EXCEPT Inc(Result); END;` - is the same case and is also BLIND, not SILENT, even though rule 10 lists everything else wrong with it. Rule 10 tells you what to write in the finding; this row decides the verdict. | Row 3. |
+| - | *(and the one that looks like it but is fine)* | `EXCEPT FreeAndNil(Result); RAISE; END;` is **correct and not a finding** - the half-built object is cleaned up and the exception still travels on to madExcept. On LightSaber this shape appears 36 times (2026-09-05) and every one of them has the `raise;`. Check for it before you write the finding: without the `raise` it is BLIND, with it there is nothing to do. | None. |
 | 3 | **BLIND** | Catches broadly and does do something, but the something is not enough to stop our own bugs from disappearing. Covers `on E: Exception do`, a bare `except`, and an `else` part whose body is not `RAISE;`. | Rewrite: name the classes that can really happen here - see "How to find those classes" below. |
-| 4 | **NARROW** | Names only classes from the "not our fault" list of Step 2. Our own bugs still fly out to madExcept. | Nothing. This is the target shape. A narrow block that swallows without a log is still worth one line in the report - but it is not SILENT, because madExcept keeps getting our bugs. |
+| 4 | **NARROW** | Names only classes from the "not our fault" list of Step 2 - **or only classes from the "depends where the value came from" list, where you traced the value and it came from outside the program.** Our own bugs still fly out to madExcept either way. | Nothing. This is the target shape. A narrow block that swallows without a log is still worth one line in the report - but it is not SILENT, because madExcept keeps getting our bugs. Real case: `C:\Projects\LightSaber\FrameVCL\LightVcl.Common.IO.pas` lines 779-781 catch only `EConvertError` around a timestamp read from the file system. `EConvertError` is a "depends" class, the value comes from outside, so the verdict is NARROW - not UNSURE, because the question *was* answerable. |
 | 5 | **UNSURE** | You could not answer some question the verdict depends on - which classes the called routine can raise, where a value came from, whether a thread can reach this line. | Put it in the report as UNSURE **with the question you could not answer**. Never drop it silently and never guess a verdict. |
 
 ### Three things the verdict alone will get wrong
 
-**JUSTIFIED clears the catch, never the handler body.** A handler runs at the worst moment the program will ever have - something has just failed. Code that is safe anywhere else is not safe in there. After clearing a block, read the handler body and ask whether it can itself raise. Real case found in LightSaber: `ciUpdater.pas` line 196 is a blind catch in a **destructor**, which rule 1 blesses without argument - and its one line is `AppDataCore.LogError(...)` with no NIL check. A destructor runs at shutdown, which is the exact moment `AppDataCore` is set to NIL (rule 6). The handler raises an access violation while handling an exception, inside a destructor. The verdict is right and the code is broken.
+**JUSTIFIED clears the catch, never the handler body.** A handler runs at the worst moment the program will ever have - something has just failed. Code that is safe anywhere else is not safe in there. After clearing a block, read the handler body and ask whether it can itself raise. Real case, and the trap inside the trap: `C:\Projects\LightSaber\ciUpdater.pas` line 196 is a blind catch in a **destructor**, which rule 1 blesses without argument - and its one line is `AppDataCore.LogError('Updater.Save failed: ' + E.Message)` with no NIL check. A destructor runs at shutdown, which is the exact moment `AppDataCore` is set to NIL. That reads like a certain access violation while handling an exception. **It is not, and the reason is the point of this paragraph.** `TAppDataCore.LogError` is a `static` class method that tests the global itself (`C:\Projects\LightSaber\LightCore.AppData.pas` line 190, body at 686-689: `if AppDataCore <> NIL then AppDataCore.doLogError(Msg);`), so the call is safe. An **instance** member in the same position - `AppDataCore.RamLog.AddError(...)`, `AppDataCore.IniFile` - would have raised. So: read the handler body, and then read the declaration of what it calls. The shape of the call tells you nothing.
 
-**The reason for a silent catch is often written above the `try`, not inside the `except`.** Before writing SILENT, read the whole procedure and the comment block above it. Real case: `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.CrashHandler.pas` line 190 is `EXCEPT` with `END` on the next line and nothing in between - and the six lines at 179-186, directly above the `TRY`, explain that the block runs on a later message-loop turn where a raise would start a repeating error storm. Flagging it SILENT would be a false alarm and would cost the reader's trust in every other line of the report.
+**The reason for a silent catch is often written above the `try`, not inside the `except`.** Before writing SILENT, read the whole procedure and the comment block above it. Real case: `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.CrashHandler.pas` lines 179-180 are `EXCEPT` with `END;` on the next line and nothing in between - and the four lines at 172-175, directly above the `TRY` at 176, explain that the block runs on a later message-loop turn where a raise would start a repeating error storm. (Line numbers measured 2026-09-05; this file has moved three times in two days, so find the block by its comment, not by its line.) Flagging it SILENT would be a false alarm and would cost the reader's trust in every other line of the report.
 
 **A documented "does not raise" contract is a promise to the caller, not a licence to swallow our bugs.** The "What NOT to flag" list clears a function whose comment says it returns an error value and never raises. Read that narrowly: it clears the *decision to catch*, not the decision to catch `Exception`. The contract can be kept and our bugs still reported - name the classes the outside world can cause, and put `madExcept.HandleException` (rule 7) in the catch-all so the crash is mailed while the function still returns its error string.
 
@@ -316,6 +366,8 @@ In `OnCloseQuery`, `OnClose`, `OnDestroy` and `FormClose`, every attempt to clos
 
 **This is the one place where a blind catch is right.** Catch everything, log it, and let the form close. Same for a destructor and for a `finalization` section.
 
+**The log is a separate finding, not part of the verdict.** Row 1 of the verdict table clears the *catch* in these places without asking whether it logs, and that is deliberate - the catch is right either way. An empty `EXCEPT END;` in a destructor is therefore JUSTIFIED **and** a breach of this rule: one line in the report for the missing log, none for the catch. Do not let the cleared verdict swallow the second finding, and do not downgrade the verdict because the log is missing.
+
 When judging a raise in an ordinary button handler, check whether the button carries a `ModalResult` set at design time or in code.
 
 **If it does not**, an escaping exception is harmless: the VCL message loop catches it, madExcept reports it, and the form stays open with the user's data intact - usually exactly what you want, at no cost.
@@ -379,8 +431,8 @@ The message box dies the moment the user clicks OK. The log survives: `AppDataCo
 
 So do both, through one call. **The routine already exists - do not write another one:**
 
-- VCL: `MessageErrorLog` in `C:\Projects\LightSaber\FrameVCL\LightVcl.Common.Dialogs.pas` (declared line 56, body line 157).
-- FMX: `MessageErrorLog` in `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.Dialogs.pas` (declared line 37, body line 125).
+- VCL: `MessageErrorLog` in `C:\Projects\LightSaber\FrameVCL\LightVcl.Common.Dialogs.pas` (declared line 57, body line 158; 2026-09-05).
+- FMX: `MessageErrorLog` in `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.Dialogs.pas` (declared line 38, body line 126; 2026-09-05).
 
 ```pascal
 procedure MessageErrorLog(CONST MessageText: string; CONST LogText: string= ''; CONST Title: string= '');
@@ -392,21 +444,27 @@ Both write the log line even in test mode, where no dialog is shown at all - see
 
 ### 5. Never `MessageDlg` - use the LightSaber routines
 
-`C:\Projects\LightSaber\FrameVCL\LightVcl.Common.Dialogs.pas` has `MessageError`, `MessageWarning`, `MessageInfo`, `MesajYesNo` and `MesajErrDetail`. Prefer them, for one concrete reason beyond consistency: `MesajGeneric` (line 91 of that unit) reads `if TAppDataCore.TEST_MODE then EXIT(0)` at lines 96-97 - no dialog appears during unit tests. A `MessageDlg` in the same place hangs the test run forever, waiting for a click nobody will make.
+`C:\Projects\LightSaber\FrameVCL\LightVcl.Common.Dialogs.pas` has `MessageError`, `MessageWarning`, `MessageInfo`, `MesajYesNo` and `MesajErrDetail`. Prefer them, for one concrete reason beyond consistency: `MesajGeneric` (line 92 of that unit) reads `if TAppDataCore.Unattended then EXIT(0)` at lines 97-98 - no dialog appears during unit tests. (The property was called `TEST_MODE` until 2026-09-04 and the old name no longer compiles; `LightCore.AppData.pas` line 123 records the rename.) A `MessageDlg` in the same place hangs the test run forever, waiting for a click nobody will make.
 
 `MesajGeneric` also prefixes the caption with `Application.Title`, so the box says "BioniX - Error" instead of a bare form name.
 
-### 6. In a unit advertised as reusable, guard `AppDataCore`
+### 6. Guard the global - but only where it is not already guarded for you
 
-`AppDataCore` is a global that each application creates by hand in its `.dpr` (`AppDataCore := TAppDataCore.Create('MyCoolApp')`), and it is set back to NIL during shutdown - the comment at `C:\Projects\LightSaber\LightCore.AppData.pas` line 186 says the `finalization` of `LightVcl.Visual.AppData` frees it and nils the variable.
+`AppDataCore` is a global that each application creates by hand in its `.dpr` (`AppDataCore := TAppDataCore.Create('MyCoolApp')`), and it is set back to NIL during shutdown: the `finalization` of `LightVcl.Visual.AppData` / `LightFmx.Common.AppData` frees it and nils the variable, as the comment at `C:\Projects\LightSaber\LightCore.AppData.pas` lines 178-181 says. A handler is the most likely place in the program to run during shutdown, so this is a handler problem before it is anything else.
 
-So in a unit whose header claims it works outside this project, write `if AppDataCore <> NIL then AppDataCore.LogError(...)`. That is LightSaber's own habit - `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.Graph.pas` line 64 reads `if Assigned(AppDataCore) then AppDataCore.LogError(...)`, and thirteen other LightSaber units do the same - fourteen in total.
+**Split the calls in two before you write a finding. The two halves have opposite answers.**
 
-Inside an application unit that can only ever run in that application, the guard is dead code. Flag it only when the unit header makes no reusability claim.
+**Logging needs no guard.** `TAppDataCore.LogError`, `LogWarn`, `LogInfo`, `LogMsg`, `LogBold`, `LogHint`, `LogImpo`, `LogVerb`, `LogEmptyRow` and `LogClear` are declared `static` at `LightCore.AppData.pas` lines 188-197 and each one tests the global itself (`if AppDataCore <> NIL then AppDataCore.doLogError(Msg);`, lines 686-689). `AppDataCore.LogError('x')` and `TAppDataCore.LogError('x')` are both safe on a NIL global. Writing `if AppDataCore <> NIL then AppDataCore.LogError(...)` in front of one is dead code - do not ask for it and do not flag its absence. Sixteen LightSaber units still write it out of habit; that is history, not a rule.
+
+`static` is what makes this work and it is worth knowing why, because the same class without it behaves the opposite way. A class method **without** `static` carries a hidden `Self`; called through a NIL object reference it reads the class pointer out of that NIL object and raises `EAccessViolation` at address 0 - measured on Delphi 13, Win32 and Win64. With `static` there is no hidden `Self`, nothing is read, and the call is safe.
+
+**Instance members do need the guard.** `AppDataCore.RamLog`, `AppDataCore.IniFile` and anything else reached through the object itself will raise on a NIL global. Write `if Assigned(AppDataCore) then ...`, as `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.Graph.pas` line 64 does. The one unguarded case in LightSaber today is `C:\Projects\LightSaber\FrameVCL\FormSkinsDisk.pas` line 131.
+
+**The general rule, for a project that is not LightSaber:** open the declaration of what the handler calls before you require anything. A routine that guards itself needs no guard at the call site, and you cannot tell which kind you have from the call - `AppDataCore.LogError(...)` and `AppDataCore.RamLog.AddError(...)` look alike and behave differently.
 
 ### 7. To keep running AND still get the report: `madExcept.HandleException`
 
-Sometimes the code must survive the failure but you still want the crash mail. The comment above the declaration in `madExcept.pas` line 1464 (the `Sources` folder of your madExcept install) says it plainly: *"this calls our exception handler, you can e.g. call this from a try..except"*.
+Sometimes the code must survive the failure but you still want the crash mail. The comment above the declaration in `C:\Delphi\IDE madShi 510\madExcept\Sources\madExcept.pas` line 1464 says it plainly: *"this calls our exception handler, you can e.g. call this from a try..except"*.
 
 ```pascal
 EXCEPT
@@ -443,7 +501,7 @@ ForceDirectoriesE(FFolderPath);
 
 Do not append `SysErrorMessage(GetLastError)` to a message after `ForceDirectoriesB`. That routine calls `System.SysUtils.ForceDirectories`, **deliberately ignores its result**, and then answers `DirectoryExists(Folder)` instead. The comment at `C:\Projects\LightSaber\LightCore.IO.pas` line 753 says why: when another thread creates the same folder in the gap between the runtime library's own existence check and its `CreateDir` call, the runtime library answers `FALSE` for a folder that does exist. Asking the file system afterwards is the only answer immune to that race, and BioniX depends on it because several background threads create thumbnail folders at once. The cost is that by the time you see the `FALSE`, the last Windows error code no longer belongs to the failure.
 
-**What `ForceDirectoriesE` raises** - all four come out of `TDirectory.CreateDirectory`, and three of the four are covered by catching `EInOutError`:
+**What `ForceDirectoriesE` raises** - all five come out of `TDirectory.CreateDirectory`, and only three of the five are covered by catching `EInOutError`:
 
 | Class | Ancestor | Caught by `EInOutError`? |
 |---|---|---|
@@ -451,8 +509,21 @@ Do not append `SysErrorMessage(GetLastError)` to a message after `ForceDirectori
 | `EDirectoryNotFoundException` | `EInOutError` (line 509) | yes |
 | `EInOutError` - anything else, message = `SysErrorMessage(GetLastError)` | - | yes |
 | `EInOutArgumentException` - path empty, or holding characters invalid in a path | **`EArgumentException`** (line 516) | **NO - you must name it** |
+| `ENotSupportedException` - a colon anywhere after the drive letter, e.g. a user typing `C:\Data\12:30` | **`Exception`** (line 472) | **NO - you must name it** |
 
-**The general rule this taught:** reading the runtime library source is not enough. A project can shadow or replace any name, and a name that was there last year may be gone. Check the unit's own uses clause and the current declaration before you write a fact about a routine.
+The fifth row is the one everybody misses, this skill included until 2026-09-05. `TDirectory.CreateDirectory` (`C:\Delphi\Delphi 13\source\rtl\common\System.IOUtils.pas` line 1170) calls `CheckCreateDirectoryParameters`, which calls `InternalCheckDirPathParam` (line 1937), which ends with:
+
+```pascal
+{$IFDEF MSWINDOWS}
+  { Windows-only: Check for valid colon char in the path }
+  if not TPath.HasPathValidColon(Path) then
+    raise ENotSupportedException.CreateRes(@SPathFormatNotSupported);
+{$ENDIF MSWINDOWS}
+```
+
+`ENotSupportedException` descends straight from `Exception` (`System.SysUtils.pas` line 472), so nothing else in this table catches it, and a path typed by a user is exactly where a stray colon comes from. The same four-class list without it is repeated in LightSaber's own source comment at `C:\Projects\LightSaber\LightCore.IO.pas` lines 783-787 - so the gap sits in two places and fixing one does not fix the other.
+
+**The general rule this taught:** reading the runtime library source is not enough, and reading only the routine you called is not enough either. Follow the calls it makes down to the bottom - the fifth class above is raised three levels below `ForceDirectoriesE`. A project can also shadow or replace any name, and a name that was there last year may be gone, so check the unit's own uses clause and the current declaration before you write a fact about a routine.
 
 ### 9. An exception leaving a thread's `Execute` is absorbed by the runtime library
 
@@ -468,16 +539,31 @@ end;
 
 It is stored in the read-only property `TThread.FatalException` (line 1982 of the same file) and freed when the thread object dies. Nobody sees it unless somebody reads that property in `OnTerminate`.
 
-In a madExcept build the opposite problem appears: madExcept boxes the thread exception, and a modal box owned by a background thread looks to the user like a full application freeze. BioniX documents exactly this at `BxAIProviderComfyUI.pas` line 630, inside the comment block that runs from line 626.
+In a madExcept build the opposite problem appears: madExcept boxes the thread exception, and a modal box owned by a background thread looks to the user like a full application freeze. BioniX documents exactly this at `C:\Projects\BioniX\SourceCode\BioniX VCL\BxAIProviderComfyUI.pas` line 630, inside the comment block that runs from line 626.
 
 So a procedure called from a worker thread should return an error value, not raise. Flag any `raise` on a path reachable from `TThread.Execute` that has no handler before the thread boundary.
 
 **`Execute` is not the only door into this.** The same fault arrives through every routine that takes an anonymous method and runs it later, on a stack that no longer has your `try..except` on it:
 
-- `TThread.Queue`, `TThread.ForceQueue` and `TThread.Synchronize` - the closure runs on a later turn of the main message loop, inside `CheckSynchronize`, which is **outside** any `try..except` that was open when you posted it.
-- `TTask.Run` and `TParallel.For` - the exception is captured into the task and only re-raised if somebody calls `Wait` on it. Nobody usually does.
+- **`TThread.ForceQueue` - always defers.** The closure runs on a later turn of the main message loop, inside `CheckSynchronize`, which is **outside** any `try..except` that was open when you posted it. This is the only one of the three `TThread` routines that behaves this way from every thread.
+- **`TThread.Queue` and `TThread.Synchronize` - it depends which thread you call them from, and the difference is not visible at the call site.** `TThread.Synchronize` (`C:\Delphi\Delphi 13\source\rtl\common\System.Classes.pas` line 17085) begins `if (CurrentThread.ThreadID = MainThreadID) and not (QueueEvent and ForceQueue) then` and runs the closure **inline** at lines 17094-17097. `Queue` passes `ForceQueue = False` (lines 17023 and 17037), so on the main thread both run the closure immediately, inside the caller's `try..except`. Called from a worker thread they do defer - and `Synchronize` then re-raises the closure's exception back in the worker (lines 17128-17129), where the worker's own handler catches it. So only a `Queue` posted from a worker escapes the way this rule describes.
+- **`TTask.Run` - the exception is captured into the task and only re-raised if somebody calls `Wait` on it.** Nobody usually does.
+- **`TParallel.For` is not in this list - it re-raises by itself.** `TParallel.ForWorker` (`C:\Delphi\Delphi 13\source\rtl\common\System.Threading.pas`) calls `RootTask.Start.Wait;` at line 1489 inside its own `try..except` and ends that handler with `RootTaskObj.CheckFaulted;` at line 1496; `TTask.CheckFaulted` (lines 1901-1911) reads `Exception := GetExceptionObject; if Exception <> nil then begin SetRaisedState; raise Exception; end;`. So a `try..except` wrapped around `TParallel.For` **does** see the loop's exception. Do not flag it.
 
-The trap is that the code reads as protected. Real case in LightSaber: `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.CrashHandler.pas` lines 177-192 posts a closure with `TThread.ForceQueue` from inside a `try..except`, and the closure needs its own `try..except` because the outer one has long since unwound by the time it runs. It has one, and the comment above it says exactly why.
+**And when a closure does escape, it is not silent.** Inside `CheckSynchronize`, lines 16371-16375:
+
+```pascal
+            except
+              if not SyncProc.Queued then
+                SyncProc.SyncRec.FSynchronizeException := AcquireExceptionObject
+              else if Assigned(ApplicationHandleException) then
+                ApplicationHandleException(SyncProc.SyncRec.FThread);
+            end;
+```
+
+For a **queued** closure the exception goes to `Application.HandleException`, which is where madExcept sits - so it is reported, not parked in a field nobody reads. The heading of this rule ("absorbed by the runtime library") is true of `TThread.Execute` and of `TTask.Run`, and false of a queued closure. The finding is still real, because the closure escapes the `try..except` the author thought protected it and lands in a madExcept box the author did not expect - but write the finding as "reaches madExcept from the wrong place", never as "disappears".
+
+The trap is that the code reads as protected. Real case in LightSaber: `C:\Projects\LightSaber\FrameFMX\LightFmx.Common.CrashHandler.pas` posts a closure with `TThread.ForceQueue` from inside a `try..except` (line 170 on 2026-09-05), and the closure needs its own `try..except` because the outer one has long since unwound by the time it runs. It has one, at lines 179-180, and the comment at 172-175 says exactly why. Find it by that comment - this block has moved three times in two days.
 
 So: **when a `try` block posts a closure, the closure is not inside the try.** Judge it as its own block, and if it has no handler of its own, that is a finding.
 
@@ -548,7 +634,7 @@ Summary table first, one row per finding, worst first:
 
 Group when all three are true: same shape of handler, same reason it is wrong, same fix. Otherwise keep them apart.
 
-**One block can hold two findings.** Judge the catch and the handler body separately - a blind catch that also logs through an unguarded global is two lines in the table, not one, because the two are fixed in different places by different edits.
+**One block can hold two findings.** Judge the catch and the handler body separately - a blind catch whose handler can itself raise is two lines in the table, not one, because the two are fixed in different places by different edits. **The handler body is a finding only when it can really raise**, which means an unguarded *instance* member of a global (`AppDataCore.RamLog.AddError(...)`), never a self-guarding static call (`AppDataCore.LogError(...)`) - see rule 6. Log-then-re-raise, the pattern shown under rule 3, is one finding at most and usually none.
 
 Then one short block per finding: the code as it stands, and the code as it should read. For a grouped finding show **one** pair of code blocks, from the first line number listed.
 
@@ -565,7 +651,7 @@ End the file with this line, exactly:
 - A blind catch that logs and then re-raises with a bare `raise;` - madExcept still gets it, with the right stack.
 - A blind catch at a boundary an exception must not cross, where it must become a return code instead: a `stdcall` callback the Windows API calls back into, a DLL export, a COM method, and the same thing on mobile - an anonymous method handed to the Android or iOS platform layer, which calls it back from code that is not Delphi.
 
-  **Check for this boundary before you judge a single block in a unit, not after.** It is one command and it decides the verdict of every block in the file at once: `grep -c "stdcall;\|cdecl;" "<the unit>"`. A count above zero means the unit is an export layer and its blind catches are correct by design. Real case: `C:\Projects\LightSaber\HardwareID\chHardID_C.pas` has 36 of them and ships as `HardwareIDExtractorC.dll`; its 17 bare catches all read `EXCEPT Result:= nil; END;` and every one is right, because an exception must not cross into C. The sister unit `chHardID.pas` has **zero** `stdcall` - it is the implementation, not the boundary - and its eleven near-identical-looking catches *are* findings. Same folder, same shape, opposite verdicts, and the only thing that separates them is that one grep.
+  **Check for this boundary before you judge a single block in a unit, not after.** It is one command and it decides the verdict of every block in the file at once: `grep -c "stdcall;\|cdecl;" "<the unit>"`. A count above zero means the unit is an export layer and its blind catches are correct by design. Real case: `C:\Projects\LightSaber\HardwareID\chHardID_C.pas` has 35 of them and ships as `HardwareIDExtractorC.dll`; its 17 bare catches all read `EXCEPT Result:= nil; END;` and every one is right, because an exception must not cross into C. The sister unit `chHardID.pas` has **zero** `stdcall` - it is the implementation, not the boundary - and its eleven near-identical-looking catches *are* findings. Same folder, same shape, opposite verdicts, and the only thing that separates them is that one grep.
 - A function whose documented contract is to return an error string and never raise. **Read this narrowly.** It clears the decision to catch, not the decision to catch `Exception` - see "Three things the verdict alone will get wrong" in Step 3.
 - An `else` part whose body is `RAISE;`. Everything the named handlers did not take goes on to madExcept, which is the whole point.
 - Test code, demo projects, and third-party source.
@@ -573,9 +659,3 @@ End the file with this line, exactly:
 Report a count of the blocks you looked at and cleared, so the numbers add up, and list the cleared ones with the reason each was cleared - a report that shows only findings cannot be checked by anybody. A block you were unsure about goes into the report marked UNSURE, with the question you could not answer - never silently dropped.
 
 **Say plainly when a whole verdict came back empty.** "No SILENT block in this project" is a real result and the reader wants it. A report that lists only what is wrong leaves them unable to tell a clean project from an unfinished audit.
-
----
-
-*[Claude Tools for Delphi](https://github.com/GabrielOnDelphi/Claude-Tools-for-Delphi) — © 2026 Gabriel Moraru, [gabrielmoraru.com](https://gabrielmoraru.com) — MPL-2.0*
-
-*[Autopilot for Delphi](https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/) — Claude clicks, types and reads inside your running VCL / FMX app.*

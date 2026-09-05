@@ -1,6 +1,7 @@
 ---
 name: light-review-Full
-description: Full three-stage Delphi code review pipeline: find correctness bugs, counter-analyze + apply surviving fixes, verify + compile. Say "review this Delphi code", "code review FormFoo.pas", "deep review the Lib folder".
+description: |
+  Full three-stage Delphi code review pipeline: find correctness bugs, counter-analyze and apply the fixes that survive, verify them and compile. Say "review this Delphi code", "code review FormFoo.pas", "deep review the Lib folder", "review the code I just changed", "check this unit for bugs", "is this code correct". With no file named it reviews whatever `git status` shows as uncommitted, so it works on a bare "review my changes".
 author: Gabriel Moraru
 homepage: https://gabrielmoraru.com
 license: MPL-2.0
@@ -134,68 +135,67 @@ says *no further review needed*, and is more useful in the log than a noisy entr
 governs the review-set files — **not** the global `CLAUDE.md`). The full record lives in a
 dedicated file; the always-loaded `CLAUDE.md` carries only a one-line pointer to it:
 
-- **`ReviewHistory.md`** (in the project root, next to its `CLAUDE.md`) — the full log. This
-  file is **not** auto-loaded into context, so it can hold real history: **prepend** a new dated
-  block at the top (newest first), keeping past blocks in full. **Create the file if it does not
-  exist** — start it with an `# Review history` heading, then the first block.
-  **Size cap — trim oldest when it grows too large.** After prepending, if the file exceeds
-  **~25 KB**, delete whole blocks from the **bottom** (the oldest reviews) until it is back under
-  the cap. Drop entire `## <date>` blocks, never half a block. Keep at least the **5 most recent**
-  blocks regardless — if even those exceed 25 KB, leave them; history integrity wins over the
-  cap. Trimming loses only the oldest detail, which is the least useful — the recent verdict
-  trend is what decides "do we need another review?".
-- **`CLAUDE.md → ## Last review`** — a single pointer line, **overwritten** every run, carrying
-  the latest verdict + date so the "do we need another review?" answer is visible in the
-  always-loaded file without opening anything:
-  `YYYY-MM-DD — **<verdict>** — full history in [ReviewHistory.md](ReviewHistory.md)`.
-  Keep it to that one line — all detail belongs in `ReviewHistory.md`, never here.
+- **`ReviewHistory.md`** (in the project root, next to its `CLAUDE.md`) — the full log, newest
+  block first. It is **not** auto-loaded into context, so it can hold real history.
+- **`CLAUDE.md → ## Last review`** — a single pointer line carrying the latest verdict and date,
+  so the "do we need another review?" answer is visible in the always-loaded file without opening
+  anything. Overwritten every run; all detail belongs in `ReviewHistory.md`.
 
-If the project has no `CLAUDE.md` at all, still write `ReviewHistory.md`; skip the pointer line
-(there is no file to put it in) and say so in the summary.
+**Do not write either file by hand — run the bundled script.** It prepends the block, enforces the
+size cap by dropping only whole `## <date>` blocks from the bottom while never falling below the 5
+most recent, and overwrites the `## Last review` pointer, creating `ReviewHistory.md` or the pointer
+section when they do not exist yet:
 
-**What each `ReviewHistory.md` block contains** (keep it short — a few lines, not a report):
-
-- **Heading** — `## YYYY-MM-DD — <verdict>`: the date (absolute, never "today" / "last week")
-  and the ship-readiness verdict on one line. This same date + verdict is what the `CLAUDE.md`
-  pointer line copies.
-- **Scope** — how many `.pas` files and, if few, which ones (or the folder name).
-- **Result** — confirmed-and-fixed count (the fixes stage 3 left in place), and the
-  compile/test outcome from stage 3.
-- **Unresolved** — the count and a one-line-each list of every "Possible issue" / skipped
-  finding the agents flagged for a human (the "Needs your attention" items from the summary).
-  Write **"none"** when there are none. This line is what drives the ship-readiness call.
-- **Ship-readiness** — one verdict from this fixed scale, so entries stay comparable:
-  - **Ready** — stage 3 compiled/passed clean **and** zero unresolved items.
-  - **Ready with notes** — compiled/passed clean, but ≥1 low-risk unresolved item that does
-    not block shipping (name them on the Unresolved line).
-  - **Not ready** — the build/tests failed, **or** an unresolved item is serious enough to
-    block a release (a likely crash, data loss, security, or correctness hole).
-
-  Base the verdict on stage 3's actual compile/test result and the unresolved list — do not
-  inflate it. If unsure between two levels, pick the more cautious one.
-
-Example `ReviewHistory.md` (full log, newest block on top — every block kept in full):
-
-```markdown
-# Review history
-
-## 2026-06-10 — Ready with notes
-- **Scope:** 3 files — BxAIEngine.pas, BxAIMaskGen.pas, BxAIProviderComfyUI.pas
-- **Result:** 2 issues fixed; compiles clean.
-- **Unresolved:** 1 — ViewportResolver may deadlock if the queue is drained mid-await (needs a human call).
-
-## 2026-05-28 — Ready
-- **Scope:** playlist + monitor units.
-- **Result:** nothing found; compiles clean.
-- **Unresolved:** none.
+```
+python "c:\Users\<you>\.claude\skills\light-review-Full\scripts\review-log.py" add "<project root>" ^
+  --date 2026-06-10 --verdict "Ready with notes" --model "Opus 5" ^
+  --scope "3 files - BxAIEngine.pas, BxAIMaskGen.pas, BxAIProviderComfyUI.pas" ^
+  --result "2 issues fixed; compiles clean." ^
+  --unresolved "1 - ViewportResolver may deadlock if the queue is drained mid-await."
 ```
 
-And the matching one-line pointer in that project's `CLAUDE.md` (overwritten each run):
+`--verdict` accepts only `Ready`, `Ready with notes` or `Not ready`, so a verdict outside the scale
+below fails loudly instead of quietly entering the log. Omit `--unresolved` and it writes `none`.
+The script prints the block count, the resulting size, how many old blocks it dropped, and whether
+the pointer line was added or overwritten — put those numbers in the Step 7 summary. A project with
+no `CLAUDE.md` still gets its `ReviewHistory.md`; the script says `no CLAUDE.md - pointer line
+skipped` and that goes in the summary too.
 
-```markdown
-## Last review
-2026-06-10 — **Ready with notes** — full history in [ReviewHistory.md](ReviewHistory.md)
+**Why a script rather than an edit.** Trimming to a byte cap by hand is where this step goes wrong,
+and both ways it goes wrong leave a file that still looks right: cutting a block in half at the cap,
+and trimming past the 5-block floor because the file is still over it. `scripts\test-review-log.py`
+checks exactly those two, plus that a hand-written header above the first block survives. Run it
+after any change to the script:
+
 ```
+python "c:\Users\<you>\.claude\skills\light-review-Full\scripts\test-review-log.py"
+```
+
+To see the current state of a project's log without writing anything:
+`python "…\review-log.py" check "<project root>"`.
+
+**What to pass to each switch.** The script owns the shape of the block; these rules own its content.
+
+- `--date` — absolute, never "today" or "last week".
+- `--model` — the model that ran the review, read live from this session, never guessed. Reviews from
+  different models are not equally trustworthy, and a year from now nobody can tell which one produced
+  a block from the text alone.
+- `--scope` — how many `.pas` files, and which ones if there are few, or the folder name if there are many.
+- `--result` — the confirmed-and-fixed count, meaning the fixes stage 3 left in place, plus stage 3's
+  compile or test outcome.
+- `--unresolved` — the count, then one line each for every "Possible issue" or skipped finding the
+  agents left for a human: the same items the Step 7 summary lists under "Needs your attention".
+  Omit the switch when there are none and the script writes `none`. This line is what drives the verdict.
+- `--verdict` — one of three, so entries stay comparable across years:
+  - **Ready** — stage 3 compiled or passed clean, **and** there are zero unresolved items.
+  - **Ready with notes** — compiled or passed clean, but at least one low-risk unresolved item that
+    does not block shipping. Name those items on `--unresolved`.
+  - **Not ready** — the build or the tests failed, **or** an unresolved item is serious enough to block
+    a release: a likely crash, data loss, a security hole, a correctness hole.
+
+  Base it on stage 3's real compile or test result and on the unresolved list, never on an optimistic
+  reading. Torn between two levels? Take the more cautious one — an inflated verdict is the one thing
+  in this log that actively misleads a later session.
 
 ## Optional - check it in the running app
 
@@ -232,7 +232,7 @@ transcript above — do not re-paste them). Cover:
   pipeline per file. Cross-file analysis depends on the agent seeing the whole set.
 - **You do not review code.** Resolving input, launching agents, threading reports, and
   summarizing is your entire job. The agents do the review.
-- **Shared memory checklist.** The `light-review-step1` and `light-review-step3` agents apply the Delphi memory-safety & exception checklist at `~/.claude/skills/light-ref-Memory/SKILL.md` — that file is its single source of truth, not copied here or inside the agents. Edit that one file to change what the pipeline checks for memory/exception safety.
+- **Shared memory checklist.** The `light-review-step1` and `light-review-step3` agents apply the Delphi memory-safety & exception checklist at `c:/Users/<you>/.claude/skills/light-ref-Memory/SKILL.md` — that file is its single source of truth, not copied here or inside the agents. Edit that one file to change what the pipeline checks for memory/exception safety.
 - **If a stage fails** (agent errors out, returns nothing usable), stop the pipeline, report
   which stage failed and why, and do not fabricate the missing stage's output.
 - **Docs come after the code is verified, not before.** Step 5 runs only after stage 3 has

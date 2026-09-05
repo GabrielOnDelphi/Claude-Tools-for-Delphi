@@ -1,6 +1,7 @@
 ---
 name: light-task-DerailmentCheck
-description: "Pause mid-task and verify your own conclusions before continuing: classify every load-bearing conclusion VERIFIED / INFERRED / ASSUMED with evidence, actively attack the unverified ones, and find the earliest wrong turn if one exists. Not Delphi-specific — usable in any long or drifting task, in any language. Use when the user says \"derailment check\", \"are you on track\", \"checkpoint yourself\", \"pause and check your conclusions\", \"/light-task-DerailmentCheck\", or after any long autonomous stretch. ALSO fire this on yourself, unprompted, whenever: the user says \"nope\"/\"no\"/\"wrong\"/\"stop\" or otherwise corrects you; a fix didn't change the symptom; two fix attempts on the same problem both failed; you're editing a file your own analysis never mentioned; you're explaining away contradicting evidence instead of checking it; or you're about to act without ever having reproduced the problem."
+effort: max
+description: "Pause mid-task and verify your own conclusions before continuing: classify every load-bearing conclusion VERIFIED / INFERRED / ASSUMED with evidence, actively attack the unverified ones, and find the earliest wrong turn if one exists. Not Delphi-specific — usable in any long or drifting task, in any language. Use when the user says \"derailment check\", \"are you on track\", \"checkpoint yourself\", \"pause and check your conclusions\", or after any long autonomous stretch. ALSO fire this on yourself, unprompted, whenever: the user says \"nope\"/\"no\"/\"wrong\"/\"stop\" or otherwise corrects you; a fix didn't change the symptom; two fix attempts on the same problem both failed; you're editing a file your own analysis never mentioned; you're explaining away contradicting evidence instead of checking it; or you're about to act without ever having reproduced the problem."
 author: Gabriel Moraru
 homepage: https://gabrielmoraru.com
 license: MPL-2.0
@@ -27,14 +28,16 @@ STOP. Do not write, edit, or run anything until this audit is done.
 
 Do not defend prior work. A wrong conclusion found now is cheap; a wrong conclusion kept is expensive.
 
-## Tripwires — when to fire this on yourself
+## Why the six tripwires are tripwires
 
-- The user says "nope" / "no" / "wrong" / "stop" or corrects you — the model of the task was just contradicted.
-- A fix did not change the symptom (the causal model is wrong — do not stack another fix on top).
-- Two failed fix attempts on the same symptom.
-- You are editing a file your own root-cause analysis never mentioned.
-- You are explaining away contradicting evidence ("probably flaky", "must be caching") without verifying.
-- You are proceeding without a reproduction, "based on reading the code" alone.
+The `description:` line above lists six moments that should start this audit without anyone asking for it. Each one is there because it is evidence that the model of the task is already wrong, not merely incomplete:
+
+- **The user says "nope" / "no" / "wrong" / "stop", or corrects you.** Something you believed was just contradicted by the one person who knows.
+- **A fix did not change the symptom.** The causal model is wrong. A second fix stacked on top of a wrong model changes the code without changing the cause.
+- **Two failed fix attempts on the same symptom.** Same reason, now with evidence.
+- **You are editing a file your own root-cause analysis never mentioned.** Either the analysis was wrong or the edit is.
+- **You are explaining away contradicting evidence** — "probably flaky", "must be caching" — instead of checking it. That sentence is the moment a wrong conclusion becomes permanent.
+- **You are proceeding without a reproduction**, on reading the code alone.
 
 ## Short version (quick mid-task nudge)
 

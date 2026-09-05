@@ -1,6 +1,6 @@
 ---
 name: light-md-DriftUpdate
-description: Scan project markdown docs (CLAUDE.md, README.md, docs/*.md) for drift after code changes. Flag sections out of sync with current code — class names, file paths, settings keys, procedure signatures, architecture claims. Propose and apply concrete edits. Use when user says "update md", "check docs", "refresh claude.md", "verify docs", or invokes /light-md-DriftUpdate.
+description: Scan project markdown docs (CLAUDE.md, README.md, docs/*.md) for drift after code changes. Flag sections out of sync with current code — class names, file paths, settings keys, procedure signatures, architecture claims. Propose and apply concrete edits. Use when the user says "update md", "check docs", "verify docs", "refresh claude.md", "are the docs still accurate", "doc drift check". Also fire it yourself, without being asked, when a session has changed 3 or more source files in a project that has a CLAUDE.md and the user is about to stop or commit — stale docs are only ever noticed later, by someone who trusted them.
 author: Gabriel Moraru
 homepage: https://gabrielmoraru.com
 license: MPL-2.0
@@ -11,18 +11,6 @@ license: MPL-2.0
 This skill is a thin launcher. The scan-verify-fix work is done by the **`light-md-DriftUpdate` agent**
 in its own context window (reading every doc + grepping the code is heavy — keep it out of the main
 context). Your job: decide whether to run, resolve the scope, launch the agent, relay its report.
-
-## When to run
-
-User invokes `/light-md-DriftUpdate` OR says a variant: "update md", "check docs", "verify docs",
-"refresh claude.md", "are the docs still accurate", "doc drift check".
-
-Also run proactively IF all of these hold:
-- Session touched 3+ source files (code changes, not just reads)
-- User about to end turn / close / commit
-- Project has CLAUDE.md
-
-If uncertain whether to run, ask first.
 
 ## Steps
 
@@ -46,7 +34,7 @@ and applies the surgical fixes.
 ## Where the rules live (for the agent, not for you)
 
 The agent loads the Delphi vocabulary + clarity references from
-`~\.claude\skills\light-md-DelphiIdiom\references\` so any new prose it writes is already
+`c:\Users\<you>\.claude\skills\light-md-DelphiIdiom\references\` so any new prose it writes is already
 Delphi-idiomatic, and it holds the claim-extraction / verify / skip / anti-pattern rules. See
 `.claude/agents/light-md-DriftUpdate.md`.
 

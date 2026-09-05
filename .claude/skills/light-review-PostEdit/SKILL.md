@@ -1,6 +1,6 @@
 ---
 name: light-review-PostEdit
-description: Verify the code you just wrote (fix or feature) works — confirm each change matches intent, broke nothing observable, missed no call sites, didn't break DFM/FMX bindings; revert what fails; then test or compile. Use after implementing a fix/feature or /light-review-PostEdit.
+description: Verify the code you just wrote (fix or feature) works — confirm each change matches intent, broke nothing observable, missed no call sites, didn't break DFM/FMX bindings; revert what fails; then test or compile through the light-compiler agent. Use when the user says "check what you just changed", "verify your edits", "did that break anything", "post-edit review", "make sure the fix is right". Fire it yourself, without being asked, as the last step of any session that changed Delphi code — an edit that nobody verified is the ordinary way a regression reaches the user.
 author: Gabriel Moraru
 homepage: https://gabrielmoraru.com
 license: MPL-2.0
@@ -23,14 +23,16 @@ If you cannot state the "why" clearly, the change is suspect — flag it.
 
 ## Step 2 — Load the false-positive memory and match against the list
 
-1. Read `~/.claude/agent-memory/light-review/patterns_common_false_positives.md` if it exists.
-2. Glob `~/.claude/agent-memory/light-review/patterns_*.md` and read the 2–5 files whose filename keywords match the files you edited (e.g., edited `FormLessonChat.pas` → read `patterns_formlessonsetup_*.md`, `patterns_formview_main_chat.md`, etc.).
+1. Read `c:/Users/<you>/.claude/agent-memory/light-review/patterns_common_false_positives.md` if it exists.
+2. Glob `c:/Users/<you>/.claude/agent-memory/light-review/patterns_*.md` and read the 2–5 files whose filename keywords match the files you edited (e.g., edited `FormLessonChat.pas` → read `patterns_formlessonsetup_*.md`, `patterns_formview_main_chat.md`, etc.).
 
-For every edit in your Step 1 list, check: does this change contradict a known-good pattern? If yes, **revert immediately** and note the revert.
+For every edit in your Step 1 list, check: does this change contradict a known-good pattern? If yes, quote the line of the pattern file it contradicts, then **revert immediately** and note the revert. No quoted pattern line, no revert.
 
 If the memory directory does not exist, skip this step.
 
-## Step 3 — Critical analysis of each change
+## Step 3 — Critical analysis of each change, including the opposite case
+
+This is the ONLY judgement pass over the edits. Ask all of it here, in one go — do not judge the edits and then judge them again, because a second pass over your own first pass is the worst-scoring way to review anything (21.7% of planted errors caught against 28.6% for a fresh console, and 4.4 wrong complaints per document against 3.1 — Song, arXiv:2603.12123).
 
 For every edit:
 
@@ -43,19 +45,14 @@ For every edit:
 - **Did the change introduce a new exception path, ownership shift, or broken invariant?** Watch for: `Free` on a non-owned object, missing `try/finally`, `FreeAndNil` on a borrowed reference, dangling event handlers after a form closes.
 - **Resource leaks.** New `TStringList.Create`, `TFileStream.Create`, `TBitmap.Create` etc. — is there a matching `Free` or `try/finally`?
 - **Threading.** Did you touch code that runs on a non-main thread? `Synchronize` / `Queue` boundary preserved?
-
-## Step 4 — Counter-analysis
-
-For each change, argue the opposite case:
-
-- "What if the original code was actually correct (for fixes) or the new feature is solving the wrong problem?"
-- "What if my change is correct but I overshot — could a smaller change have worked?"
-- "What if a related guarantee exists upstream that my new code now violates downstream?"
-- "What if the feature is correct in isolation but breaks an assumption another part of the code relies on?"
+- **What if the original code was actually correct** (for fixes), or the new feature is solving the wrong problem?
+- **What if the change is correct but overshot** — could a smaller change have worked?
+- **What if a related guarantee exists upstream** that the new code now violates downstream?
+- **What if the feature is correct in isolation** but breaks an assumption another part of the code relies on?
 
 Verify, do NOT speculate. Read the files. Check the docs. Search the Internet if needed (Embarcadero, RTL source at `c:\Delphi\Delphi 13\source\`).
 
-## Step 5 — Integration check
+## Step 4 — Integration check
 
 For every modified file:
 
@@ -63,21 +60,27 @@ For every modified file:
 - **Grep for every public identifier you touched or added.** List every call site. Read each one.
 - **DFM/FMX bindings.** If you renamed, removed, or added a published field/event the form expects, the form will fail to load. Check the `.dfm` / `.fmx`.
 - **New units.** If you added a new unit, is it added to the `.dpr` / `.dproj` or only sitting on disk? An unreferenced unit will not be compiled into the project.
-- **New `uses` entries.** Did you add a `uses` that pulls in a circular dependency? Don't manually trace cycles — the Delphi compiler emits E2004. Step 7's compile catches it.
+- **New `uses` entries.** Did you add a `uses` that pulls in a circular dependency? Don't manually trace cycles — the Delphi compiler emits E2004. Step 6's compile catches it.
 
-Do NOT run the compiler in this step — Step 7 handles it. (Avoid double-compiling.)
+Do NOT run the compiler in this step — Step 6 handles it. (Avoid double-compiling.)
 
-## Step 6 — Revise
+## Step 5 — Revise
+
+**Proof gate — read this before you touch any code.** Undoing code that was correct is the one failure in this whole skill that leaves the project worse off than if the skill had never run. Everything else costs you a missed problem; this costs you working code. So an adjustment or a revert needs a quoted line before it is allowed:
+
+- Quote `file:line` and then that line of source, exactly as it stands, and say what it proves — a guard, a clamp, an early exit, a declaration the edit assumed wrongly, a caller that breaks.
+- No such line? Then you do not have a finding, you have a doubt. Write the doubt down in the report and **change nothing**.
+- Never write a percentage, a confidence score, or the word "likely" here. A wrong line number is caught in one keystroke; a wrong confidence score is not.
 
 Produce three sections:
 
 - **Changes that hold up** — short list, one line each.
-- **Changes that need adjustment** — what was wrong, what the corrected version looks like, then apply the correction.
-- **Changes that should be reverted** — the new code was wrong; undo the edit and explain why.
+- **Changes that need adjustment** — the quoted `file:line` that shows what is wrong, what the corrected version looks like, then apply the correction.
+- **Changes that should be reverted** — the quoted `file:line` that proves the new code is wrong, then undo the edit and explain why.
 
 Apply adjustments and reverts in this step. Do NOT just report them.
 
-## Step 7 — Final integration test
+## Step 6 — Final integration test
 
 A change is **large** if any of these is true:
 - More than one file was modified.
@@ -101,7 +104,7 @@ user input — do NOT improvise an `msbuild` or `dcc32` invocation, and do NOT f
 script. If the target EXE is locked because the app is running, tell the agent to use `--test`
 (it compiles to a temp folder) rather than killing the process.
 
-If tests/compile fail, treat the failure as a regression you caused unless you can clearly trace it to a pre-existing issue. Fix it or revert the offending edit. Any new revert performed here feeds Step 8.
+If tests/compile fail, treat the failure as a regression you caused unless you can clearly trace it to a pre-existing issue. Fix it or revert the offending edit. Any new revert performed here feeds Step 7.
 
 ## Optional - check it in the running app
 
@@ -111,11 +114,11 @@ If the project has the **Autopilot for Delphi** bridge linked in, drive the runn
 
 If a tool answers `-32099 target_not_running`, the program is closed or was built without the bridge. Say so and stop; do not retry, and do not go and wire the bridge in unless asked. What it is and how to link it: https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/
 
-## Step 8 — Update the false-positive memory
+## Step 7 — Update the false-positive memory
 
-If a change was reverted in Step 2, Step 6, OR Step 7 because the "improvement" turned out to contradict an intentional pattern, add it to `patterns_common_false_positives.md`. One short bullet per pattern.
+If a change was reverted in Step 2, Step 5, OR Step 6 because the "improvement" turned out to contradict an intentional pattern, add it to `patterns_common_false_positives.md`. One short bullet per pattern.
 
-If you create a new pattern file, add an index entry to `~/.claude/agent-memory/light-review/MEMORY.md`.
+If you create a new pattern file, add an index entry to `c:/Users/<you>/.claude/agent-memory/light-review/MEMORY.md`.
 
 Skip this step if the memory directory does not exist.
 
@@ -136,7 +139,7 @@ Report:
 
 ```
 
-**Anti-duplication rule:** The Report block above is the ONLY end-of-stage summary. Do NOT write a "Final summary", "Conclusion", or "Wrap-up" section above it. The "Changes that hold up / need adjustment / should be reverted" sections from Step 6 stay — but no extra summary on top of them.
+**Anti-duplication rule:** The Report block above is the ONLY end-of-stage summary. Do NOT write a "Final summary", "Conclusion", or "Wrap-up" section above it. The "Changes that hold up / need adjustment / should be reverted" sections from Step 5 stay — but no extra summary on top of them.
 
 **Top-of-summary cue (redundancy):** As the FIRST line of your final response, write one line: `Pipeline terminal step — no further auto-chain.` — so the user can see at a glance the verification chain is ending here.
 

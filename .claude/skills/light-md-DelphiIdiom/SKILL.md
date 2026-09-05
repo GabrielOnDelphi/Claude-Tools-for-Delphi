@@ -1,6 +1,6 @@
 ---
 name: light-md-DelphiIdiom
-description: Fix Delphi vocabulary and writing-clarity issues in Markdown docs — non-Delphi term swaps + bounded clarity rewrites. Say "check vocab", "fix vocabulary", "delphi terms", "clean up the md", or after writing/editing *.md in a Delphi project.
+description: Fix Delphi vocabulary and writing-clarity issues in the Markdown documentation of a Delphi project — swap terms borrowed from C, Java or Python for the Delphi word, plus bounded clarity rewrites. Say "check vocab", "fix vocabulary", "delphi terms", "vocab pass", "scan docs for vocab", "clean up the md", "fix the docs". Also fire it yourself, without being asked, after writing or editing any *.md in a Delphi project, before saying the work is done. Documentation only — it refuses .pas files, and it refuses book and manuscript prose such as anything under c:\MyBooks\, which has its own deliberately non-technical voice.
 author: Gabriel Moraru
 homepage: https://gabrielmoraru.com
 license: MPL-2.0
@@ -10,15 +10,13 @@ license: MPL-2.0
 
 This skill is a thin launcher. The work is done by the `light-md-DelphiIdiom` agent. Do not load the dictionary or scan files yourself — that's the agent's job, in its own context window.
 
-## When to run
+## Is this file in scope?
 
-- User invokes `/light-md-DelphiIdiom` (with or without args).
-- User says variants: "check vocab", "fix vocabulary", "delphi terms", "vocab pass", "scan docs for vocab", "clean up the md", "fix the docs".
-- Proactively: after writing or editing any `*.md` file in a Delphi project, run before claiming done.
+Two checks before resolving any target.
 
-If unsure whether a project is "Delphi", check for `*.dpr`, `*.dpk`, `*.dproj` in the project root or for `CLAUDE.md` mentioning Delphi. If still unsure, ask.
+**Is the project a Delphi project?** Look for a `*.dpr`, `*.dpk` or `*.dproj` file in the project root, or a `CLAUDE.md` that talks about Delphi. If neither is there, ask.
 
-**Hard exclusion — never run on prose/manuscript MD.** This skill is for *Delphi-project source documentation* (CLAUDE.md, README, docs about code). It is NOT for long-form prose that merely *mentions* Delphi. Skip entirely — do not even resolve targets — when the file lives under a book/manuscript tree, in particular anything under a book/manuscript tree such as `c:\MyBooks\`. Those `.docx`/`.md` files have their own casual, honest writing voice (see that tree's own CLAUDE.md) that deliberately conflicts with the Delphi-vocabulary rules here. A folder having a `CLAUDE.md` that talks about Delphi is NOT enough — the test is "is this documentation *for code*?", not "does it mention Delphi?". When in doubt about a prose file, skip and say why.
+**Is the file documentation for code, or is it prose?** This skill rewrites the documentation of Delphi source — `CLAUDE.md`, `README.md`, docs describing how the code works. It must never touch long-form prose that merely mentions Delphi. Anything under `c:\MyBooks\` is out of scope, and so is any other manuscript tree: those files are written in a casual, personal voice that the book tree's own `CLAUDE.md` defines and protects, and the vocabulary rules here would flatten it. A folder whose `CLAUDE.md` talks about Delphi is not enough to bring it in scope — the question is whether the file documents code, not whether it mentions Delphi. Skip a prose file without resolving it, and say why.
 
 ## Invocation modes
 
@@ -42,15 +40,17 @@ That's it. No scanning, no dictionary loading, no edits in the skill itself.
 
 ## Where the rules live (for the agent, not for you)
 
-- `~\.claude\skills\light-md-DelphiIdiom\references\vocabulary.md` — word-level rules
-- `~\.claude\skills\light-md-DelphiIdiom\references\writing-good-md.md` — sentence-level clarity rules
+- `c:\Users\<you>\.claude\skills\light-md-DelphiIdiom\references\vocabulary.md` — word-level rules
+- `c:\Users\<you>\.claude\skills\light-md-DelphiIdiom\references\writing-good-md.md` — sentence-level clarity rules
 
 These are loaded by the agent, not by this skill.
 
-## Scope
+## Scope - Markdown ONLY
 
-- **Default:** MD files only (`*.md`, `*.markdown`).
-- **PAS comments on explicit request:** if the user says "clean up the comments in `FooBar.pas`", pass that scope to the agent. Never autonomously expand to PAS.
+- **This skill edits `*.md` and `*.markdown`. Nothing else.**
+- **A `.pas` file is REFUSED, even when the user names one explicitly.** Do not pass it to the agent. Tell the user that Delphi source comments are a different job and this skill will not do it. Then carry on with any `.md` files in the same invocation.
+- The reason is not tidiness. Cleaning source comments is the OPPOSITE operation - deletion. It cuts edit history, shortens what is left, and has to protect several kinds of comment this skill knows nothing about, starting with `///`, which in many Delphi codebases marks temporarily disabled code that is meant to come back. Letting the vocabulary rules loose on a `.pas` file would rewrite those instead of leaving them alone.
+- Reading a `.pas` file to resolve an antecedent while editing Markdown is fine. Reading is not editing.
 
 ## Extending the dictionary
 

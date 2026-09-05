@@ -1,6 +1,6 @@
 # Delphi vocabulary — banned and preferred terms
 
-Last updated: 2026-06-29.
+Last updated: 2026-08-09.
 
 Loaded by the `light-md-DelphiIdiom` skill. Sections:
 
@@ -108,6 +108,7 @@ Report these with file:line and a snippet (full line or ~60 chars) so a human ca
 | hook into, hooks into                           | Win32 `SetWindowsHookEx`, message-hook chains, IDE OTA notifiers (`ToolsAPI`)       | borrowed event-system vocabulary — say "assigns to" / "subscribes to" / "registers with"                                              |
 | seam, seams                                     | a literal seam — fabric / weld / geology — or quoted from a source                   | borrowed testing/refactoring jargon for a substitution point — say "an interface used for dependency injection", "a substitution point", or name the actual boundary/unit |
 | tracer bullet                                   | kept where the doc defines it (e.g. `light-new-Feature` defines slice 1 this way) | borrowed Pragmatic-Programmer metaphor used without a definition nearby — say "a thin end-to-end first slice"                          |
+| headless, headless mode                         | a real headless *machine* — a server or a build box with no monitor attached, where the word is literal | borrowed sysadmin word standing in for "shows no window". Say what is actually suppressed: "shows no exception box", "no-box settings", "no GUI". If the point is that nobody is watching, say **unattended**. If the program genuinely has no GUI at all, say **console application** (`{$APPTYPE CONSOLE}`) |
 
 ---
 
@@ -181,5 +182,13 @@ The auto-fixer must skip a Section A match when the surrounding text matches any
 | canvas surface           | legitimate FMX `TCanvas` concept                        |
 
 When the skill finds a Section A match and the surrounding text matches an allowlist phrase, log it as "skipped (allowlist)" rather than fixing or flagging.
+
+---
+
+## Section D — Open questions (unresolved)
+
+Park new vocabulary questions here when the right ruling (ban / context-dependent / already-correct) is not yet decided. When one is resolved, move it into Section A, B, or C and delete it from here (see SKILL.md → "Extending the dictionary").
+
+*(empty — nothing pending)*
 
 

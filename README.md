@@ -1,7 +1,10 @@
 # Claude Tools for Delphi
 
 Claude Code skills and agents for **Delphi** development — the same tooling I use daily to build commercial Delphi apps.
-MORE tools to be published!
+
+**I have 52 Delphi skills on my machine. 32 of them are published here.**
+The rest get published as this repository collects stars — click the **Star** button (top-right corner) and I keep going.
+Click **Watch** too, if you want to be notified when the next batch lands.
 
 Several of these skills end at "it compiles". If you want Claude to go one step further and actually *use* your program — click a button, type into an edit box, read a label back, screenshot a form — see [Autopilot for Delphi](#autopilot-for-delphi) further down.
 
@@ -121,6 +124,16 @@ Pre-release. Details and download: [gabrielmoraru.com/my-delphi-code/autopilot-f
 Drop an agent into `~/.claude/agents/` and a skill folder into `~/.claude/skills/`, then call it from any Claude Code session. On Windows that is `C:\Users\<you>\.claude\`.
 
 A few skills reach for something specific to my machine — a product profile, an FTP profile, a helper `.exe`. They say so in their own `SKILL.md`; adapt or ignore those.
+
+## Help me publish the rest
+
+I don't ask for money, not even donations. You can help by spreading the word:
+
+ - Click the **Star** button (top-right corner) if these tools save you time. 20 more skills and 4 more agents are waiting to be cleaned up and added.
+ - Click **Watch** to get notified when the next batch is published.
+ - Tell another Delphi developer about the repository.
+
+If you want a skill that is not here yet, open an issue and say what it should do. The ones people ask for get published first.
 
 ## Author
 

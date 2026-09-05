@@ -10,7 +10,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 
-$Extractor = Join-Path $PSScriptRoot 'extract-mad.ps1'
+$Extractor = 'c:\Users\<you>\.claude\skills\light-bug-MadShi\Tools\extract-mad.ps1'
 $TestRoot  = 'c:\AI\Claude Code\Temp\extractor-tests'
 $OutDir    = Join-Path $TestRoot 'out'
 
@@ -102,7 +102,7 @@ function New-MadMessage {
   $sb = New-Object System.Text.StringBuilder
   [void]$sb.Append("From - $FromDate$LineEnd")
   [void]$sb.Append("From: bionix-bug@example.com$LineEnd")
-  [void]$sb.Append("To: support@example.com$LineEnd")
+  [void]$sb.Append("To: xxxxxxxxx@GabrielMoraru.com$LineEnd")
   [void]$sb.Append("Subject: $Subject$LineEnd")
   [void]$sb.Append("Date: $Date$LineEnd")
   [void]$sb.Append("MIME-Version: 1.0$LineEnd")

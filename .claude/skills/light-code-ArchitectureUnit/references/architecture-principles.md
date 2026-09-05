@@ -26,9 +26,7 @@ method-count or line-count. Size is at most a tiebreaker between two otherwise-e
 
 ## Counter-analysis is mandatory
 
-Before recommending any change, argue the OTHER side: *why should this stay as-is?* Apply the
-anti-signals in your granularity's instructions. Drop every candidate that survives the challenge as
-"keep as-is" — and **state why**, so a later run does not re-flag it. No challenge, no recommendation.
+Before recommending any change, argue the OTHER side: *why should this stay as-is?* Apply the anti-signals in your granularity's instructions. Then split the candidates in two: the ones the challenge DEFEATS go into a "keep as-is" list with **the reason written down**, so a later run does not re-flag them; the ones that WITHSTAND the challenge are the only ones you may recommend. No challenge, no recommendation.
 
 ## Prefer non-interface fixes
 
@@ -60,6 +58,20 @@ These are the expensive mistakes; naming them is the point of the audit. Common 
 
 Each granularity adds its own flags (unit: none beyond these; class: DFM/FMX bindings, ownership /
 free-order). Apply those from your own instructions.
+
+## Naming the reshape — read the catalog before inventing a move
+
+Every reshape this audit proposes already has a name and a safe recipe. The catalog is
+`c:\Users\<you>\.claude\skills\light-ref-Refactoring\SKILL.md`: Extract Method, Extract Class, Guard
+Clauses, Named Constants, Replace Conditional with Polymorphism, Introduce Parameter Object as a
+record, Remove `with`, Rename, Inline Method, and how to introduce a test seam through a shared base
+class instead of an interface. It also carries the one rule that makes a reshape a refactoring rather
+than a rewrite: a test that is green before and stays green after. **Read it before writing a proposal**
+— naming the move by its catalog name, rather than describing a bespoke rearrangement, is what lets the
+person implementing it follow a known-safe sequence.
+
+It also points at `c:\Users\<you>\.claude\skills\light-ref-DesignPatterns\SKILL.md` when the reshape is a structural pattern
+rather than a mechanical move.
 
 ## Rank, and be honest about a null result
 

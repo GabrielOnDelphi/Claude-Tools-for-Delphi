@@ -1,6 +1,6 @@
 ---
 name: light-code-ArchitectureClass
-description: Audit a Delphi project's own classes (INCLUDING forms) for bad shapes — god classes, anemic data classes, misplaced responsibility, fat config records, shared mutable singletons, Ex-downcast holders. Reports ranked reshapes (extract-class, move-method, replace-singleton); never refactors. Say "is this a god class", "review the class design", "find anemic classes". For UNIT merges use light-code-ArchitectureUnit.
+description: Audit a Delphi project's own classes, forms included, for bad shapes — god classes, anemic data classes, misplaced responsibility, fat config records, shared mutable singletons, Ex-downcast holders. Reports ranked reshapes (extract-class, move-method, replace-singleton); never refactors. Say "is this a god class", "review the class design", "find anemic classes", "which classes carry too many responsibilities", "audit the class shapes". For UNIT merges use light-code-ArchitectureUnit.
 author: Gabriel Moraru
 homepage: https://gabrielmoraru.com
 license: MPL-2.0
@@ -11,11 +11,6 @@ license: MPL-2.0
 This skill is a thin launcher. The audit is done by the **`light-code-ArchitectureClass` agent** in its
 own context window, so the whole-project class read does not clog the main context — only the ranked
 report comes back. Do not map or analyse classes yourself; resolve the scope, then launch the agent.
-
-## When to run
-
-- User invokes `/light-code-ArchitectureClass` (with or without args).
-- User says variants: "is this a god class", "review the class design", "find anemic classes", "which classes carry too many responsibilities", "audit the class shapes".
 
 If the real question is whether two **units/files** should merge, this is the wrong skill — point at
 `/light-code-ArchitectureUnit`.

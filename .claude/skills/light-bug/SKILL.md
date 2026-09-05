@@ -1,6 +1,7 @@
 ---
 name: light-bug
-description: "Diagnose and fix a Delphi bug end-to-end, however it arrived: a Thunderbird crash report (.mad), a pasted exception/stack trace, or a symptom described in plain words. Routes internally — a .mad or 'crash report' goes to the light-bug-MadShi pipeline, an Android-only symptom hands off to /light-bug-Android, everything else runs here: intake, reproduce (a failing DUnitX test preferred), localize, a MANDATORY derailment check before any fix, fix, then verify and compile (never releases). Use whenever the user reports a bug, crash, or unexpected behavior in a Delphi project — says \"/light-bug\", \"/light-bug bionix\", \"I have a crash in program X\", \"the app does Y instead of Z\", \"this doesn't work\", pastes an exception or stack trace, forwards a bug-report email, or describes an app crashing/hanging/misbehaving — even without typing a command."
+effort: max
+description: "Diagnose and fix a Delphi bug end-to-end, however it arrived: a Thunderbird crash report (.mad), a pasted exception/stack trace, or a symptom described in plain words. Routes internally — a .mad or 'crash report' goes to the light-bug-MadShi pipeline, an Android-only symptom hands off to /light-bug-Android, everything else runs here: intake, reproduce (a failing DUnitX test preferred), localize, a MANDATORY derailment check before any fix, fix, then verify and compile (never releases). Use whenever the user reports a bug, crash, or unexpected behavior in a Delphi project — says \"there's a bug\", \"it crashes\", \"I have a crash in program X\", \"the app does Y instead of Z\", \"this doesn't work\", pastes an exception or stack trace, forwards a bug-report email, or describes an app crashing/hanging/misbehaving — even without typing a command."
 author: Gabriel Moraru
 homepage: https://gabrielmoraru.com
 license: MPL-2.0
@@ -16,10 +17,10 @@ One skill for "there's a bug", regardless of how it arrived — a Thunderbird cr
 
 Work through these in order — the first one that matches decides the path. Do not skip ahead to "general path" just because a message isn't obviously a crash report; case 3 below exists precisely to catch the messages that are too thin to act on either way.
 
-1. **Unambiguous crash-report evidence** — a `.mad` file path, or wording like "crash report" / ".mad" / "bug report email" / "madExcept". This is the crash-report pipeline: read `~\.claude\skills\light-bug-MadShi\SKILL.md` and follow it exactly (it resolves the product, lists/extracts the `.mad`, and launches its own agent). That skill is self-contained end to end — do not continue into Phase 1 below.
+1. **Unambiguous crash-report evidence** — a `.mad` file path, or wording like "crash report" / ".mad" / "bug report email" / "madExcept". This is the crash-report pipeline: read `c:\Users\<you>\.claude\skills\light-bug-MadShi\SKILL.md` and follow it exactly (it resolves the product, lists/extracts the `.mad`, and launches its own agent). That skill is self-contained end to end — do not continue into Phase 1 below.
 2. **An Android-only symptom** (works on Windows, fails only on the phone; "disappears on the phone"; a logcat paste) — hand off to the `light-bug-Android` skill (Skill tool) instead of continuing here.
 3. **Too thin to act on** — neither 1 nor 2 matched, AND you cannot pin down BOTH (a) which product/project this is about and (b) a concrete symptom (the message is just "there's a bug" / "it crashes", names no registered product, and no project is obvious from the working directory). Do not guess on either axis — ask with `AskUserQuestion`. If evidence type is the unclear part (might be a report they haven't attached yet, might be pure description), lead with that: "New crash-report email (.mad) or a bug you'll describe?" — its answer usually resolves the product question too, since case 1 (if they do have a report) asks about product internally. If evidence type is clear but the product/project genuinely isn't, ask which project instead.
-4. **A concrete symptom with a resolvable product/project** — everything else. This is the general path (Phase 1 onward). If a product word is named (`bionix`, `dna`/`dnabaser`/`baser`), read that product's block from `~\.claude\skills\light-bug-MadShi\products.ini` — you need `SourceRoot`, `ProjectFile`, `ProjectClaude`, `BugProtocol`, `FixesLog`, `BugFolderRoot` even though nothing crashed. A product word alone does NOT imply a crash: a `.mad` only exists after one, and most bugs reach you as prose, not a report. If no product word is named but a project is obvious from the working directory, use that project's own `CLAUDE.md` / Fixes Log if it has one — proceed with whatever it has, and skip the Fixes Log bookkeeping in Phase 6 if it has none.
+4. **A concrete symptom with a resolvable product/project** — everything else. This is the general path (Phase 1 onward). If a product word is named (`bionix`, `myproduct`), read that product's block from `c:\Users\<you>\.claude\skills\light-bug-MadShi\products.ini` — you need `SourceRoot`, `ProjectFile`, `ProjectClaude`, `BugProtocol`, `FixesLog`, `BugFolderRoot` even though nothing crashed. A product word alone does NOT imply a crash: a `.mad` only exists after one, and most bugs reach you as prose, not a report. If no product word is named but a project is obvious from the working directory, use that project's own `CLAUDE.md` / Fixes Log if it has one — proceed with whatever it has, and skip the Fixes Log bookkeeping in Phase 6 if it has none.
 
 ---
 
@@ -28,7 +29,7 @@ Work through these in order — the first one that matches decides the path. Do 
 1. **Restate the bug** in one sentence each: expected behavior vs. actual behavior. If the user's report doesn't make this crisp, ask.
 2. **Collect evidence**: exact error text, stack trace, log excerpt, repro steps, the version/build the user is running. Quote error messages verbatim — don't paraphrase them.
 3. **Define the DONE criterion**: one sentence, the observable result that proves the bug is fixed (e.g. "tray icon reappears after resume without a restart").
-4. **Open a bug ledger** at `<SourceRoot>\.claude\session-bug-<short-name>.md` (create the `.claude\` folder if it doesn't exist). This doubles as the HandOver file the global CLAUDE.md convention expects, so the task survives a restart. Seed it with:
+4. **Open a bug ledger** at `<SourceRoot>\.claude\session-bug-<short-name>.md` (create the `.claude\` folder if it doesn't exist). This is the session file the global CLAUDE.md convention expects, so the hunt survives a restart — keep writing to it after every significant step, and delete it once the bug is fixed. It is not the project's `HandOver.md`: when the bug closes, fold the outcome into `HandOver.md` as one line. Seed it with:
 
 ```markdown
 # Bug: <short name>
@@ -81,6 +82,8 @@ If the check comes back DERAILED, follow its verdict: go back to the last verifi
 
 ## Phase 5 — Fix
 
+**Effort.** Phases 1-4 are diagnosis, which is why this skill pins `effort: max`. From here it is implementation, where XHIGH is the rule. You cannot change the level yourself — if `ACTIVE EFFORT` is `max`, tell Gabriel in one line that he can run `/effort xhigh` for the rest, then carry on without waiting.
+
 Smallest change that fixes the root cause the derailment check just confirmed:
 
 - `FreeAndNil` not `.Free`. Delphi vocabulary only — no `null`/`void`/`enum`/`struct`/etc.
@@ -88,7 +91,7 @@ Smallest change that fixes the root cause the derailment check just confirmed:
 - No cargo-cult nil-checks beyond what Phase 3 actually proved necessary. No drive-by refactoring.
 - If the fix would touch shared framework code (LightSaber, LightProteus, BioControl) used by more than this product, name the affected products to the user before touching it — that code is shared, and a "fix" there can regress a different app.
 
-The full implementation checklist (path rebasing, shared-framework precedence order, the anti-patterns list) lives in the `light-bug-MadShi` agent's Steps 5–6 (`~\.claude\agents\light-bug-MadShi.md`) — read it for a non-trivial fix; the rules above cover most bugs.
+The full implementation checklist (path rebasing, shared-framework precedence order, the anti-patterns list) lives in the `light-bug-MadShi` agent's Steps 5–6 (`c:\Users\<you>\.claude\agents\light-bug-MadShi.md`) — read it for a non-trivial fix; the rules above cover most bugs.
 
 If the right fix is unclear and a wrong one would do real harm, stop and ask rather than guess.
 

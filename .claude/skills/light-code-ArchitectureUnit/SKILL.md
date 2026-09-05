@@ -1,6 +1,6 @@
 ---
 name: light-code-ArchitectureUnit
-description: Audit a Delphi project's own units (files) for SHALLOW modules that should merge into one deep module — information leakage, temporal decomposition, pass-through layers, always-paired usage. Reports ranked merge candidates; never merges. Say "find shallow units", "what units should be merged". For CLASS shapes use light-code-ArchitectureClass.
+description: Audit a Delphi project's own units (files) for SHALLOW modules that should merge into one deep module — information leakage, temporal decomposition, pass-through layers, always-paired usage. Reports ranked merge candidates; never merges. Say "find shallow units", "what units should be merged", "which files should be folded together", "audit the module structure". For CLASS shapes use light-code-ArchitectureClass.
 author: Gabriel Moraru
 homepage: https://gabrielmoraru.com
 license: MPL-2.0
@@ -11,11 +11,6 @@ license: MPL-2.0
 This skill is a thin launcher. The audit is done by the **`light-code-ArchitectureUnit` agent** in its
 own context window, so the whole-project read does not clog the main context — only the ranked report
 comes back. Do not map units or analyse them yourself; resolve the scope, then launch the agent.
-
-## When to run
-
-- User invokes `/light-code-ArchitectureUnit` (with or without args).
-- User says variants: "find shallow units", "what units should be merged", "which files should be folded together", "audit the module structure".
 
 If the real question is about a **class** shape (god class, anemic class, misplaced responsibility),
 this is the wrong skill — point at `/light-code-ArchitectureClass`.

@@ -49,11 +49,11 @@ Subagents cannot prompt, so **you** settle this. **Skip the question when the lo
 
 Then call **Agent** with `subagent_type: "light-web-YoutubeSummarizer"` once per file, passing the single file path and the concrete `OutputPath` (or "don't save"). Parallel is fine — nothing left to prompt for.
 
-The agent cleans → reads whole → routes the topic to a lens → verifies the load-bearing claims → returns only the summary. Relay each one.
+The agent cleans → reads whole → picks the matching topic file → verifies the load-bearing claims → returns only the summary. Relay each one.
 
-## Lenses (edit these, not the agent)
+## Topic files (edit these, not the agent)
 
-The "apply it" section is driven by three reference files the agent reads only when the topic calls for one — [references/lens-code.md](references/lens-code.md) (Delphi 13 / LightSaber stack, build, tests, style), [references/lens-ai.md](references/lens-ai.md) (skills, subagents, hooks, effort, MCP, memory), and [references/lens-factual.md](references/lens-factual.md) (a video that teaches no technique but feeds a real decision outside software — medical, a purchase, legal: a verbatim four-part inventory instead of an adaptation). Change what an adaptation knows about by editing the lens, not the agent prompt.
+The "apply it" section is driven by three topic files the agent reads only when the topic calls for one — [references/topic-code.md](references/topic-code.md) (Delphi 13 / LightSaber stack, build, tests, style), [references/topic-ai.md](references/topic-ai.md) (skills, subagents, hooks, effort, MCP, memory), and [references/topic-factual.md](references/topic-factual.md) (a video that teaches no technique but feeds a real decision outside software — medical, a purchase, legal: a verbatim four-part inventory instead of an adaptation). Change what an adaptation knows about by editing the topic file, not the agent prompt.
 
 ## Step 3 — Close
 

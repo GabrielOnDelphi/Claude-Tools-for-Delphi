@@ -1,5 +1,76 @@
-# Root CLAUDE.md only (internal notes). Every other CLAUDE.md in the repo IS published.
+# Files that must never reach GitHub.
+#
+# WARNING - an ignore rule has NO effect on a file git ALREADY TRACKS.
+# .claude/CLAUDE.md proves it: it is matched by a rule below and is public anyway, because it
+# was committed before the rule existed. For an already-tracked file the only fix is
+# "git rm --cached <file>", which Gabriel runs in GitHub Desktop. Claude never writes git history here.
+#
+# WARNING - a comment must sit on its own line. Git has no end-of-line comments: it reads
+# "pattern   # note" as one pattern, note included, and that pattern matches no file.
+#
+# The decision about which SKILLS are published lives in one file:
+#   C:\Users\trei\.claude\skills\publish-list.md
+# The generated block at the bottom of this file is only a second net. Regenerate both together.
+
+# ---------- single files ----------
+# The root CLAUDE.md holds internal notes. Every OTHER CLAUDE.md in this repo IS published.
 /CLAUDE.md
-.claude/skills/HowWeShareTheseSkills.md
 PUBLISH-PROTOCOL.md
+publish-list.md
+.claude/skills/HowWeShareTheseSkills.md
+
+# ---------- internal by nature, at any depth ----------
+# descript.ion - Total Commander folder comments. Local file-manager artefact.
 descript.ion
+# HandOver.md - cross-session memory: what is unfinished, blocked, broken.
+HandOver.md
+# todo.md - the backlog, including everything broken and not fixed yet.
+todo.md
+# session-*.md - throwaway notes for one task.
+session-*.md
+# evals/ - test cases built out of our own past mistakes, and they quote them.
+evals/
+# history/ - kept precisely because it records what went wrong.
+history/
+
+# A skill’s own CLAUDE.md is its private notes on how it was wrong. One level only, so this does
+# NOT match .claude/skills/CLAUDE.md, which is a separately written public file and IS published.
+.claude/skills/*/CLAUDE.md
+
+# ---------- skills that are never published ----------
+# Generated from publish-list.md, category NEVER, on 2026-09-07. 14 skills.
+.claude/skills/kai-Debug/
+.claude/skills/kai-Editor/
+.claude/skills/kai-Project/
+.claude/skills/light-book-ConvertToBookChapter/
+.claude/skills/light-book-Review/
+.claude/skills/light-book-Translate/
+.claude/skills/light-inet-KleinanzeigenSearch/
+.claude/skills/light-inet-KleinanzeigenSell/
+.claude/skills/light-inet-ShopSearch/
+.claude/skills/light-md-HandOver/
+.claude/skills/light-md-Status/
+.claude/skills/light-ref-DelphiOfflineKnowledge/
+.claude/skills/light-security-PersonalDataLeakCheck/
+.claude/skills/light-tools-BionixFreeKeyGen/
+.claude/skills/skill-creator/
+
+# Not created yet. Listed early on purpose: it will hold the local master folders, the WordPress
+# admin and the name of the file that holds the application password.
+.claude/skills/light-tools-PublishMySkills/
+
+# ---------- agents of skills that are never published ----------
+# Only agents belonging to a NEVER skill. An agent of a PUBLISHED skill must ship with it -
+# a skill whose agent is missing does nothing when a reader installs it - so those are NOT listed.
+# Generated 2026-09-07.
+.claude/agents/light-book-Translate.md
+.claude/agents/light-book-Verify.md
+.claude/agents/light-ref-DelphiOfflineKnowledge.md
+.claude/agents/light-security-PersonalDataLeakCheck.md
+
+# ---------- private tool folders under Tools/ ----------
+# FTP/ - a private upload tool. Nothing in it is ever published.
+Tools/FTP/
+
+# Temporary files of Claude Code sessions
+Temp/

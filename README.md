@@ -81,8 +81,15 @@ Slash commands you call from any Claude Code session. The name of the folder is 
 | --- | --- |
 | `/light-web-CodeReview` | Review HTML, CSS or JavaScript for errors, formatting, best practices, accessibility and cross-browser problems. |
 | `/light-web-PushToFTP` | Release a tool's new version to its website FTP, following that tool's own `ReleaseProfile.md`. |
-| `/light-web-UncensoredFetch` | Read a web page that Claude Code's built-in `WebFetch` refuses (the whole `reddit.com` domain is on its denylist; also Cloudflare-walled and JavaScript-only pages). Drives a local Delphi WebView2 browser and writes the visible text to a file. |
-| `/light-web-YoutubeSummarizer` | Clean a YouTube transcript and summarize it — with a Delphi adaptation section when the talk is about programming. |
+
+### Internet
+
+Renamed on 2026-09-18: these two skills were called `light-web-UncensoredFetch` and `light-web-YoutubeSummarizer`. If you installed them before that date, delete the old folders `.claude\skills\light-web-UncensoredFetch\` and `.claude\skills\light-web-YoutubeSummarizer\` and the old agent file `.claude\agents\light-web-YoutubeSummarizer.md`, or each skill shows up twice.
+
+| Skill | What it does |
+| --- | --- |
+| `/light-inet-UncensoredFetch` | Read a web page that Claude Code's built-in `WebFetch` refuses (the whole `reddit.com` domain is on its denylist; also Cloudflare-walled and JavaScript-only pages). Drives a local Delphi WebView2 browser and writes the visible text to a file. |
+| `/light-inet-YoutubeSummarizer` | Clean a YouTube transcript and summarize it — with a Delphi adaptation section when the talk is about programming. |
 
 ## Agents
 
@@ -105,7 +112,7 @@ The engines the skills launch. Most are also usable standalone. All are self-doc
 | `light-md-PruneClaudeMD` | Prune an instruction markdown without losing load-bearing information. Verifies before cutting; flags what it is unsure about instead of deleting it. |
 | `light-security-ClaudeSettingsAudit` | Classify every Claude Code config finding DANGEROUS / SUSPICIOUS / SAFE against a known-good baseline. Read-only. |
 | `light-web-CodeReview` | Review HTML / CSS / JavaScript. |
-| `light-web-YoutubeSummarizer` | Clean and summarize a transcript in its own context, so the bulk never reaches your main conversation. |
+| `light-inet-YoutubeSummarizer` | Clean and summarize a transcript in its own context, so the bulk never reaches your main conversation. |
 
 ## Autopilot for Delphi
 

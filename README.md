@@ -6,8 +6,6 @@ Claude Code skills and agents for **Delphi** development — the same tooling I 
 The rest get published as this repository collects stars — click the **Star** button (top-right corner) and I keep going.
 Click **Watch** too, if you want to be notified when the next batch lands.
 
-Several of these skills end at "it compiles". If you want Claude to go one step further and actually *use* your program — click a button, type into an edit box, read a label back, screenshot a form — see [Autopilot for Delphi](#autopilot-for-delphi) further down.
-
 ## A long time ago in a galaxy far, far away....
 
 There are more skills to come and the existing ones have been massively updated. I hope, one day, before the end of the Universe, I will have the time to publish them all.

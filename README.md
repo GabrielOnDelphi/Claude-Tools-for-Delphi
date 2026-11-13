@@ -10,8 +10,8 @@ Several of these skills end at "it compiles". If you want Claude to go one step 
 
 ## A long time ago in a galaxy far, far away....
 
-There are more skills to come and the existing ones have been massively updated. I hope, one day I will have the time to publish them all.
-Until then I work on the Autopilot for Delphi. Don't miss it. It is one of the most useful tools for AI. 
+There are more skills to come and the existing ones have been massively updated. I hope, one day, before the end of the Universe, I will have the time to publish them all.
+Until then I work on [Autopilot for Delphi](https://gabrielmoraru.com/my-delphi-code/autopilot-for-delphi/). Don't miss it. It is one of the most useful tools for AI. 
 
 ## Skills
 
@@ -149,7 +149,9 @@ If you want a skill that is not here yet, open an issue and say what it should d
 
 ## Author
 
-Built by Gabriel Moraru, a long-time Delphi developer. More of my open-source Delphi code, libraries and articles: [gabrielmoraru.com/my-delphi-code](https://gabrielmoraru.com/my-delphi-code/).
+Built by Gabriel Moraru, a long-time Delphi developer. 
+Author of the "[Delphi in all its glory](https://gabrielmoraru.com/publications-citations/)" series. 
+More of my open-source Delphi code, libraries and articles: [gabrielmoraru.com/my-delphi-code](https://gabrielmoraru.com/my-delphi-code/).
 
 ## Licence
 

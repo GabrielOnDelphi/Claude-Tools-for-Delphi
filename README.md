@@ -8,7 +8,7 @@ Click **Watch** too, if you want to be notified when the next batch lands.
 
 Several of these skills end at "it compiles". If you want Claude to go one step further and actually *use* your program — click a button, type into an edit box, read a label back, screenshot a form — see [Autopilot for Delphi](#autopilot-for-delphi) further down.
 
-## A long time ago, in a far far away galaxy
+## A long time ago in a galaxy far, far away....
 
 There are more skills to come and the existing ones have been massively updated. I hope, one day I will have the time to publish them all.
 Until then I work on the Autopilot for Delphi. Don't miss it. It is one of the most useful tools for AI. 
